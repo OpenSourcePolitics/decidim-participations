@@ -1,0 +1,4 @@
+<% content_for(:title, model.title) %>
+
+<%= render partial: "decidim/participations/participations/participation_badge", locals: { participation: model } %>
+<p><%= truncate(model.body, length: 100) %></p>

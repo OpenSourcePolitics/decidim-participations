@@ -5,28 +5,28 @@ require "social-share-button"
 require "ransack"
 
 module Decidim
-  module Proposals
-    # This is the engine that runs on the public interface of `decidim-proposals`.
+  module Participations
+    # This is the engine that runs on the public interface of `decidim-participations`.
     # It mostly handles rendering the created page associated to a participatory
     # process.
     class Engine < ::Rails::Engine
-      isolate_namespace Decidim::Proposals
+      isolate_namespace Decidim::Participations
 
       routes do
-        resources :proposals, except: [:destroy] do
-          resource :proposal_vote, only: [:create, :destroy]
-          resource :proposal_widget, only: :show, path: "embed"
+        resources :participations, except: [:destroy] do
+          resource :participation_vote, only: [:create, :destroy]
+          resource :participation_widget, only: :show, path: "embed"
         end
-        root to: "proposals#index"
+        root to: "participations#index"
       end
 
-      initializer "decidim_proposals.assets" do |app|
-        app.config.assets.precompile += %w(decidim_proposals_manifest.js decidim_proposals_manifest.css)
+      initializer "decidim_participations.assets" do |app|
+        app.config.assets.precompile += %w(decidim_participations_manifest.js decidim_participations_manifest.css)
       end
 
-      initializer "decidim_proposals.inject_abilities_to_user" do |_app|
+      initializer "decidim_participations.inject_abilities_to_user" do |_app|
         Decidim.configure do |config|
-          config.abilities += ["Decidim::Proposals::Abilities::CurrentUserAbility"]
+          config.abilities += ["Decidim::Participations::Abilities::CurrentUserAbility"]
         end
       end
     end

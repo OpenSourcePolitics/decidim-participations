@@ -1,5 +1,4 @@
-# Decidim::Participation
-
+# Decidim::Participations
 
 
 ## Usage

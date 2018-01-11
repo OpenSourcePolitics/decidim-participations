@@ -1,0 +1,10 @@
+var $participations = $('#participations');
+var $participationsCount = $('#participations-count');
+var $orderFilterInput = $('.order_filter');
+
+$participations.html('<%= j(render partial: "participations").strip.html_safe %>');
+$participationsCount.html('<%= j(render partial: "count").strip.html_safe %>');
+$orderFilterInput.val('<%= order %>');
+
+var $dropdownMenu = $('.dropdown.menu', $participations);
+$dropdownMenu.foundation();

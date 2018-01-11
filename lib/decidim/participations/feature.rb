@@ -2,14 +2,14 @@
 
 require "decidim/features/namer"
 
-Decidim.register_feature(:proposals) do |feature|
-  feature.engine = Decidim::Proposals::Engine
-  feature.admin_engine = Decidim::Proposals::AdminEngine
-  feature.icon = "decidim/proposals/icon.svg"
+Decidim.register_feature(:participations) do |feature|
+  feature.engine = Decidim::Participations::Engine
+  feature.admin_engine = Decidim::Participations::AdminEngine
+  feature.icon = "decidim/participations/icon.svg"
 
   feature.on(:before_destroy) do |instance|
-    if Decidim::Proposals::Proposal.where(feature: instance).any?
-      raise "Can't destroy this feature when there are proposals"
+    if Decidim::Participations::Participation.where(feature: instance).any?
+      raise "Can't destroy this feature when there are participations"
     end
   end
 
@@ -17,18 +17,18 @@ Decidim.register_feature(:proposals) do |feature|
 
   feature.settings(:global) do |settings|
     settings.attribute :vote_limit, type: :integer, default: 0
-    settings.attribute :proposal_limit, type: :integer, default: 0
-    settings.attribute :proposal_edit_before_minutes, type: :integer, default: 5
-    settings.attribute :maximum_votes_per_proposal, type: :integer, default: 0
-    settings.attribute :proposal_answering_enabled, type: :boolean, default: true
-    settings.attribute :official_proposals_enabled, type: :boolean, default: true
+    settings.attribute :participation_limit, type: :integer, default: 0
+    settings.attribute :participation_edit_before_minutes, type: :integer, default: 5
+    settings.attribute :maximum_votes_per_participation, type: :integer, default: 0
+    settings.attribute :participation_answering_enabled, type: :boolean, default: true
+    settings.attribute :official_participations_enabled, type: :boolean, default: true
     settings.attribute :comments_enabled, type: :boolean, default: true
     settings.attribute :upstream_moderation_enabled, type: :boolean, default: false
     settings.attribute :comments_upstream_moderation_enabled, type: :boolean, default: false
     settings.attribute :geocoding_enabled, type: :boolean, default: false
     settings.attribute :attachments_allowed, type: :boolean, default: false
     settings.attribute :announcement, type: :text, translated: true, editor: true
-    settings.attribute :new_proposal_help_text, type: :text, translated: true, editor: true
+    settings.attribute :new_participation_help_text, type: :text, translated: true, editor: true
   end
 
   feature.settings(:step) do |settings|
@@ -37,47 +37,47 @@ Decidim.register_feature(:proposals) do |feature|
     settings.attribute :votes_hidden, type: :boolean, default: false
     settings.attribute :comments_blocked, type: :boolean, default: false
     settings.attribute :creation_enabled, type: :boolean
-    settings.attribute :proposal_answering_enabled, type: :boolean, default: true
+    settings.attribute :participation_answering_enabled, type: :boolean, default: true
     settings.attribute :announcement, type: :text, translated: true, editor: true
   end
 
   feature.register_resource do |resource|
-    resource.model_class_name = "Decidim::Proposals::Proposal"
-    resource.template = "decidim/proposals/proposals/linked_proposals"
+    resource.model_class_name = "Decidim::Participations::Participation"
+    resource.template = "decidim/participations/participations/linked_participations"
   end
 
-  feature.register_stat :proposals_count, primary: true, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
-    Decidim::Proposals::FilteredProposals.for(features, start_at, end_at).not_hidden.authorized.count
+  feature.register_stat :participations_count, primary: true, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
+    Decidim::Participations::FilteredParticipations.for(features, start_at, end_at).not_hidden.authorized.count
   end
 
-  feature.register_stat :proposals_accepted, primary: true, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
-    Decidim::Proposals::FilteredProposals.for(features, start_at, end_at).accepted.count
+  feature.register_stat :participations_accepted, primary: true, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
+    Decidim::Participations::FilteredParticipations.for(features, start_at, end_at).accepted.count
   end
 
   feature.register_stat :votes_count, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
-    proposals = Decidim::Proposals::FilteredProposals.for(features, start_at, end_at).not_hidden
-    Decidim::Proposals::ProposalVote.where(proposal: proposals).count
+    participations = Decidim::Participations::FilteredParticipations.for(features, start_at, end_at).not_hidden
+    Decidim::Participations::ParticipationVote.where(participation: participations).count
   end
 
   feature.register_stat :comments_count, tag: :comments do |features, start_at, end_at|
-    proposals = Decidim::Proposals::FilteredProposals.for(features, start_at, end_at).not_hidden
-    Decidim::Comments::Comment.where(root_commentable: proposals).count
+    participations = Decidim::Participations::FilteredParticipations.for(features, start_at, end_at).not_hidden
+    Decidim::Comments::Comment.where(root_commentable: participations).count
   end
 
-  feature.exports :proposals do |exports|
+  feature.exports :participations do |exports|
     exports.collection do |feature_instance|
-      Decidim::Proposals::Proposal
+      Decidim::Participations::Participation
         .where(feature: feature_instance)
         .includes(:category, feature: { participatory_space: :organization })
     end
 
-    exports.serializer Decidim::Proposals::ProposalSerializer
+    exports.serializer Decidim::Participations::ParticipationSerializer
   end
 
   feature.exports :comments do |exports|
     exports.collection do |feature_instance|
       Decidim::Comments::Export.comments_for_resource(
-        Decidim::Proposals::Proposal, feature_instance
+        Decidim::Participations::Participation, feature_instance
       )
     end
 
@@ -92,8 +92,8 @@ Decidim.register_feature(:proposals) do |feature|
                     end
 
     feature = Decidim::Feature.create!(
-      name: Decidim::Features::Namer.new(participatory_space.organization.available_locales, :proposals).i18n_name,
-      manifest_name: :proposals,
+      name: Decidim::Features::Namer.new(participatory_space.organization.available_locales, :participations).i18n_name,
+      manifest_name: :participations,
       published_at: Time.current,
       participatory_space: participatory_space,
       settings: {
@@ -123,7 +123,7 @@ Decidim.register_feature(:proposals) do |feature|
                         [nil, nil]
                       end
 
-      proposal = Decidim::Proposals::Proposal.create!(
+      participation = Decidim::Participations::Participation.create!(
         feature: feature,
         category: participatory_space.categories.sample,
         scope: Faker::Boolean.boolean(0.5) ? global : scopes.sample,
@@ -151,10 +151,10 @@ Decidim.register_feature(:proposals) do |feature|
           confirmed_at: Time.current
         )
 
-        Decidim::Proposals::ProposalVote.create!(proposal: proposal, author: author) unless proposal.answered? && proposal.rejected?
+        Decidim::Participations::ParticipationVote.create!(participation: participation, author: author) unless participation.answered? && participation.rejected?
       end
 
-      Decidim::Comments::Seed.comments_for(proposal)
+      Decidim::Comments::Seed.comments_for(participation)
     end
   end
 end

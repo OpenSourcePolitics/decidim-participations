@@ -4,9 +4,9 @@ require "decidim/core/test/factories"
 require "decidim/participatory_processes/test/factories"
 
 FactoryBot.define do
-  factory :proposal_feature, parent: :feature do
-    name { Decidim::Features::Namer.new(participatory_space.organization.available_locales, :proposals).i18n_name }
-    manifest_name :proposals
+  factory :participation_feature, parent: :feature do
+    name { Decidim::Features::Namer.new(participatory_space.organization.available_locales, :participations).i18n_name }
+    manifest_name :participations
     participatory_space { create(:participatory_process, :with_steps, organization: organization) }
 
     trait :with_votes_enabled do
@@ -37,14 +37,14 @@ FactoryBot.define do
       end
     end
 
-    trait :with_proposal_limit do
+    trait :with_participation_limit do
       transient do
-        proposal_limit 1
+        participation_limit 1
       end
 
       settings do
         {
-          proposal_limit: proposal_limit
+          participation_limit: participation_limit
         }
       end
     end
@@ -84,19 +84,19 @@ FactoryBot.define do
       end
     end
 
-    trait :with_maximum_votes_per_proposal do
+    trait :with_maximum_votes_per_participation do
       settings do
         {
-          maximum_votes_per_proposal: 1
+          maximum_votes_per_participation: 1
         }
       end
     end
   end
 
-  factory :proposal, class: "Decidim::Proposals::Proposal" do
+  factory :participation, class: "Decidim::Participations::Participation" do
     title { Faker::Lorem.sentence }
     body { Faker::Lorem.sentences(3).join("\n") }
-    feature { create(:proposal_feature) }
+    feature { create(:participation_feature) }
     author do
       create(:user, organization: feature.organization) if feature
     end
@@ -126,8 +126,8 @@ FactoryBot.define do
     end
   end
 
-  factory :proposal_vote, class: "Decidim::Proposals::ProposalVote" do
-    proposal { build(:proposal) }
-    author { build(:user, organization: proposal.organization) }
+  factory :participation_vote, class: "Decidim::Participations::ParticipationVote" do
+    participation { build(:participation) }
+    author { build(:user, organization: participation.organization) }
   end
 end

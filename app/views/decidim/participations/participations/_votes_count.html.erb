@@ -1,0 +1,10 @@
+<div id="participation-<%= participation.id %>-votes-count" class="card__support__data">
+  <% if !current_settings.votes_hidden? %>
+    <span class="<%= votes_count_classes(from_participations_list)[:number] %>">
+      <%= participation.participation_votes_count %>
+    </span>
+    <span class="<%= votes_count_classes(from_participations_list)[:label]  %>">
+      <%= t('.count', count: participation.participation_votes_count) %>
+    </span>
+  <% end %>
+</div>

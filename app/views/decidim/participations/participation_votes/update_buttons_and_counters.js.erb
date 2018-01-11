@@ -1,0 +1,20 @@
+var $participationVotesCount = $('#participation-<%= participation.id %>-votes-count');
+var $participationVoteButton = $('#participation-<%= participation.id %>-vote-button');
+
+morphdom($participationVotesCount[0], '<%= j(render partial: 'decidim/participations/participations/votes_count', locals: { participation: participation, from_participations_list: @from_participations_list }).strip.html_safe %>');
+morphdom($participationVoteButton[0], '<%= j(render partial: 'decidim/participations/participations/vote_button', locals: { participation: participation, from_participations_list: @from_participations_list }).strip.html_safe %>');
+
+<% if vote_limit_enabled? %>
+  var $remainingVotesCount = $('#remaining-votes-count');
+  var $notVotedButtons = $('.card__button.button').not('.success');
+
+  morphdom($remainingVotesCount[0], '<%= j(render partial: 'decidim/participations/participations/remaining_votes_count').strip.html_safe %>');
+
+  <% if remaining_votes_count_for(current_user) == 0 %>
+    $notVotedButtons.attr('disabled', true);
+    $notVotedButtons.val('<%= t('decidim.participations.participations.vote_button.no_votes_remaining') %>');
+  <% else %>
+    $notVotedButtons.attr('disabled', false);
+    $notVotedButtons.val('<%= t('decidim.participations.participations.vote_button.vote') %>');
+  <% end %>
+<% end %>

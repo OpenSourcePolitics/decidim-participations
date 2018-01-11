@@ -1,0 +1,95 @@
+<% add_decidim_meta_tags({
+  description: @participation.body,
+  title: @participation.title,
+  url: participation_url(@participation.id)
+}) %>
+
+<%= render partial: "voting_rules" %>
+<div class="row column view-header">
+  <h2 class="heading2"><%= @participation.title %></h2>
+  <div class="author-data">
+    <%= render partial: "decidim/shared/author_reference", locals: { author: Decidim::Participations::ParticipationPresenter.new(@participation).author } %>
+    <div class="author-data__extra">
+      <button type="button" data-open="<%= current_user.present? ? 'flagModal' : 'loginModal' %>" title="<%= t('.report') %>" aria-controls="<%= current_user.present? ? 'flagModal' : 'loginModal' %>" aria-haspopup="true" tabindex="0">
+        <%= icon "flag", aria_label: t('.report'), class: 'icon--small' %>
+      </button>
+      <% unless @participation.official? %>
+        <%= link_to_current_or_new_conversation_with(@participation.author) %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="columns section view-side mediumlarge-4 mediumlarge-push-8 large-3 large-push-9">
+    <% if can?(:edit, @participation) %>
+      <%= link_to t(".edit_participation"), edit_participation_path(@participation), class: "button secondary hollow expanded button-sc button--icon follow-button" %>
+    <% end %>
+    <% if current_settings.votes_enabled? || current_user %>
+      <div class="card extra">
+        <div class="card__content">
+          <% if current_settings.votes_enabled? %>
+            <%= render partial: "votes_count", locals: { participation: @participation, from_participations_list: false } %>
+            <%= render partial: "vote_button", locals: { participation: @participation, from_participations_list: false } %>
+          <% end %>
+          <% if current_user %>
+            <%= render partial: "decidim/shared/follow_button", locals: { followable: @participation } %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <%= feature_reference(@participation) %>
+    <%= render partial: "decidim/shared/share_modal" %>
+    <%= embed_modal_for participation_participation_widget_url(@participation, format: :js) %>
+  </div>
+  <div class="columns mediumlarge-8 mediumlarge-pull-4">
+    <div class="section">
+      <%= render partial: "participation_badge", locals: { participation: @participation } %>
+      <%= simple_format @participation.body %>
+      <% if feature_settings.geocoding_enabled? %>
+        <%= render partial: "decidim/shared/static_map", locals: { icon_name: "participations", geolocalizable: @participation } %>
+      <% end %>
+      <%= render partial: "decidim/shared/tags", locals: { resource: @participation, tags_class_extra: "tags--participation" } %>
+    </div>
+    <% if @participation.answered? && translated_attribute(@participation.answer).present? %>
+      <% if @participation.accepted? %>
+        <div class="section">
+          <div class="callout success">
+            <h5><%= t(".participation_accepted_reason") %></h5>
+            <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
+          </div>
+        </div>
+      <% elsif @participation.rejected? %>
+        <div class="section">
+          <div class="callout warning">
+            <h5><%= t(".participation_rejected_reason") %></h5>
+            <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
+          </div>
+        </div>
+      <% else %>
+        <div class="section">
+          <div class="callout secondary">
+            <h5><%= t(".participation_in_evaluation_reason") %></h5>
+            <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <%= linked_resources_for @participation, :results, "included_participations" %>
+    <%= linked_resources_for @participation, :projects, "included_participations" %>
+    <%= linked_resources_for @participation, :meetings, "participations_from_meeting" %>
+  </div>
+</div>
+<%= attachments_for @participation %>
+
+<%= comments_for @participation %>
+
+<%= javascript_include_tag "decidim/participations/social_share" %>
+<%= stylesheet_link_tag "decidim/participations/social_share" %>
+
+<%=
+  render partial: "decidim/shared/flag_modal", locals: {
+    reportable: @participation,
+    form: @report_form,
+    url: decidim.report_path(sgid: @participation.to_sgid.to_s)
+  }
+%>
