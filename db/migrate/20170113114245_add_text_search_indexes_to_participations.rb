@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddTextSearchIndexes < ActiveRecord::Migration[5.0]
+class AddTextSearchIndexesToParticipations < ActiveRecord::Migration[5.0]
   def change
     add_index :decidim_participations_participations, :title, name: "decidim_participations_participation_title_search"
     add_index :decidim_participations_participations, :body, name: "decidim_participations_participation_body_search"
