@@ -2,7 +2,7 @@ $(() => {
   window.DecidimParticipations = window.DecidimParticipations || {};
 
   window.DecidimParticipations.bindParticipationAddress = () => {
-    const $checkbox = $('#proposal_has_address');
+    const $checkbox = $('#participation_has_address');
     const $addressInput = $('#address_input');
 
     if ($checkbox.length > 0) {

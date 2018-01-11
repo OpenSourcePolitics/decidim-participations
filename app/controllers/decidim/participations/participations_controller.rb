@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 module Decidim
-  module Proposals
-    # Exposes the proposal resource so users can view and create them.
-    class ProposalsController < Decidim::Proposals::ApplicationController
+  module Participations
+    # Exposes the participation resource so users can view and create them.
+    class ParticipationsController < Decidim::Participations::ApplicationController
       helper Decidim::WidgetUrlsHelper
       include FormFactory
       include FilterResource
       include Orderable
       include Paginable
 
-      helper_method :geocoded_proposals
+      helper_method :geocoded_participations
       before_action :authenticate_user!, only: [:new, :create]
 
       def index
-        @proposals = search
+        @participations = search
                       .results
                       .not_hidden
                       .authorized
@@ -22,21 +22,21 @@ module Decidim
                       .includes(:category)
                       .includes(:scope)
 
-        @voted_proposals = if current_user
-                             ProposalVote.where(
+        @voted_participations = if current_user
+                             ParticipationVote.where(
                                author: current_user,
-                               proposal: @proposals.pluck(:id)
-                             ).pluck(:decidim_proposal_id)
+                               participation: @participations.pluck(:id)
+                             ).pluck(:decidim_participation_id)
                            else
                              []
                            end
 
-        @proposals = paginate(@proposals)
-        @proposals = reorder(@proposals)
+        @participations = paginate(@participations)
+        @participations = reorder(@participations)
       end
 
       def show
-        @proposal = Proposal
+        @participation = Participation
                     .not_hidden
                     .where(feature: current_feature)
                     .find(params[:id])
@@ -44,51 +44,51 @@ module Decidim
       end
 
       def new
-        authorize! :create, Proposal
+        authorize! :create, Participation
 
-        @form = form(ProposalForm).from_params(
+        @form = form(ParticipationForm).from_params(
           attachment: form(AttachmentForm).from_params({})
         )
       end
 
       def create
-        authorize! :create, Proposal
+        authorize! :create, Participation
 
-        @form = form(ProposalForm).from_params(params)
+        @form = form(ParticipationForm).from_params(params)
 
-        CreateProposal.call(@form, current_user) do
-          on(:ok) do |proposal|
-            flash[:notice] = I18n.t("proposals.create.success", scope: "decidim")
-            redirect_to proposal_path(proposal)
+        CreateParticipation.call(@form, current_user) do
+          on(:ok) do |participation|
+            flash[:notice] = I18n.t("participations.create.success", scope: "decidim")
+            redirect_to participation_path(participation)
           end
 
           on(:invalid) do
-            flash.now[:alert] = I18n.t("proposals.create.error", scope: "decidim")
+            flash.now[:alert] = I18n.t("participations.create.error", scope: "decidim")
             render :new
           end
         end
       end
 
       def edit
-        @proposal = Proposal.not_hidden.where(feature: current_feature).find(params[:id])
-        authorize! :edit, @proposal
+        @participation = Participation.not_hidden.where(feature: current_feature).find(params[:id])
+        authorize! :edit, @participation
 
-        @form = form(ProposalForm).from_model(@proposal)
+        @form = form(ParticipationForm).from_model(@participation)
       end
 
       def update
-        @proposal = Proposal.not_hidden.where(feature: current_feature).find(params[:id])
-        authorize! :edit, @proposal
+        @participation = Participation.not_hidden.where(feature: current_feature).find(params[:id])
+        authorize! :edit, @participation
 
-        @form = form(ProposalForm).from_params(params)
-        UpdateProposal.call(@form, current_user, @proposal) do
-          on(:ok) do |proposal|
-            flash[:notice] = I18n.t("proposals.update.success", scope: "decidim")
-            redirect_to proposal_path(proposal)
+        @form = form(ParticipationForm).from_params(params)
+        UpdateParticipation.call(@form, current_user, @participation) do
+          on(:ok) do |participation|
+            flash[:notice] = I18n.t("participations.update.success", scope: "decidim")
+            redirect_to participation_path(participation)
           end
 
           on(:invalid) do
-            flash.now[:alert] = I18n.t("proposals.update.error", scope: "decidim")
+            flash.now[:alert] = I18n.t("participations.update.error", scope: "decidim")
             render :edit
           end
         end
@@ -108,12 +108,12 @@ module Decidim
         )
       end
 
-      def geocoded_proposals
-        @geocoded_proposals ||= search.results.not_hidden.select(&:geocoded?)
+      def geocoded_participations
+        @geocoded_participations ||= search.results.not_hidden.select(&:geocoded?)
       end
 
       def search_klass
-        ProposalSearch
+        ParticipationSearch
       end
 
       def default_filter_params
