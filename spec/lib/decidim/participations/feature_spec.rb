@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-describe "Proposals feature" do # rubocop:disable RSpec/DescribeClass
-  let!(:feature) { create(:proposal_feature) }
+describe "Participations feature" do # rubocop:disable RSpec/DescribeClass
+  let!(:feature) { create(:participation_feature) }
 
   describe "on destroy" do
-    context "when there are no proposals for the feature" do
+    context "when there are no participations for the feature" do
       it "destroys the feature" do
         expect do
           Decidim::Admin::DestroyFeature.call(feature)
@@ -16,9 +16,9 @@ describe "Proposals feature" do # rubocop:disable RSpec/DescribeClass
       end
     end
 
-    context "when there are proposals for the feature" do
+    context "when there are participations for the feature" do
       before do
-        create(:proposal, feature: feature)
+        create(:participation, feature: feature)
       end
 
       it "raises an error" do
@@ -41,21 +41,21 @@ describe "Proposals feature" do # rubocop:disable RSpec/DescribeClass
     end
 
     let(:stats) do
-      raw_stats.select { |stat| stat[0] == :proposals }
+      raw_stats.select { |stat| stat[0] == :participations }
     end
 
-    let!(:proposal) { create :proposal }
-    let(:feature) { proposal.feature }
-    let!(:hidden_proposal) { create :proposal, feature: feature }
-    let!(:moderation) { create :moderation, reportable: hidden_proposal, hidden_at: 1.day.ago }
+    let!(:participation) { create :participation }
+    let(:feature) { participation.feature }
+    let!(:hidden_participation) { create :participation, feature: feature }
+    let!(:moderation) { create :moderation, reportable: hidden_participation, hidden_at: 1.day.ago }
 
     let(:current_stat) { stats.find { |stat| stat[1] == stats_name } }
 
-    describe "proposals_count" do
-      let(:stats_name) { :proposals_count }
+    describe "participations_count" do
+      let(:stats_name) { :participations_count }
 
-      it "only counts not hidden proposals" do
-        expect(Decidim::Proposals::Proposal.where(feature: feature).count).to eq 2
+      it "only counts not hidden participations" do
+        expect(Decidim::Participations::Participation.where(feature: feature).count).to eq 2
         expect(subject).to eq 1
       end
     end
@@ -64,12 +64,12 @@ describe "Proposals feature" do # rubocop:disable RSpec/DescribeClass
       let(:stats_name) { :votes_count }
 
       before do
-        create_list :proposal_vote, 2, proposal: proposal
-        create_list :proposal_vote, 3, proposal: hidden_proposal
+        create_list :participation_vote, 2, participation: participation
+        create_list :participation_vote, 3, participation: hidden_participation
       end
 
-      it "counts the votes from visible proposals" do
-        expect(Decidim::Proposals::ProposalVote.count).to eq 5
+      it "counts the votes from visible participations" do
+        expect(Decidim::Participations::ParticipationVote.count).to eq 5
         expect(subject).to eq 2
       end
     end
@@ -78,11 +78,11 @@ describe "Proposals feature" do # rubocop:disable RSpec/DescribeClass
       let(:stats_name) { :comments_count }
 
       before do
-        create_list :comment, 2, commentable: proposal
-        create_list :comment, 3, commentable: hidden_proposal
+        create_list :comment, 2, commentable: participation
+        create_list :comment, 3, commentable: hidden_participation
       end
 
-      it "counts the comments from visible proposals" do
+      it "counts the comments from visible participations" do
         expect(Decidim::Comments::Comment.count).to eq 5
         expect(subject).to eq 2
       end

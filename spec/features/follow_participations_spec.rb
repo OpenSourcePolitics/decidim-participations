@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-describe "Follow proposals", type: :feature do
-  let(:manifest_name) { "proposals" }
+describe "Follow participations", type: :feature do
+  let(:manifest_name) { "participations" }
 
   let!(:followable) do
-    create(:proposal, feature: feature)
+    create(:participation, feature: feature)
   end
 
   include_examples "follows"

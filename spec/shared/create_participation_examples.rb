@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-shared_examples "create a proposal" do |with_author|
-  let(:feature) { create(:proposal_feature) }
+shared_examples "create a participation" do |with_author|
+  let(:feature) { create(:participation_feature) }
   let(:organization) { feature.organization }
   let(:form) do
     form_klass.from_params(
@@ -29,8 +29,8 @@ shared_examples "create a proposal" do |with_author|
   describe "call" do
     let(:form_params) do
       {
-        title: "A reasonable proposal title",
-        body: "A reasonable proposal body",
+        title: "A reasonable participation title",
+        body: "A reasonable participation body",
         address: address,
         has_address: has_address,
         attachment: attachment_params,
@@ -55,10 +55,10 @@ shared_examples "create a proposal" do |with_author|
         expect { command.call }.to broadcast(:invalid)
       end
 
-      it "doesn't create a proposal" do
+      it "doesn't create a participation" do
         expect do
           command.call
-        end.not_to change { Decidim::Proposals::Proposal.count }
+        end.not_to change { Decidim::Participations::Participation.count }
       end
     end
 
@@ -67,10 +67,10 @@ shared_examples "create a proposal" do |with_author|
         expect { command.call }.to broadcast(:ok)
       end
 
-      it "creates a new proposal" do
+      it "creates a new participation" do
         expect do
           command.call
-        end.to change { Decidim::Proposals::Proposal.count }.by(1)
+        end.to change { Decidim::Participations::Participation.count }.by(1)
       end
 
       if with_author
@@ -79,18 +79,18 @@ shared_examples "create a proposal" do |with_author|
 
           it "sets the author" do
             command.call
-            proposal = Decidim::Proposals::Proposal.last
+            participation = Decidim::Participations::Participation.last
 
-            expect(proposal.author).to eq(author)
-            expect(proposal.user_group).to eq(nil)
+            expect(participation.author).to eq(author)
+            expect(participation.user_group).to eq(nil)
           end
 
-          context "with a proposal limit" do
+          context "with a participation limit" do
             let(:feature) do
-              create(:proposal_feature, settings: { "proposal_limit" => 2 })
+              create(:participation_feature, settings: { "participation_limit" => 2 })
             end
 
-            it "checks the author doesn't exceed the amount of proposals" do
+            it "checks the author doesn't exceed the amount of participations" do
               expect { command.call }.to broadcast(:ok)
               expect { command.call }.to broadcast(:ok)
               expect { command.call }.to broadcast(:invalid)
@@ -101,22 +101,22 @@ shared_examples "create a proposal" do |with_author|
         context "with a user group" do
           it "sets the user group" do
             command.call
-            proposal = Decidim::Proposals::Proposal.last
+            participation = Decidim::Participations::Participation.last
 
-            expect(proposal.author).to eq(author)
-            expect(proposal.user_group).to eq(user_group)
+            expect(participation.author).to eq(author)
+            expect(participation.user_group).to eq(user_group)
           end
 
-          context "with a proposal limit" do
+          context "with a participation limit" do
             let(:feature) do
-              create(:proposal_feature, settings: { "proposal_limit" => 2 })
+              create(:participation_feature, settings: { "participation_limit" => 2 })
             end
 
             before do
-              create_list(:proposal, 2, feature: feature, author: author)
+              create_list(:participation, 2, feature: feature, author: author)
             end
 
-            it "checks the user group doesn't exceed the amount of proposals independently of the author" do
+            it "checks the user group doesn't exceed the amount of participations independently of the author" do
               expect { command.call }.to broadcast(:ok)
               expect { command.call }.to broadcast(:ok)
               expect { command.call }.to broadcast(:invalid)
@@ -126,7 +126,7 @@ shared_examples "create a proposal" do |with_author|
       end
 
       context "when geocoding is enabled" do
-        let(:feature) { create(:proposal_feature, :with_geocoding_enabled) }
+        let(:feature) { create(:participation_feature, :with_geocoding_enabled) }
 
         context "when the has address checkbox is checked" do
           let(:has_address) { true }
@@ -143,17 +143,17 @@ shared_examples "create a proposal" do |with_author|
 
             it "sets the latitude and longitude" do
               command.call
-              proposal = Decidim::Proposals::Proposal.last
+              participation = Decidim::Participations::Participation.last
 
-              expect(proposal.latitude).to eq(latitude)
-              expect(proposal.longitude).to eq(longitude)
+              expect(participation.latitude).to eq(latitude)
+              expect(participation.longitude).to eq(longitude)
             end
           end
         end
       end
 
       context "when attachments are allowed", processing_uploads_for: Decidim::AttachmentUploader do
-        let(:feature) { create(:proposal_feature, :with_attachments_allowed) }
+        let(:feature) { create(:participation_feature, :with_attachments_allowed) }
         let(:attachment_params) do
           {
             title: "My attachment",
@@ -161,13 +161,13 @@ shared_examples "create a proposal" do |with_author|
           }
         end
 
-        it "creates an atachment for the proposal" do
+        it "creates an atachment for the participation" do
           expect do
             command.call
           end.to change { Decidim::Attachment.count }.by(1)
-          last_proposal = Decidim::Proposals::Proposal.last
+          last_participation = Decidim::Participations::Participation.last
           last_attachment = Decidim::Attachment.last
-          expect(last_attachment.attached_to).to eq(last_proposal)
+          expect(last_attachment.attached_to).to eq(last_participation)
         end
 
         context "when attachment is left blank" do

@@ -3,19 +3,19 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
+  module Participations
     module Admin
-      describe AnswerProposal do
+      describe AnswerParticipation do
         describe "call" do
-          let(:proposal) { create(:proposal) }
-          let(:form) { ProposalAnswerForm.from_params(form_params) }
+          let(:participation) { create(:participation) }
+          let(:form) { ParticipationAnswerForm.from_params(form_params) }
           let(:form_params) do
             {
               state: "rejected", answer: { en: "Foo" }
             }
           end
 
-          let(:command) { described_class.new(form, proposal) }
+          let(:command) { described_class.new(form, participation) }
 
           describe "when the form is not valid" do
             before do
@@ -26,8 +26,8 @@ module Decidim
               expect { command.call }.to broadcast(:invalid)
             end
 
-            it "doesn't update the proposal" do
-              expect(proposal).not_to receive(:update_attributes!)
+            it "doesn't update the participation" do
+              expect(participation).not_to receive(:update_attributes!)
               command.call
             end
           end
@@ -41,10 +41,10 @@ module Decidim
               expect { command.call }.to broadcast(:ok)
             end
 
-            it "updates the proposal" do
+            it "updates the participation" do
               command.call
 
-              expect(proposal.reload).to be_answered
+              expect(participation.reload).to be_answered
             end
           end
         end

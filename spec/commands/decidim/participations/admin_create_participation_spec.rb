@@ -3,12 +3,12 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
+  module Participations
     module Admin
-      describe CreateProposal do
-        let(:form_klass) { ProposalForm }
+      describe CreateParticipation do
+        let(:form_klass) { ParticipationForm }
 
-        it_behaves_like "create a proposal", false
+        it_behaves_like "create a participation", false
       end
     end
   end

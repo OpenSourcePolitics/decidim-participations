@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-shared_examples "a proposal form" do
+shared_examples "a participation form" do
   subject { form }
 
   let(:organization) { create(:organization, available_locales: [:en]) }
   let(:participatory_space) { create(:participatory_process, :with_steps, organization: organization) }
-  let(:feature) { create(:proposal_feature, participatory_space: participatory_space) }
+  let(:feature) { create(:participation_feature, participatory_space: participatory_space) }
   let(:title) { "Oriol for president!" }
   let(:body) { "Everything would be better" }
   let(:author) { create(:user, organization: organization) }
@@ -80,7 +80,7 @@ shared_examples "a proposal form" do
   end
 
   context "when geocoding is enabled" do
-    let(:feature) { create(:proposal_feature, :with_geocoding_enabled, participatory_space: participatory_space) }
+    let(:feature) { create(:participation_feature, :with_geocoding_enabled, participatory_space: participatory_space) }
 
     context "when the has address checkbox is checked" do
       let(:has_address) { true }
@@ -169,9 +169,9 @@ shared_examples "a proposal form" do
   end
 
   it "properly maps category id from model" do
-    proposal = create(:proposal, feature: feature, category: category)
+    participation = create(:participation, feature: feature, category: category)
 
-    expect(described_class.from_model(proposal).category_id).to eq(category_id)
+    expect(described_class.from_model(participation).category_id).to eq(category_id)
   end
 
   context "when the attachment is present" do

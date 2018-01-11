@@ -3,10 +3,10 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
+  module Participations
     module Admin
-      describe ProposalForm do
-        it_behaves_like "a proposal form"
+      describe ParticipationForm do
+        it_behaves_like "a participation form"
       end
     end
   end

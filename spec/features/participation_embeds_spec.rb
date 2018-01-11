@@ -2,20 +2,20 @@
 
 require "spec_helper"
 
-describe "Proposal embeds", type: :feature do
+describe "Participation embeds", type: :feature do
   include_context "with a feature"
-  let(:manifest_name) { "proposals" }
+  let(:manifest_name) { "participations" }
 
-  let!(:proposal) { create(:proposal, feature: feature) }
+  let!(:participation) { create(:participation, feature: feature) }
 
-  context "when visiting the embed page for a proposal" do
+  context "when visiting the embed page for a participation" do
     before do
-      visit resource_locator(proposal).path
+      visit resource_locator(participation).path
       visit "#{current_path}/embed"
     end
 
     it "renders the page correctly" do
-      expect(page).to have_content(proposal.title)
+      expect(page).to have_content(participation.title)
       expect(page).to have_content(organization.name)
     end
 

@@ -3,19 +3,19 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
+  module Participations
     module Admin
-      describe ProposalAnswersController, type: :controller do
-        routes { Decidim::Proposals::AdminEngine.routes }
+      describe ParticipationAnswersController, type: :controller do
+        routes { Decidim::Participations::AdminEngine.routes }
 
-        let(:feature) { proposal.feature }
-        let(:proposal) { create(:proposal) }
+        let(:feature) { participation.feature }
+        let(:participation) { create(:participation) }
         let(:user) { create(:user, :confirmed, :admin, organization: feature.organization) }
 
         let(:params) do
           {
-            id: proposal.id,
-            proposal_id: proposal.id,
+            id: participation.id,
+            participation_id: participation.id,
             feature_id: feature.id,
             participatory_process_slug: feature.participatory_space.slug,
             state: "rejected"

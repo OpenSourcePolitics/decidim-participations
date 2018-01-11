@@ -3,9 +3,9 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
-    describe ProposalsController, type: :controller do
-      routes { Decidim::Proposals::Engine.routes }
+  module Participations
+    describe ParticipationsController, type: :controller do
+      routes { Decidim::Participations::Engine.routes }
 
       let(:user) { create(:user, :confirmed, organization: feature.organization) }
 
@@ -24,10 +24,10 @@ module Decidim
 
       describe "POST create" do
         context "when creation is not enabled" do
-          let(:feature) { create(:proposal_feature) }
+          let(:feature) { create(:participation_feature) }
 
           it "raises an error" do
-            expect(CreateProposal).not_to receive(:call)
+            expect(CreateParticipation).not_to receive(:call)
 
             post :create, params: params
 
@@ -37,10 +37,10 @@ module Decidim
         end
 
         context "when creation is enabled" do
-          let(:feature) { create(:proposal_feature, :with_creation_enabled) }
+          let(:feature) { create(:participation_feature, :with_creation_enabled) }
 
-          it "creates a proposal" do
-            expect(CreateProposal).to receive(:call)
+          it "creates a participation" do
+            expect(CreateParticipation).to receive(:call)
 
             post :create, params: params
           end

@@ -2,16 +2,16 @@
 
 require "spec_helper"
 
-describe "Process admin manages proposals", type: :feature do
-  let(:manifest_name) { "proposals" }
-  let!(:proposal) { create :proposal, feature: current_feature }
-  let!(:reportables) { create_list(:proposal, 3, feature: current_feature) }
+describe "Process admin manages participations", type: :feature do
+  let(:manifest_name) { "participations" }
+  let!(:participation) { create :participation, feature: current_feature }
+  let!(:reportables) { create_list(:participation, 3, feature: current_feature) }
 
   include_context "when managing a feature as a process admin"
 
-  it_behaves_like "manage proposals"
+  it_behaves_like "manage participations"
   it_behaves_like "manage moderations"
-  it_behaves_like "export proposals"
+  it_behaves_like "export participations"
   it_behaves_like "manage announcements"
-  it_behaves_like "manage proposals help texts"
+  it_behaves_like "manage participations help texts"
 end

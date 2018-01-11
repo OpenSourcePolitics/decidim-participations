@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-describe Decidim::Proposals::Abilities::CurrentUserAbility do
+describe Decidim::Participations::Abilities::CurrentUserAbility do
   subject { described_class.new(user, context) }
 
   let(:user) { build(:user) }
-  let(:proposal_feature) { create :proposal_feature }
+  let(:participation_feature) { create :participation_feature }
   let(:extra_context) do
     {
       current_settings: current_settings,
@@ -15,7 +15,7 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
   end
   let(:context) do
     {
-      current_feature: proposal_feature
+      current_feature: participation_feature
     }.merge(extra_context)
   end
   let(:settings) do
@@ -27,13 +27,13 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
   end
   let(:extra_settings) { {} }
   let(:current_settings) { double(settings.merge(extra_settings)) }
-  let(:feature_settings) { double(proposal_edit_before_minutes: 5) }
+  let(:feature_settings) { double(participation_edit_before_minutes: 5) }
 
-  it { is_expected.to be_able_to(:report, Decidim::Proposals::Proposal) }
+  it { is_expected.to be_able_to(:report, Decidim::Participations::Participation) }
 
   describe "voting" do
     context "when voting is disabled" do
-      let(:proposal) { build :proposal, feature: proposal_feature }
+      let(:participation) { build :participation, feature: participation_feature }
       let(:extra_settings) do
         {
           votes_enabled?: false,
@@ -41,7 +41,7 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
         }
       end
 
-      it { is_expected.not_to be_able_to(:unvote, proposal) }
+      it { is_expected.not_to be_able_to(:unvote, participation) }
     end
 
     context "when user is authorized" do
@@ -52,13 +52,13 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
         }
       end
 
-      it { is_expected.to be_able_to(:unvote, Decidim::Proposals::Proposal) }
+      it { is_expected.to be_able_to(:unvote, Decidim::Participations::Participation) }
     end
   end
 
   describe "unvoting" do
     context "when voting is disabled" do
-      let(:proposal) { build :proposal, feature: proposal_feature }
+      let(:participation) { build :participation, feature: participation_feature }
       let(:extra_settings) do
         {
           votes_enabled?: false,
@@ -66,7 +66,7 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
         }
       end
 
-      it { is_expected.not_to be_able_to(:unvote, proposal) }
+      it { is_expected.not_to be_able_to(:unvote, participation) }
     end
 
     context "when user is authorized" do
@@ -77,11 +77,11 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
         }
       end
 
-      it { is_expected.to be_able_to(:unvote, Decidim::Proposals::Proposal) }
+      it { is_expected.to be_able_to(:unvote, Decidim::Participations::Participation) }
     end
   end
 
-  describe "proposal creation" do
+  describe "participation creation" do
     context "when creation is disabled" do
       let(:extra_settings) do
         {
@@ -89,7 +89,7 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
         }
       end
 
-      it { is_expected.not_to be_able_to(:create, Decidim::Proposals::Proposal) }
+      it { is_expected.not_to be_able_to(:create, Decidim::Participations::Participation) }
     end
 
     context "when user is authorized" do
@@ -99,27 +99,27 @@ describe Decidim::Proposals::Abilities::CurrentUserAbility do
         }
       end
 
-      it { is_expected.to be_able_to(:create, Decidim::Proposals::Proposal) }
+      it { is_expected.to be_able_to(:create, Decidim::Participations::Participation) }
     end
   end
 
-  describe "proposal edition" do
-    let(:proposal) { build :proposal, author: user, created_at: Time.current, feature: proposal_feature }
+  describe "participation edition" do
+    let(:participation) { build :participation, author: user, created_at: Time.current, feature: participation_feature }
 
-    context "when proposal is editable" do
+    context "when participation is editable" do
       before do
-        allow(proposal).to receive(:editable_by?).and_return(true)
+        allow(participation).to receive(:editable_by?).and_return(true)
       end
 
-      it { is_expected.to be_able_to(:edit, proposal) }
+      it { is_expected.to be_able_to(:edit, participation) }
     end
 
-    context "when proposal is not editable" do
+    context "when participation is not editable" do
       before do
-        allow(proposal).to receive(:editable_by?).and_return(false)
+        allow(participation).to receive(:editable_by?).and_return(false)
       end
 
-      it { is_expected.not_to be_able_to(:edit, proposal) }
+      it { is_expected.not_to be_able_to(:edit, participation) }
     end
   end
 end

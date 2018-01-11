@@ -3,22 +3,22 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
-    describe UnvoteProposal do
+  module Participations
+    describe UnvoteParticipation do
       describe "call" do
-        let(:proposal) { create(:proposal) }
-        let(:current_user) { create(:user, organization: proposal.feature.organization) }
-        let!(:proposal_vote) { create(:proposal_vote, author: current_user, proposal: proposal) }
-        let(:command) { described_class.new(proposal, current_user) }
+        let(:participation) { create(:participation) }
+        let(:current_user) { create(:user, organization: participation.feature.organization) }
+        let!(:participation_vote) { create(:participation_vote, author: current_user, participation: participation) }
+        let(:command) { described_class.new(participation, current_user) }
 
         it "broadcasts ok" do
           expect { command.call }.to broadcast(:ok)
         end
 
-        it "deletes the proposal vote for that user" do
+        it "deletes the participation vote for that user" do
           expect do
             command.call
-          end.to change { ProposalVote.count }.by(-1)
+          end.to change { ParticipationVote.count }.by(-1)
         end
       end
     end

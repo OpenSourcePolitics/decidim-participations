@@ -3,18 +3,18 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
-    describe CreateProposal do
-      let(:form_klass) { ProposalForm }
+  module Participations
+    describe CreateParticipation do
+      let(:form_klass) { ParticipationForm }
 
-      it_behaves_like "create a proposal", true
+      it_behaves_like "create a participation", true
 
       describe "events" do
         subject do
           described_class.new(form, author)
         end
 
-        let(:feature) { create(:proposal_feature) }
+        let(:feature) { create(:participation_feature) }
         let(:organization) { feature.organization }
         let(:form) do
           form_klass.from_params(
@@ -26,8 +26,8 @@ module Decidim
         end
         let(:form_params) do
           {
-            title: "A reasonable proposal title",
-            body: "A reasonable proposal body",
+            title: "A reasonable participation title",
+            body: "A reasonable participation body",
             address: nil,
             has_address: false,
             attachment: nil,
@@ -42,9 +42,9 @@ module Decidim
           expect(Decidim::EventsManager)
             .to receive(:publish)
             .with(
-              event: "decidim.events.proposals.proposal_created",
-              event_class: Decidim::Proposals::CreateProposalEvent,
-              resource: kind_of(Decidim::Proposals::Proposal),
+              event: "decidim.events.participations.participation_created",
+              event_class: Decidim::Participations::CreateParticipationEvent,
+              resource: kind_of(Decidim::Participations::Participation),
               recipient_ids: [follower.id]
             )
 

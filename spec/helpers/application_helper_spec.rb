@@ -3,14 +3,14 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
+  module Participations
     describe ApplicationHelper do
-      describe "humanize_proposal_state" do
-        subject { helper.humanize_proposal_state(state) }
+      describe "humanize_participation_state" do
+        subject { helper.humanize_participation_state(state) }
 
         let(:helper) do
           Class.new.tap do |v|
-            v.extend(Decidim::Proposals::ApplicationHelper)
+            v.extend(Decidim::Participations::ApplicationHelper)
           end
         end
 

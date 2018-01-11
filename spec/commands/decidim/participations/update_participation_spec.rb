@@ -3,11 +3,11 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
-    describe UpdateProposal do
-      let(:form_klass) { ProposalForm }
+  module Participations
+    describe UpdateParticipation do
+      let(:form_klass) { ParticipationForm }
 
-      let(:feature) { create(:proposal_feature) }
+      let(:feature) { create(:participation_feature) }
       let(:organization) { feature.organization }
       let(:form) do
         form_klass.from_params(
@@ -18,7 +18,7 @@ module Decidim
         )
       end
 
-      let!(:proposal) { create :proposal, feature: feature, author: author }
+      let!(:participation) { create :participation, feature: feature, author: author }
       let(:author) { create(:user, organization: organization) }
 
       let(:user_group) do
@@ -33,8 +33,8 @@ module Decidim
       describe "call" do
         let(:form_params) do
           {
-            title: "A reasonable proposal title",
-            body: "A reasonable proposal body",
+            title: "A reasonable participation title",
+            body: "A reasonable participation body",
             address: address,
             has_address: has_address,
             user_group_id: user_group.try(:id)
@@ -42,7 +42,7 @@ module Decidim
         end
 
         let(:command) do
-          described_class.new(form, author, proposal)
+          described_class.new(form, author, participation)
         end
 
         describe "when the form is not valid" do
@@ -54,32 +54,32 @@ module Decidim
             expect { command.call }.to broadcast(:invalid)
           end
 
-          it "doesn't update the proposal" do
+          it "doesn't update the participation" do
             expect do
               command.call
-            end.not_to change { proposal.title }
+            end.not_to change { participation.title }
           end
         end
 
-        describe "when the proposal is not editable by the user" do
+        describe "when the participation is not editable by the user" do
           before do
-            expect(proposal).to receive(:editable_by?).and_return(false)
+            expect(participation).to receive(:editable_by?).and_return(false)
           end
 
           it "broadcasts invalid" do
             expect { command.call }.to broadcast(:invalid)
           end
 
-          it "doesn't update the proposal" do
+          it "doesn't update the participation" do
             expect do
               command.call
-            end.not_to change { proposal.title }
+            end.not_to change { participation.title }
           end
         end
 
-        context "when the author changinng the author to one that has reached the proposal limit" do
-          let!(:other_proposal) { create :proposal, feature: feature, author: author, user_group: user_group }
-          let(:feature) { create(:proposal_feature, :with_proposal_limit) }
+        context "when the author changinng the author to one that has reached the participation limit" do
+          let!(:other_participation) { create :participation, feature: feature, author: author, user_group: user_group }
+          let(:feature) { create(:participation_feature, :with_participation_limit) }
 
           it "broadcasts invalid" do
             expect { command.call }.to broadcast(:invalid)
@@ -91,10 +91,10 @@ module Decidim
             expect { command.call }.to broadcast(:ok)
           end
 
-          it "updates the proposal" do
+          it "updates the participation" do
             expect do
               command.call
-            end.to change { proposal.title }
+            end.to change { participation.title }
           end
 
           context "with an author" do
@@ -102,25 +102,25 @@ module Decidim
 
             it "sets the author" do
               command.call
-              proposal = Decidim::Proposals::Proposal.last
+              participation = Decidim::Participations::Participation.last
 
-              expect(proposal.author).to eq(author)
-              expect(proposal.user_group).to eq(nil)
+              expect(participation.author).to eq(author)
+              expect(participation.user_group).to eq(nil)
             end
           end
 
           context "with a user group" do
             it "sets the user group" do
               command.call
-              proposal = Decidim::Proposals::Proposal.last
+              participation = Decidim::Participations::Participation.last
 
-              expect(proposal.author).to eq(author)
-              expect(proposal.user_group).to eq(user_group)
+              expect(participation.author).to eq(author)
+              expect(participation.user_group).to eq(user_group)
             end
           end
 
           context "when geocoding is enabled" do
-            let(:feature) { create(:proposal_feature, :with_geocoding_enabled) }
+            let(:feature) { create(:participation_feature, :with_geocoding_enabled) }
 
             context "when the has address checkbox is checked" do
               let(:has_address) { true }
@@ -137,10 +137,10 @@ module Decidim
 
                 it "sets the latitude and longitude" do
                   command.call
-                  proposal = Decidim::Proposals::Proposal.last
+                  participation = Decidim::Participations::Participation.last
 
-                  expect(proposal.latitude).to eq(latitude)
-                  expect(proposal.longitude).to eq(longitude)
+                  expect(participation.latitude).to eq(latitude)
+                  expect(participation.longitude).to eq(longitude)
                 end
               end
             end

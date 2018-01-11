@@ -3,37 +3,37 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
-    describe ProposalVotesHelper do
+  module Participations
+    describe ParticipationVotesHelper do
       let(:organization) { create(:organization) }
       let(:limit) { 10 }
       let(:votes_enabled) { true }
-      let(:proposal_feature) { create(:proposal_feature, organization: organization) }
+      let(:participation_feature) { create(:participation_feature, organization: organization) }
       let(:user) { create(:user, organization: organization) }
 
       before do
         allow(helper).to receive(:current_user).and_return(user)
-        allow(helper).to receive(:current_feature).and_return(proposal_feature)
+        allow(helper).to receive(:current_feature).and_return(participation_feature)
         allow(helper).to receive(:current_settings).and_return(double(votes_enabled?: votes_enabled))
         allow(helper).to receive(:feature_settings).and_return(double(vote_limit: limit))
       end
 
       describe "#vote_button_classes" do
-        it "returns small buttons classes from proposals list" do
+        it "returns small buttons classes from participations list" do
           expect(helper.vote_button_classes(true)).to eq("small")
         end
 
-        it "returns expanded buttons classes if it's not from proposals list'" do
+        it "returns expanded buttons classes if it's not from participations list'" do
           expect(helper.vote_button_classes(false)).to eq("expanded button--sc")
         end
       end
 
       describe "#votes_count_classes" do
-        it "returns small count classes from proposals list" do
+        it "returns small count classes from participations list" do
           expect(helper.votes_count_classes(true)).to eq(number: "card__support__number", label: "")
         end
 
-        it "returns expanded count classes if it's not from proposals list'" do
+        it "returns expanded count classes if it's not from participations list'" do
           expect(helper.votes_count_classes(false)).to eq(number: "extra__suport-number", label: "extra__suport-text")
         end
       end
@@ -56,8 +56,8 @@ module Decidim
 
       describe "#remaining_votes_count_for" do
         it "returns the remaining votes for a user based on the feature votes limit" do
-          proposal = create(:proposal, feature: proposal_feature)
-          create(:proposal_vote, author: user, proposal: proposal)
+          participation = create(:participation, feature: participation_feature)
+          create(:participation_vote, author: user, participation: participation)
 
           expect(helper.remaining_votes_count_for(user)).to eq(9)
         end

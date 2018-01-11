@@ -2,12 +2,12 @@
 
 require "spec_helper"
 
-describe "Vote Proposal", type: :feature do
+describe "Vote Participation", type: :feature do
   include_context "with a feature"
-  let(:manifest_name) { "proposals" }
+  let(:manifest_name) { "participations" }
 
-  let!(:proposals) { create_list(:proposal, 3, feature: feature) }
-  let!(:proposal) { Decidim::Proposals::Proposal.where(feature: feature).first }
+  let!(:participations) { create_list(:participation, 3, feature: feature) }
+  let!(:participation) { Decidim::Participations::Participation.where(feature: feature).first }
   let!(:user) { create :user, :confirmed, organization: organization }
 
   def expect_page_not_to_include_votes
@@ -17,11 +17,11 @@ describe "Vote Proposal", type: :feature do
 
   context "when votes are not enabled" do
     context "when the user is not logged in" do
-      it "doesn't show the vote proposal button and counts" do
+      it "doesn't show the vote participation button and counts" do
         visit_feature
         expect_page_not_to_include_votes
 
-        click_link proposal.title
+        click_link participation.title
         expect_page_not_to_include_votes
       end
     end
@@ -31,11 +31,11 @@ describe "Vote Proposal", type: :feature do
         login_as user, scope: :user
       end
 
-      it "doesn't show the vote proposal button and counts" do
+      it "doesn't show the vote participation button and counts" do
         visit_feature
         expect_page_not_to_include_votes
 
-        click_link proposal.title
+        click_link participation.title
         expect_page_not_to_include_votes
       end
     end
@@ -43,7 +43,7 @@ describe "Vote Proposal", type: :feature do
 
   context "when votes are blocked" do
     let!(:feature) do
-      create(:proposal_feature,
+      create(:participation_feature,
              :with_votes_blocked,
              manifest: manifest,
              participatory_space: participatory_process)
@@ -57,7 +57,7 @@ describe "Vote Proposal", type: :feature do
 
   context "when votes are enabled" do
     let!(:feature) do
-      create(:proposal_feature,
+      create(:participation_feature,
              :with_votes_enabled,
              manifest: manifest,
              participatory_space: participatory_process)
@@ -80,47 +80,47 @@ describe "Vote Proposal", type: :feature do
         login_as user, scope: :user
       end
 
-      context "when the proposal is not voted yet" do
+      context "when the participation is not voted yet" do
         before do
           visit_feature
         end
 
-        it "is able to vote the proposal" do
-          within "#proposal-#{proposal.id}-vote-button" do
+        it "is able to vote the participation" do
+          within "#participation-#{participation.id}-vote-button" do
             click_button "Vote"
             expect(page).to have_button("Already voted")
           end
 
-          within "#proposal-#{proposal.id}-votes-count" do
+          within "#participation-#{participation.id}-votes-count" do
             expect(page).to have_content("1 VOTE")
           end
         end
       end
 
-      context "when the proposal is already voted" do
+      context "when the participation is already voted" do
         before do
-          create(:proposal_vote, proposal: proposal, author: user)
+          create(:participation_vote, participation: participation, author: user)
           visit_feature
         end
 
         it "is not able to vote it again" do
-          within "#proposal-#{proposal.id}-vote-button" do
+          within "#participation-#{participation.id}-vote-button" do
             expect(page).to have_button("Already voted")
             expect(page).to have_no_button("Vote")
           end
 
-          within "#proposal-#{proposal.id}-votes-count" do
+          within "#participation-#{participation.id}-votes-count" do
             expect(page).to have_content("1 VOTE")
           end
         end
 
         it "is able to undo the vote" do
-          within "#proposal-#{proposal.id}-vote-button" do
+          within "#participation-#{participation.id}-vote-button" do
             click_button "Already voted"
             expect(page).to have_button("Vote")
           end
 
-          within "#proposal-#{proposal.id}-votes-count" do
+          within "#participation-#{participation.id}-votes-count" do
             expect(page).to have_content("0 VOTES")
           end
         end
@@ -130,7 +130,7 @@ describe "Vote Proposal", type: :feature do
         let(:vote_limit) { 10 }
 
         let!(:feature) do
-          create(:proposal_feature,
+          create(:participation_feature,
                  :with_votes_enabled,
                  :with_vote_limit,
                  vote_limit: vote_limit,
@@ -141,7 +141,7 @@ describe "Vote Proposal", type: :feature do
         describe "vote counter" do
           context "when votes are blocked" do
             let!(:feature) do
-              create(:proposal_feature,
+              create(:participation_feature,
                      :with_votes_blocked,
                      :with_vote_limit,
                      vote_limit: vote_limit,
@@ -159,7 +159,7 @@ describe "Vote Proposal", type: :feature do
 
           context "when votes are enabled" do
             let!(:feature) do
-              create(:proposal_feature,
+              create(:participation_feature,
                      :with_votes_enabled,
                      :with_vote_limit,
                      vote_limit: vote_limit,
@@ -176,13 +176,13 @@ describe "Vote Proposal", type: :feature do
           end
         end
 
-        context "when the proposal is not voted yet" do
+        context "when the participation is not voted yet" do
           before do
             visit_feature
           end
 
           it "updates the remaining votes counter" do
-            within "#proposal-#{proposal.id}-vote-button" do
+            within "#participation-#{participation.id}-vote-button" do
               click_button "Vote"
               expect(page).to have_button("Already voted")
             end
@@ -191,7 +191,7 @@ describe "Vote Proposal", type: :feature do
           end
         end
 
-        context "when the proposal is not voted yet but the user isn't authorized" do
+        context "when the participation is not voted yet but the user isn't authorized" do
           before do
             permissions = {
               vote: {
@@ -204,7 +204,7 @@ describe "Vote Proposal", type: :feature do
           end
 
           it "shows a modal dialog" do
-            within "#proposal-#{proposal.id}-vote-button" do
+            within "#participation-#{participation.id}-vote-button" do
               click_button "Vote"
             end
 
@@ -212,26 +212,26 @@ describe "Vote Proposal", type: :feature do
           end
         end
 
-        context "when the proposal is already voted" do
+        context "when the participation is already voted" do
           before do
-            create(:proposal_vote, proposal: proposal, author: user)
+            create(:participation_vote, participation: participation, author: user)
             visit_feature
           end
 
           it "is not able to vote it again" do
-            within "#proposal-#{proposal.id}-vote-button" do
+            within "#participation-#{participation.id}-vote-button" do
               expect(page).to have_button("Already voted")
               expect(page).to have_no_button("Vote")
             end
           end
 
           it "is able to undo the vote" do
-            within "#proposal-#{proposal.id}-vote-button" do
+            within "#participation-#{participation.id}-vote-button" do
               click_button "Already voted"
               expect(page).to have_button("Vote")
             end
 
-            within "#proposal-#{proposal.id}-votes-count" do
+            within "#participation-#{participation.id}-votes-count" do
               expect(page).to have_content("0 VOTES")
             end
 
@@ -243,17 +243,17 @@ describe "Vote Proposal", type: :feature do
           let(:vote_limit) { 1 }
 
           before do
-            create(:proposal_vote, proposal: proposal, author: user)
+            create(:participation_vote, participation: participation, author: user)
             visit_feature
           end
 
-          it "is not able to vote other proposals" do
+          it "is not able to vote other participations" do
             expect(page).to have_css(".card__button[disabled]", count: 2)
           end
 
           context "when votes are blocked" do
             let!(:feature) do
-              create(:proposal_feature,
+              create(:participation_feature,
                      :with_votes_blocked,
                      manifest: manifest,
                      participatory_space: participatory_process)
@@ -268,27 +268,27 @@ describe "Vote Proposal", type: :feature do
       end
     end
 
-    context "when the proposal is rejected" do
-      let!(:rejected_proposal) { create(:proposal, :rejected, feature: feature) }
+    context "when the participation is rejected" do
+      let!(:rejected_participation) { create(:participation, :rejected, feature: feature) }
 
       before do
-        feature.update_attributes!(settings: { proposal_answering_enabled: true })
+        feature.update_attributes!(settings: { participation_answering_enabled: true })
       end
 
       it "cannot be voted" do
         visit_feature
-        expect(page).not_to have_selector("#proposal-#{rejected_proposal.id}-vote-button")
+        expect(page).not_to have_selector("#participation-#{rejected_participation.id}-vote-button")
 
-        click_link rejected_proposal.title
-        expect(page).not_to have_selector("#proposal-#{rejected_proposal.id}-vote-button")
+        click_link rejected_participation.title
+        expect(page).not_to have_selector("#participation-#{rejected_participation.id}-vote-button")
       end
     end
 
-    context "when proposals have a voting limit" do
+    context "when participations have a voting limit" do
       let!(:feature) do
-        create(:proposal_feature,
+        create(:participation_feature,
                :with_votes_enabled,
-               :with_maximum_votes_per_proposal,
+               :with_maximum_votes_per_participation,
                manifest: manifest,
                participatory_space: participatory_process)
       end
@@ -297,25 +297,25 @@ describe "Vote Proposal", type: :feature do
         login_as user, scope: :user
       end
 
-      it "doesn't allow users to vote to a proposal that's reached the limit" do
-        create(:proposal_vote, proposal: proposal)
+      it "doesn't allow users to vote to a participation that's reached the limit" do
+        create(:participation_vote, participation: participation)
         visit_feature
 
-        proposal_element = page.find("article", text: proposal.reference)
+        participation_element = page.find("article", text: participation.reference)
 
-        within proposal_element do
+        within participation_element do
           within ".card__support", match: :first do
             expect(page).to have_content("Vote limit reached")
           end
         end
       end
 
-      it "allows users to vote on proposals under the limit" do
+      it "allows users to vote on participations under the limit" do
         visit_feature
 
-        proposal_element = page.find("article", text: proposal.reference)
+        participation_element = page.find("article", text: participation.reference)
 
-        within proposal_element do
+        within participation_element do
           within ".card__support", match: :first do
             click_button "Vote"
             expect(page).to have_content("Already voted")

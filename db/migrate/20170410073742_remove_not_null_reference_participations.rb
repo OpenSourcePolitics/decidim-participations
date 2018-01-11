@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class RemoveNotNullReferenceProposals < ActiveRecord::Migration[5.0]
+class RemoveNotNullReferenceParticipations < ActiveRecord::Migration[5.0]
   def change
-    change_column_null :decidim_proposals_proposals, :reference, true
+    change_column_null :decidim_participations_participations, :reference, true
   end
 end

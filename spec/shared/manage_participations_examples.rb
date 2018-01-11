@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples "manage proposals" do
+shared_examples "manage participations" do
   let(:address) { "Carrer Pare Llaurador 113, baixos, 08224 Terrassa" }
   let(:latitude) { 40.1234 }
   let(:longitude) { 2.1234 }
@@ -14,11 +14,11 @@ shared_examples "manage proposals" do
     )
   end
 
-  context "when previewing proposals" do
-    it "allows the user to preview the proposal" do
-      within find("tr", text: proposal.title) do
+  context "when previewing participations" do
+    it "allows the user to preview the participation" do
+      within find("tr", text: participation.title) do
         klass = "action-icon--preview"
-        href = resource_locator(proposal).path
+        href = resource_locator(participation).path
         target = "blank"
 
         expect(page).to have_selector(
@@ -30,9 +30,9 @@ shared_examples "manage proposals" do
   end
 
   describe "creation" do
-    context "when official_proposals setting is enabled" do
+    context "when official_participations setting is enabled" do
       before do
-        current_feature.update_attributes!(settings: { official_proposals_enabled: true })
+        current_feature.update_attributes!(settings: { official_participations_enabled: true })
       end
 
       context "when creation is enabled" do
@@ -57,26 +57,26 @@ shared_examples "manage proposals" do
             end
           end
 
-          it "creates a new proposal", :slow do
+          it "creates a new participation", :slow do
             click_link "New"
 
-            within ".new_proposal" do
-              fill_in :proposal_title, with: "Make decidim great again"
-              fill_in :proposal_body, with: "Decidim is great but it can be better"
-              select translated(category.name), from: :proposal_category_id
-              scope_pick scopes_picker_find(:proposal_scope_id), scope
+            within ".new_participation" do
+              fill_in :participation_title, with: "Make decidim great again"
+              fill_in :participation_body, with: "Decidim is great but it can be better"
+              select translated(category.name), from: :participation_category_id
+              scope_pick scopes_picker_find(:participation_scope_id), scope
               find("*[type=submit]").click
             end
 
             expect(page).to have_admin_callout("successfully")
 
             within "table" do
-              proposal = Decidim::Proposals::Proposal.last
+              participation = Decidim::Participations::Participation.last
 
               expect(page).to have_content("Make decidim great again")
-              expect(proposal.body).to eq("Decidim is great but it can be better")
-              expect(proposal.category).to eq(category)
-              expect(proposal.scope).to eq(scope)
+              expect(participation.body).to eq("Decidim is great but it can be better")
+              expect(participation.category).to eq(category)
+              expect(participation.scope).to eq(scope)
             end
           end
         end
@@ -92,25 +92,25 @@ shared_examples "manage proposals" do
             end
           end
 
-          it "creates a new proposal related to the process scope" do
+          it "creates a new participation related to the process scope" do
             click_link "New"
 
-            within ".new_proposal" do
-              fill_in :proposal_title, with: "Make decidim great again"
-              fill_in :proposal_body, with: "Decidim is great but it can be better"
-              select category.name["en"], from: :proposal_category_id
+            within ".new_participation" do
+              fill_in :participation_title, with: "Make decidim great again"
+              fill_in :participation_body, with: "Decidim is great but it can be better"
+              select category.name["en"], from: :participation_category_id
               find("*[type=submit]").click
             end
 
             expect(page).to have_admin_callout("successfully")
 
             within "table" do
-              proposal = Decidim::Proposals::Proposal.last
+              participation = Decidim::Participations::Participation.last
 
               expect(page).to have_content("Make decidim great again")
-              expect(proposal.body).to eq("Decidim is great but it can be better")
-              expect(proposal.category).to eq(category)
-              expect(proposal.scope).to eq(scope)
+              expect(participation.body).to eq("Decidim is great but it can be better")
+              expect(participation.category).to eq(category)
+              expect(participation.scope).to eq(scope)
             end
           end
 
@@ -125,26 +125,26 @@ shared_examples "manage proposals" do
               end
             end
 
-            it "creates a new proposal related to a process scope child" do
+            it "creates a new participation related to a process scope child" do
               click_link "New"
 
-              within ".new_proposal" do
-                fill_in :proposal_title, with: "Make decidim great again"
-                fill_in :proposal_body, with: "Decidim is great but it can be better"
-                select category.name["en"], from: :proposal_category_id
-                scope_repick scopes_picker_find(:proposal_scope_id), scope, child_scope
+              within ".new_participation" do
+                fill_in :participation_title, with: "Make decidim great again"
+                fill_in :participation_body, with: "Decidim is great but it can be better"
+                select category.name["en"], from: :participation_category_id
+                scope_repick scopes_picker_find(:participation_scope_id), scope, child_scope
                 find("*[type=submit]").click
               end
 
               expect(page).to have_admin_callout("successfully")
 
               within "table" do
-                proposal = Decidim::Proposals::Proposal.last
+                participation = Decidim::Participations::Participation.last
 
                 expect(page).to have_content("Make decidim great again")
-                expect(proposal.body).to eq("Decidim is great but it can be better")
-                expect(proposal.category).to eq(category)
-                expect(proposal.scope).to eq(child_scope)
+                expect(participation.body).to eq("Decidim is great but it can be better")
+                expect(participation.category).to eq(category)
+                expect(participation.scope).to eq(child_scope)
               end
             end
           end
@@ -154,26 +154,26 @@ shared_examples "manage proposals" do
               current_feature.update_attributes!(settings: { geocoding_enabled: true })
             end
 
-            it "creates a new proposal related to the process scope" do
+            it "creates a new participation related to the process scope" do
               click_link "New"
 
-              within ".new_proposal" do
-                fill_in :proposal_title, with: "Make decidim great again"
-                fill_in :proposal_body, with: "Decidim is great but it can be better"
-                fill_in :proposal_address, with: address
-                select category.name["en"], from: :proposal_category_id
+              within ".new_participation" do
+                fill_in :participation_title, with: "Make decidim great again"
+                fill_in :participation_body, with: "Decidim is great but it can be better"
+                fill_in :participation_address, with: address
+                select category.name["en"], from: :participation_category_id
                 find("*[type=submit]").click
               end
 
               expect(page).to have_admin_callout("successfully")
 
               within "table" do
-                proposal = Decidim::Proposals::Proposal.last
+                participation = Decidim::Participations::Participation.last
 
                 expect(page).to have_content("Make decidim great again")
-                expect(proposal.body).to eq("Decidim is great but it can be better")
-                expect(proposal.category).to eq(category)
-                expect(proposal.scope).to eq(scope)
+                expect(participation.body).to eq("Decidim is great but it can be better")
+                expect(participation.category).to eq(category)
+                expect(participation.scope).to eq(scope)
               end
             end
           end
@@ -184,20 +184,20 @@ shared_examples "manage proposals" do
             current_feature.update_attributes!(settings: { attachments_allowed: true })
           end
 
-          it "creates a new proposal with attachments" do
+          it "creates a new participation with attachments" do
             click_link "New"
 
-            within ".new_proposal" do
-              fill_in :proposal_title, with: "Proposal with attachments"
-              fill_in :proposal_body, with: "This is my proposal and I want to upload attachments."
-              fill_in :proposal_attachment_title, with: "My attachment"
-              attach_file :proposal_attachment_file, Decidim::Dev.asset("city.jpeg")
+            within ".new_participation" do
+              fill_in :participation_title, with: "Participation with attachments"
+              fill_in :participation_body, with: "This is my participation and I want to upload attachments."
+              fill_in :participation_attachment_title, with: "My attachment"
+              attach_file :participation_attachment_file, Decidim::Dev.asset("city.jpeg")
               find("*[type=submit]").click
             end
 
             expect(page).to have_admin_callout("successfully")
 
-            visit resource_locator(Decidim::Proposals::Proposal.last).path
+            visit resource_locator(Decidim::Participations::Participation.last).path
             expect(page).to have_selector("img[src*=\"city.jpeg\"]", count: 1)
           end
         end
@@ -214,59 +214,59 @@ shared_examples "manage proposals" do
           )
         end
 
-        it "cannot create a new proposal from the main site" do
+        it "cannot create a new participation from the main site" do
           visit_feature
-          expect(page).to have_no_button("New Proposal")
+          expect(page).to have_no_button("New Participation")
         end
 
-        it "cannot create a new proposal from the admin site" do
+        it "cannot create a new participation from the admin site" do
           visit_feature_admin
           expect(page).to have_no_link(/New/)
         end
       end
     end
 
-    context "when official_proposals setting is disabled" do
+    context "when official_participations setting is disabled" do
       before do
-        current_feature.update_attributes!(settings: { official_proposals_enabled: false })
+        current_feature.update_attributes!(settings: { official_participations_enabled: false })
       end
 
-      it "cannot create a new proposal from the main site" do
+      it "cannot create a new participation from the main site" do
         visit_feature
-        expect(page).to have_no_button("New Proposal")
+        expect(page).to have_no_button("New Participation")
       end
 
-      it "cannot create a new proposal from the admin site" do
+      it "cannot create a new participation from the admin site" do
         visit_feature_admin
         expect(page).to have_no_link(/New/)
       end
     end
   end
 
-  context "when the proposal_answering feature setting is enabled" do
+  context "when the participation_answering feature setting is enabled" do
     before do
-      current_feature.update_attributes!(settings: { proposal_answering_enabled: true })
+      current_feature.update_attributes!(settings: { participation_answering_enabled: true })
     end
 
-    context "when the proposal_answering step setting is enabled" do
+    context "when the participation_answering step setting is enabled" do
       before do
         current_feature.update_attributes!(
           step_settings: {
             current_feature.participatory_space.active_step.id => {
-              proposal_answering_enabled: true
+              participation_answering_enabled: true
             }
           }
         )
       end
 
-      it "can reject a proposal" do
-        go_to_edit_answer(proposal)
+      it "can reject a participation" do
+        go_to_edit_answer(participation)
 
-        within ".edit_proposal_answer" do
+        within ".edit_participation_answer" do
           fill_in_i18n_editor(
-            :proposal_answer_answer,
-            "#proposal_answer-answer-tabs",
-            en: "The proposal doesn't make any sense",
+            :participation_answer_answer,
+            "#participation_answer-answer-tabs",
+            en: "The participation doesn't make any sense",
             es: "La propuesta no tiene sentido",
             ca: "La proposta no te sentit"
           )
@@ -274,45 +274,45 @@ shared_examples "manage proposals" do
           click_button "Answer"
         end
 
-        expect(page).to have_admin_callout("Proposal successfully answered")
+        expect(page).to have_admin_callout("Participation successfully answered")
 
-        within find("tr", text: proposal.title) do
+        within find("tr", text: participation.title) do
           expect(page).to have_content("Rejected")
         end
       end
 
-      it "can accept a proposal" do
-        go_to_edit_answer(proposal)
+      it "can accept a participation" do
+        go_to_edit_answer(participation)
 
-        within ".edit_proposal_answer" do
+        within ".edit_participation_answer" do
           choose "Accepted"
           click_button "Answer"
         end
 
-        expect(page).to have_admin_callout("Proposal successfully answered")
+        expect(page).to have_admin_callout("Participation successfully answered")
 
-        within find("tr", text: proposal.title) do
+        within find("tr", text: participation.title) do
           expect(page).to have_content("Accepted")
         end
       end
 
-      it "can mark a proposal as evaluating" do
-        go_to_edit_answer(proposal)
+      it "can mark a participation as evaluating" do
+        go_to_edit_answer(participation)
 
-        within ".edit_proposal_answer" do
+        within ".edit_participation_answer" do
           choose "Evaluating"
           click_button "Answer"
         end
 
-        expect(page).to have_admin_callout("Proposal successfully answered")
+        expect(page).to have_admin_callout("Participation successfully answered")
 
-        within find("tr", text: proposal.title) do
+        within find("tr", text: participation.title) do
           expect(page).to have_content("Evaluating")
         end
       end
 
-      it "can edit a proposal answer" do
-        proposal.update_attributes!(
+      it "can edit a participation answer" do
+        participation.update_attributes!(
           state: "rejected",
           answer: {
             "en" => "I don't like it"
@@ -322,55 +322,55 @@ shared_examples "manage proposals" do
 
         visit_feature_admin
 
-        within find("tr", text: proposal.title) do
+        within find("tr", text: participation.title) do
           expect(page).to have_content("Rejected")
         end
 
-        go_to_edit_answer(proposal)
+        go_to_edit_answer(participation)
 
-        within ".edit_proposal_answer" do
+        within ".edit_participation_answer" do
           choose "Accepted"
           click_button "Answer"
         end
 
-        expect(page).to have_admin_callout("Proposal successfully answered")
+        expect(page).to have_admin_callout("Participation successfully answered")
 
-        within find("tr", text: proposal.title) do
+        within find("tr", text: participation.title) do
           expect(page).to have_content("Accepted")
         end
       end
     end
 
-    context "when the proposal_answering step setting is disabled" do
+    context "when the participation_answering step setting is disabled" do
       before do
         current_feature.update_attributes!(
           step_settings: {
             current_feature.participatory_space.active_step.id => {
-              proposal_answering_enabled: false
+              participation_answering_enabled: false
             }
           }
         )
       end
 
-      it "cannot answer a proposal" do
+      it "cannot answer a participation" do
         visit current_path
 
-        within find("tr", text: proposal.title) do
+        within find("tr", text: participation.title) do
           expect(page).to have_no_link("Answer")
         end
       end
     end
   end
 
-  context "when the proposal_answering feature setting is disabled" do
+  context "when the participation_answering feature setting is disabled" do
     before do
-      current_feature.update_attributes!(settings: { proposal_answering_enabled: false })
+      current_feature.update_attributes!(settings: { participation_answering_enabled: false })
     end
 
-    it "cannot answer a proposal" do
+    it "cannot answer a participation" do
       visit current_path
 
-      within find("tr", text: proposal.title) do
+      within find("tr", text: participation.title) do
         expect(page).to have_no_link("Answer")
       end
     end
@@ -416,11 +416,11 @@ shared_examples "manage proposals" do
     end
   end
 
-  def go_to_edit_answer(proposal)
-    within find("tr", text: proposal.title) do
+  def go_to_edit_answer(participation)
+    within find("tr", text: participation.title) do
       click_link "Answer"
     end
 
-    expect(page).to have_selector(".edit_proposal_answer")
+    expect(page).to have_selector(".edit_participation_answer")
   end
 end
