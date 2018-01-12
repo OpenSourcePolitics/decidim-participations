@@ -11,6 +11,6 @@ class CreateParticipationReports < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :decidim_participations_participation_reports, [:decidim_participation_id, :decidim_user_id], unique: true, name: "decidim_participations_participation_report_participation_user_unique"
+    add_index :decidim_participations_participation_reports, [:decidim_participation_id, :decidim_user_id], unique: true, name: "decidim_participations_report_participation_user_unique"
   end
 end
