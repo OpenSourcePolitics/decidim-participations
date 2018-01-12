@@ -1,5 +1,9 @@
 ---
 en:
+  pages:
+    home:
+      statistics:
+        participations_count: Participations
   activemodel:
     attributes:
       participation:
@@ -28,12 +32,15 @@ en:
           email_intro: '%{author_name} published a new participation in'
           moderation_url: "You can moderate it here : %{moderation_url}"
           email_subject: 'New participation from %{author_name} waiting for moderation'
+    participatory_processes:
+      statistics:
+        participations_count: Participations
     features:
       participations:
         actions:
           create: Create
           vote: Vote
-        name: Proposals
+        name: Participations
         settings:
           global:
             announcement: Announcement
@@ -43,17 +50,17 @@ en:
             maximum_votes_per_participation: Maximum votes per participation
             new_participation_help_text: New participation help text
             official_participations_enabled: Official participations enabled
-            participation_answering_enabled: Proposal answering enabled
-            participation_edit_before_minutes: Proposals can be edited by authors before this many minutes passes
-            participation_limit: Proposal limit per user
+            participation_answering_enabled: Participation answering enabled
+            participation_edit_before_minutes: Participations can be edited by authors before this many minutes passes
+            participation_limit: Participation limit per user
             vote_limit: Vote limit per user
             upstream_moderation_enabled: Upstream moderation for participations enabled
             comments_upstream_moderation_enabled: Upstream moderation for comments enabled
           step:
             announcement: Announcement
             comments_blocked: Comments blocked
-            creation_enabled: Proposal creation enabled
-            participation_answering_enabled: Proposal answering enabled
+            creation_enabled: Participation creation enabled
+            participation_answering_enabled: Participation answering enabled
             votes_blocked: Votes blocked
             votes_enabled: Votes enabled
             votes_hidden: Votes hidden (if votes are enabled, checking this will hide the number of votes)
@@ -67,10 +74,10 @@ en:
           preview: Preview
         exports:
           comments: Comments
-          participations: Proposals
+          participations: Participations
         models:
           participation:
-            name: Proposal
+            name: Participation
         participation_answers:
           edit:
             accepted: Accepted
@@ -81,15 +88,15 @@ en:
         participations:
           answer:
             invalid: There's been a problem answering this participation
-            success: Proposal successfully answered
+            success: Participation successfully answered
           create:
             invalid: There's been a problem creating this participation
-            success: Proposal successfully created.
+            success: Participation successfully created.
           form:
             attachment_legend: "(Optional) Add an attachment"
             select_a_category: Select a category
           index:
-            title: Proposals
+            title: Participations
           new:
             create: Create
             title: Create participation
@@ -100,7 +107,7 @@ en:
         rejected: Rejected
       create:
         error: There's been errors when saving the participation.
-        success: Proposal successfully created. It will be published as soon as an administrator will have authorized it.
+        success: Participation successfully created. It will be published as soon as an administrator will have authorized it.
       events:
         create_participation_event:
           email_intro: |-
@@ -209,8 +216,8 @@ en:
             votes: Votes
       update:
         error: There's been errors when saving the participation.
-        success: Proposal updated successfully.
+        success: Participation updated successfully.
     resource_links:
       included_participations:
-        participation_projects: 'Proposal appearing in these projects:'
-        participation_results: 'Proposal appearing in these results:'
+        participation_projects: 'Participation appearing in these projects:'
+        participation_results: 'Participation appearing in these results:'
