@@ -19,7 +19,7 @@ module Decidim
 
       has_many :votes, foreign_key: "decidim_participation_id", class_name: "ParticipationVote", dependent: :destroy, counter_cache: "participation_votes_count"
 
-      validates :title, :body, presence: true
+      # validates :title, :body, presence: true
 
       geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
 
@@ -28,6 +28,13 @@ module Decidim
       scope :evaluating, -> { where(state: "evaluating") }
       after_create :create_participation_moderation
       after_create :update_moderation
+
+      # Here we define the title (IN PROGRESS)
+      def self.define_participation_title(type)
+        title = "LE TITRE"
+
+        return title
+      end
 
       def self.order_randomly(seed)
         transaction do

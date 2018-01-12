@@ -56,6 +56,9 @@ module Decidim
 
         @form = form(ParticipationForm).from_params(params)
 
+        # Wait ! Lets define a custom title . Harry
+        @form.title = Participation.define_participation_title("TYPE")
+
         CreateParticipation.call(@form, current_user) do
           on(:ok) do |participation|
             flash[:notice] = I18n.t("participations.create.success", scope: "decidim")

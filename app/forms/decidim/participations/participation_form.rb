@@ -16,8 +16,16 @@ module Decidim
       attribute :user_group_id, Integer
       attribute :has_address, Boolean
       attribute :attachment, AttachmentForm
+      
+      # Just added. Harry.
+      attribute :type, String
+      validates :type, presence: true
 
-      validates :title, :body, presence: true, etiquette: true
+      attribute :attachment_title, String
+      validates :attachment_title, presence: true
+      
+
+      validates :body, presence: true, etiquette: true
       validates :title, length: { maximum: 150 }
       validates :body, length: { maximum: 500 }, etiquette: true
       validates :address, geocoding: true, if: ->(form) { Decidim.geocoder.present? && form.has_address? }

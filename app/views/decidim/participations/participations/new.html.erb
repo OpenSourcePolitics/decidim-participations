@@ -21,9 +21,6 @@
 
       <div class="card__content">
         <%= decidim_form_for(@form) do |form| %>
-          <div class="field">
-            <%= form.text_field :title %>
-          </div>
 
           <div class="field">
             <%= form.text_area :body, rows: 10 %>
