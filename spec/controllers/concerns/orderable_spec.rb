@@ -3,7 +3,7 @@
 require "spec_helper"
 
 module Decidim
-  module Proposals
+  module Participations
     class OrderableFakeController < Decidim::ApplicationController
       include Orderable
     end

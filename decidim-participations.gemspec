@@ -32,4 +32,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "decidim-dev", Decidim::Participations.version
   s.add_development_dependency "decidim-meetings", Decidim::Participations.version
   s.add_development_dependency "decidim-participatory_processes", Decidim::Participations.version
+  s.add_development_dependency "pry-byebug"
 end

@@ -1,4 +1,8 @@
 fr:
+  pages:
+    home:
+      statistics:
+        participations_count: Participations
   activemodel:
     attributes:
       participation:
@@ -20,6 +24,9 @@ fr:
           email_intro: "%{author_name} a publié une nouvelle proposition dans"
           moderation_url: "Vous pouvez modérer le contenu en suivant ce lien : %{moderation_url}"
           email_subject: 'Nouvelle proposition de %{author_name} en attente de modération'
+    participatory_processes:
+      statistics:
+        participations_count: Participations
     features:
       participations:
         actions:
