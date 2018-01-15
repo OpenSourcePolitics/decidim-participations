@@ -4,12 +4,16 @@
       <%= t(".title") %>
 
       <div class="button--title">
-
-        <% if can? :create, Decidim::Participations::Participation %>
-          <%= link_to t("actions.new", scope: "decidim.participations", name: t("models.participation.name", scope: "decidim.participations.admin")), new_participation_path, class: 'button tiny button--simple' if can? :manage, current_feature %>
-        <% end %>
-
         <%= export_dropdown %>
+      </div>
+      <div class="card__filter" style= "margin-right: 20px">
+        <% if can? :create, Decidim::Participations::Participation %>
+          <%= link_to t("index.unmoderate", scope: "decidim.participations.admin.participations"), participations_path(status: "unmoderate"), class: "#{'bold' if @param_unmoderate}" %>
+          |
+          <%= link_to t("index.questions", scope: "decidim.participations.admin.participations"), participations_path(status: "questions"), class: "#{'bold' if @param_questions}" %>
+          |
+          <%= link_to t("index.moderated", scope: "decidim.participations.admin.participations"), participations_path(status: "moderated"), class: "#{'bold' if @param_moderated}" %>
+        <% end %>
       </div>
     </h2>
   </div>
@@ -20,40 +24,18 @@
         <thead>
           <tr>
             <th>
-              <%= sort_link(query, :id, t("models.participation.fields.id", scope: "decidim.participations"), default_order: :desc ) %>
+              <%= sort_link(query, :created_at, t("models.participation.date", scope: "decidim.participations"), default_order: :desc ) %>
             </th>
             <th>
-              <%= sort_link(query, :title, t("models.participation.fields.title", scope: "decidim.participations") ) %>
+              <%= sort_link(query, :type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
+            </th>
+            <th>
+              <%= t("models.participation.fields.body", scope: "decidim.participations")%>
             </th>
             <th>
               <%= sort_link(query, :category_name, t("models.participation.fields.category", scope: "decidim.participations") ) %>
             </th>
 
-            <% if scopes_enabled?(current_participatory_space) %>
-              <th>
-                <%= sort_link(query, :scope_name, t("models.participation.fields.scope", scope: "decidim.participations") ) %>
-              </th>
-            <% end %>
-
-            <th>
-              <%= sort_link(query, :state, t("models.participation.fields.state", scope: "decidim.participations") ) %>
-            </th>
-
-            <% if current_settings.votes_enabled? %>
-              <th>
-                <%= sort_link(query, :participation_votes_count, t("models.participation.fields.votes", scope: "decidim.participations") ) %>
-              </th>
-            <% end %>
-
-            <% if current_feature.settings.comments_enabled? and !current_settings.comments_blocked? %>
-              <th>
-                <%= sort_link(query, :commentable_comments_count, t("models.participation.fields.comments", scope: "decidim.participations") ) %>
-              </th>
-            <% end %>
-
-            <th>
-              <%= sort_link(query, :created_at, t("models.participation.fields.created_at", scope: "decidim.participations") ) %>
-            </th>
 
             <th class="actions"><%= t("actions.title", scope: "decidim.participations") %></th>
           </tr>
@@ -62,52 +44,35 @@
           <% participations.each do |participation| %>
             <tr data-id="<%= participation.id %>">
               <td>
-                <%= participation.id %><br />
+                <%= l(participation.created_at, format: :short) %><br />
               </td>
               <td>
-                <%= participation.title %><br />
+                <%= participation.try(:type) %><br />
+              </td>
+              <td>
+                <%= participation.body.truncate(50) %><br />
               </td>
               <td>
                 <% if participation.category %>
                   <%= translated_attribute participation.category.name %>
                 <% end %>
               </td>
-              <% if scopes_enabled?(current_participatory_space) %>
-                <td>
-                  <% if participation.scope %>
-                    <%= translated_attribute participation.scope.name %>
-                  <% else %>
-                    <%= t("decidim.scopes.global") %>
-                  <% end %>
-                </td>
-              <% end %>
-              <td>
-                <strong class="<%= participation_state_css_class participation.state %>">
-                  <%= humanize_participation_state participation.state %>
-                </strong>
-              </td>
-
-              <% if current_settings.votes_enabled? %>
-                <td>
-                  <%= participation.participation_votes_count %>
-                </td>
-              <% end %>
-
-              <% if current_feature.settings.comments_enabled? and !current_settings.comments_blocked? %>
-                <td>
-                  <%= participation.comments.count %>
-                </td>
-              <% end %>
-
-              <td>
-                <%= l participation.created_at, format: :decidim_short %>
-              </td>
 
               <td class="table-list__actions">
-                <% if can? :update, participation %>
-                  <%= icon_link_to "chat", edit_participation_participation_answer_path(participation_id: participation.id, id: participation.id), t("actions.answer", scope: "decidim.participations"), class: "action-icon--edit-answer" %>
-                <% end %>
-                <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                <% if @param_unmoderate %>
+                  <!-- TODO path des boutons -->
+                  <%= icon_link_to "clipboard", "#", t("actions.duplicate", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                  <%= icon_link_to "pencil", "#", t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                  <%= icon_link_to "envelope-closed", current_or_new_conversation_path_with(participation.author), t("actions.contact", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                <% elsif @param_questions %>
+                  <% if can? :update, participation %>
+                    <%= icon_link_to "chat", edit_participation_participation_answer_path(participation_id: participation.id, id: participation.id), t("actions.answer", scope: "decidim.participations"), class: "action-icon--edit-answer" %>
+                  <% end %>
+                  <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                <% elsif @param_moderated %>
+                  <%= icon_link_to "pencil", "#", t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                  <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                <%end%>
               </td>
             </tr>
           <% end %>
