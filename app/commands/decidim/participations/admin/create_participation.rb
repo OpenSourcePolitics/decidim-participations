@@ -76,7 +76,7 @@ module Decidim
         end
 
         def attachments_allowed?
-          form.current_feature.settings.attachments_allowed?
+          true
         end
 
         def process_attachments?
