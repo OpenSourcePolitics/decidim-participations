@@ -39,7 +39,7 @@ module Decidim
       end
 
       def self.find_participations(participations)
-        where(id: participations.map(&:id)).order("created_at").reverse
+        where(id: participations.map(&:id))
       end
 
       def self.order_randomly(seed)

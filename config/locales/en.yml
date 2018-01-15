@@ -118,6 +118,11 @@ en:
       models:
         participation:
           date: Date
+          delay: Delay
+          answer_status: Answer status
+          recipient: Recipient
+          published_on: Published on
+          status: Status
           fields:
             body: Participation
             type: Type

@@ -17,68 +17,11 @@
       </div>
     </h2>
   </div>
-
-  <div class="card-section">
-    <div class="table-scroll">
-      <table class="table-list">
-        <thead>
-          <tr>
-            <th>
-              <%= sort_link(query, :created_at, t("models.participation.date", scope: "decidim.participations"), default_order: :desc ) %>
-            </th>
-            <th>
-              <%= sort_link(query, :type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
-            </th>
-            <th>
-              <%= t("models.participation.fields.body", scope: "decidim.participations")%>
-            </th>
-            <th>
-              <%= sort_link(query, :category_name, t("models.participation.fields.category", scope: "decidim.participations") ) %>
-            </th>
-
-
-            <th class="actions"><%= t("actions.title", scope: "decidim.participations") %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% participations.each do |participation| %>
-            <tr data-id="<%= participation.id %>">
-              <td>
-                <%= l(participation.created_at, format: :short) %><br />
-              </td>
-              <td>
-                <%= participation.try(:type) %><br />
-              </td>
-              <td>
-                <%= participation.body.truncate(50) %><br />
-              </td>
-              <td>
-                <% if participation.category %>
-                  <%= translated_attribute participation.category.name %>
-                <% end %>
-              </td>
-
-              <td class="table-list__actions">
-                <% if @param_unmoderate %>
-                  <!-- TODO path des boutons -->
-                  <%= icon_link_to "clipboard", "#", t("actions.duplicate", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                  <%= icon_link_to "pencil", "#", t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                  <%= icon_link_to "envelope-closed", current_or_new_conversation_path_with(participation.author), t("actions.contact", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                <% elsif @param_questions %>
-                  <% if can? :update, participation %>
-                    <%= icon_link_to "chat", edit_participation_participation_answer_path(participation_id: participation.id, id: participation.id), t("actions.answer", scope: "decidim.participations"), class: "action-icon--edit-answer" %>
-                  <% end %>
-                  <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                <% elsif @param_moderated %>
-                  <%= icon_link_to "pencil", "#", t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                  <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                <%end%>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= paginate participations, theme: "decidim" %>
-    </div>
-  </div>
+  <% if @param_unmoderate %>
+    <%= render "unmoderate" %>
+  <% elsif @param_questions %>
+    <%= render "questions" %>
+  <% elsif @param_moderated %>
+    <%= render "moderated" %>
+  <%end%>
 </div>

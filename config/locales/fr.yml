@@ -116,6 +116,11 @@ fr:
       models:
         participation:
           date: Date
+          delay: Délai
+          answer_status: Statut réponse
+          recipient: Destinataire
+          published_on: Publié le
+          status: Statut
           fields:
             body: Participation
             type: Type

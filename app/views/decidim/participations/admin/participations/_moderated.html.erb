@@ -1,0 +1,49 @@
+<div class="card-section">
+  <div class="table-scroll">
+    <table class="table-list">
+      <thead>
+        <tr>
+          <th>
+            <%= sort_link(query, :published_on, t("models.participation.published_on", scope: "decidim.participations"), default_order: :desc ) %>
+          </th>
+          <th>
+            <%= sort_link(query, :type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
+          </th>
+          <th>
+            <%= t("models.participation.fields.title", scope: "decidim.participations")%>
+          </th>
+          <th>
+            <%= sort_link(query, :status, t("models.participation.status", scope: "decidim.participations") ) %>
+          </th>
+
+
+          <th class="actions"><%= t("actions.title", scope: "decidim.participations") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% participations.each do |participation| %>
+          <tr data-id="<%= participation.id %>">
+            <td>
+              TODO
+            </td>
+            <td>
+              TODO
+            </td>
+            <td>
+              <%= participation.title %><br />
+            </td>
+            <td>
+              TODO
+            </td>
+            <td class="table-list__actions">
+            <!-- TODO path des boutons -->
+              <%= icon_link_to "pencil", "#", t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+              <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= paginate participations, theme: "decidim" %>
+  </div>
+</div>
