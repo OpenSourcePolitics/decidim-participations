@@ -7,7 +7,6 @@ module Decidim
       class ParticipationForm < Decidim::Form
         mimic :participation
 
-        attribute :title, String
         attribute :body, String
         attribute :address, String
         attribute :latitude, Float
@@ -16,7 +15,6 @@ module Decidim
         attribute :scope_id, Integer
         attribute :attachment, AttachmentForm
 
-        validates :title, :body, presence: true
         validates :address, geocoding: true, if: -> { current_feature.settings.geocoding_enabled? }
         validates :category, presence: true, if: ->(form) { form.category_id.present? }
         validates :scope, presence: true, if: ->(form) { form.scope_id.present? }

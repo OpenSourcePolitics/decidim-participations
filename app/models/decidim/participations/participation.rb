@@ -29,13 +29,6 @@ module Decidim
       after_create :create_participation_moderation
       after_create :update_moderation
 
-      # Here we define the title (IN PROGRESS)
-      def self.define_participation_title(type)
-        title = "LE TITRE"
-
-        return title
-      end
-
       def self.order_randomly(seed)
         transaction do
           connection.execute("SELECT setseed(#{connection.quote(seed)})")
