@@ -35,6 +35,10 @@
             </div>
           <% end %>
 
+          <div class="row column">
+            <%= form.select :participation_type, options_for_select([t(".question"), t(".opinion"), t(".contribution")]), prompt: t(".select_a_category"), label: t(".type")  %>
+          </div>
+
           <% if @form.categories&.any? %>
             <div class="field">
               <%= form.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>

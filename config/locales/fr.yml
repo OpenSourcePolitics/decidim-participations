@@ -87,6 +87,10 @@ fr:
           form:
             attachment_legend: "(Facultatif) Ajouter une pièce jointe"
             select_a_category: Sélectionner une catégorie
+            type: Type
+            question: Question
+            opinion: Avis
+            contribution: Contribution
           index:
             title: Propositions
           new:
@@ -132,6 +136,10 @@ fr:
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
           title: Modifier la proposition
+          type: Type
+          question: Question
+          opinion: Avis
+          contribution: Contribution
         filters:
           accepted: Retenue
           activity: Activité
@@ -168,6 +176,10 @@ fr:
           select_a_category: Veuillez sélectionner une catégorie
           send: Publier
           title: Nouvelle proposition
+          type: Type
+          question: Question
+          opinion: Avis
+          contribution: Contribution
         orders:
           label: 'Classement des propositions par:'
           most_voted: Les plus votées

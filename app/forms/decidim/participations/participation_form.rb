@@ -10,24 +10,19 @@ module Decidim
       attribute :address, String
       attribute :latitude, Float
       attribute :longitude, Float
+      attribute :participation_type, String
       attribute :category_id, Integer
       attribute :scope_id, Integer
       attribute :user_group_id, Integer
       attribute :has_address, Boolean
-      attribute :attachment, AttachmentForm
-
-      # Just added. Harry.
-      attribute :type, String
-      validates :type, presence: true
-
       attribute :attachment_title, String
-      validates :attachment_title, presence: true
-
+      attribute :attachment, AttachmentForm
 
       validates :body, presence: true, etiquette: true
       validates :body, length: { maximum: 500 }, etiquette: true
       validates :address, geocoding: true, if: ->(form) { Decidim.geocoder.present? && form.has_address? }
       validates :address, presence: true, if: ->(form) { form.has_address? }
+      validates :participation_type, presence: true
       validates :category, presence: true, if: ->(form) { form.category_id.present? }
       validates :scope, presence: true, if: ->(form) { form.scope_id.present? }
       validate { errors.add(:scope_id, :invalid) if current_participatory_space&.scope && !current_participatory_space&.scope&.ancestor_of?(scope) }
