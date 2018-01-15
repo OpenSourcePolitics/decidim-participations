@@ -1,0 +1,1 @@
+require 'decidim/mailer/email_notification_generator'
