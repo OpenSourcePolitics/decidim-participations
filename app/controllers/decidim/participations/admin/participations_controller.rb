@@ -43,7 +43,7 @@ module Decidim
         private
 
         def query
-          @query =
+          @query ||=
             if @param_unmoderate
               Participation.unmoderate(current_feature).ransack(params[:q])
             elsif @param_questions
