@@ -81,6 +81,17 @@ fr:
             rejected: Refusée
             title: Réponse à la proposition %{title}
         participations:
+          edit:
+            title: Title
+            create: Create
+            qualification: Qualification
+            select_a_category: Sélectionner une catégorie
+            question: Question
+            opinion: Opinion
+            contribution: Contribution
+            content: Content
+            fields:
+              type: Type
           answer:
             invalid: Il y a eu un problème concernant la réponse à cette proposition
             success: La réponse à la proposition a publiée avec succès

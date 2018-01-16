@@ -1,0 +1,49 @@
+ <div class="card">
+  <div class="card-divider">
+    <h2 class="card-title"><%= t(".qualification") %></h2>
+  </div>
+<br/>
+  <%=  decidim_form_for(@form, html: { class: "form edit_participation" }, method: "put") do |f| %>
+    <div class="card-divider">
+      <h2 class="card-title"><%= t(".qualification") %></h2>
+    </div>
+
+    <div class="card-section">
+      <% if @form.categories&.any? %>
+        <div class="row column">
+          <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+        </div>
+      <% end %>
+      <div class="row column"> <!-- TODO mettre participation_type -->
+        <%= f.select :category_id, options_for_select([t(".question"), t(".opinion"), t(".contribution")]), prompt: t(".select_a_category"), label: t(".fields.type")  %>
+      </div>
+    </div>
+
+    <!-- TODO issue attribution -->
+    <% if @form.type == "question" %>
+      <%= f.radio_button :status, false, true %>
+    <%end %>
+
+    <div class="card-divider">
+      <h2 class="card-title"><%= t(".content") %></h2>
+    </div>
+      <div class="row column">
+        <h6 class="heading6 bold">Original</h2>
+        <%= @form.body%>
+      </div>
+
+      <div class="row column">
+        <%=f.text_area :body, rows: 10, label: false %>
+      </div>
+
+      <div class="row column">
+        <%=f.text_field :body, rows: 10 %>
+      </div>
+    </div>
+
+
+    <div class="button--double form-general-submit">
+      <%= f.submit t(".create") %>
+    </div>
+  <% end %>
+</div>

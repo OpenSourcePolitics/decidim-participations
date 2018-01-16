@@ -40,6 +40,28 @@ module Decidim
           end
         end
 
+        def edit
+          authorize! :edit, Participation
+          @form = form(Admin::ParticipationForm).from_model(participation)
+        end
+
+        def update
+          authorize! :edit, Participation
+          @form = form(Admin::ParticipationForm).from_params(params)
+
+          Admin::UpdateParticipation.call(@form) do
+            on(:ok) do
+              flash[:notice] = I18n.t("participations.create.success", scope: "decidim.participations.admin")
+              redirect_to participations_path
+            end
+
+            on(:invalid) do
+              flash.now[:alert] = I18n.t("participations.create.invalid", scope: "decidim.participations.admin")
+              render action: "new"
+            end
+          end
+        end
+
         private
 
         def query
