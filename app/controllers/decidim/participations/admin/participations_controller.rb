@@ -6,7 +6,20 @@ module Decidim
       # This controller allows admins to manage participations in a participatory process.
       class ParticipationsController < Admin::ApplicationController
         helper Participations::ApplicationHelper
+        helper Decidim::Messaging::ConversationHelper
+
         helper_method :participations, :query
+
+        def index
+          case params[:status]
+            when nil || "unmoderate"
+              @param_unmoderate = true
+            when "questions"
+              @param_questions = true
+            when "moderated"
+              @param_moderated = true
+          end
+        end
 
         def new
           authorize! :create, Participation
@@ -35,7 +48,14 @@ module Decidim
         private
 
         def query
-          @query ||= Participation.where(feature: current_feature).ransack(params[:q])
+          @query ||=
+            if @param_unmoderate
+              Participation.unmoderate(current_feature).ransack(params[:q])
+            elsif @param_questions
+               Participation.questions_with_unpublished_answer(current_feature).ransack(params[:q])
+            elsif @param_moderated
+              Participation.moderated(current_feature).ransack(params[:q])
+            end
         end
 
         def participations
@@ -43,7 +63,7 @@ module Decidim
         end
 
         def participation
-          @participation ||= Participation.where(feature: current_feature).find(params[:id])
+          @participation ||= Participation.current_feature_participations(current_feature).find(params[:id])
         end
       end
     end

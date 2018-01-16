@@ -66,6 +66,9 @@ en:
       admin:
         actions:
           preview: Preview
+          duplicate: Duplicate
+          contact: Contact author
+          edit: edit
         exports:
           comments: Comments
           participations: Participations
@@ -95,6 +98,9 @@ en:
             contribution: Contribution
           index:
             title: Participations
+            unmoderate: Treat
+            questions: Questions
+            moderated: Traited
           new:
             create: Create
             title: Create participation
@@ -116,7 +122,15 @@ en:
           notification_title: The <a href="%{resource_path}">%{resource_title}</a> participation was created by <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
       models:
         participation:
+          date: Date
+          delay: Delay
+          answer_status: Answer status
+          recipient: Recipient
+          published_on: Published on
+          status: Status
           fields:
+            body: Participation
+            type: Type
             category: Category
             comments: Comments
             created_at: Created at

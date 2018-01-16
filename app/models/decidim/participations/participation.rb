@@ -23,11 +23,24 @@ module Decidim
 
       geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
 
+      # upstream moderation => MOA dashboard
+      scope :unmoderate, ->(current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where(upstream_moderation: "unmoderate")) }
+      scope :moderated, -> (current_feature){ current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
+      scope :questions_with_unpublished_answer, -> (current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where.not(['upstream_moderation = ? OR upstream_moderation = ? OR upstream_moderation = ?', 'unmoderate', 'authorized', 'refused'])) }
+
+      # useless for this feature
       scope :accepted, -> { where(state: "accepted") }
       scope :rejected, -> { where(state: "rejected") }
       scope :evaluating, -> { where(state: "evaluating") }
       after_create :create_participation_moderation
-      after_create :update_moderation
+
+      def self.current_feature_participations(current_feature)
+        where(feature: current_feature)
+      end
+
+      def self.find_participations(participations)
+        where(id: participations.map(&:id))
+      end
 
       def self.order_randomly(seed)
         transaction do
@@ -170,12 +183,6 @@ module Decidim
       def create_participation_moderation
         participatory_space = self.feature.participatory_space
         self.create_moderation!(participatory_space: participatory_space)
-      end
-
-      def update_moderation
-        unless moderation.upstream_activated?
-          moderation.authorize!
-        end
       end
 
       def upstream_moderation_activated?

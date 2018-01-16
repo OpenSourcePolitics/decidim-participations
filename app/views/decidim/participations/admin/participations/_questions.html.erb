@@ -1,0 +1,58 @@
+<div class="card-section">
+  <div class="table-scroll">
+    <table class="table-list">
+      <thead>
+        <tr>
+          <th>
+            <%= sort_link(query, :delay, t("models.participation.delay", scope: "decidim.participations"), default_order: :desc ) %>
+          </th>
+          <th>
+            <%= sort_link(query, :answer_status, t("models.participation.answer_status", scope: "decidim.participations"), default_order: :desc ) %>
+          </th>
+          <th>
+            <%= sort_link(query, :recipient, t("models.participation.recipient", scope: "decidim.participations"), default_order: :desc ) %>
+          </th>
+          <th>
+            <%= sort_link(query, :title, t("models.participation.fields.title", scope: "decidim.participations") ) %>
+          </th>
+          <th>
+            <%= sort_link(query, :category_name, t("models.participation.fields.category", scope: "decidim.participations") ) %>
+          </th>
+
+
+          <th class="actions"><%= t("actions.title", scope: "decidim.participations") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% participations.each do |participation| %>
+          <tr data-id="<%= participation.id %>">
+            <td>
+              TODO
+            </td>
+            <td>
+              TODO
+            </td>
+            <td>
+              TODO
+            </td>
+            <td>
+              <%= participation.title %>
+            </td>
+            <td>
+              <% if participation.category %>
+                <%= translated_attribute participation.category.name %>
+              <% end %>
+            </td>
+            <td class="table-list__actions">
+                <!-- TODO path des boutons -->
+                <%= icon_link_to "chat", edit_participation_participation_answer_path(participation_id: participation.id, id: participation.id), t("actions.answer", scope: "decidim.participations"), class: "action-icon--edit-answer" %>
+
+                <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= paginate participations, theme: "decidim" %>
+  </div>
+</div>

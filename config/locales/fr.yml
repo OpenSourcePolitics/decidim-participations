@@ -64,6 +64,9 @@ fr:
       admin:
         actions:
           preview: Aperçu
+          duplicate: Dupliquer
+          contact: Contacter l'auteur
+          edit: Modifier
         exports:
           comments: Commentaires
           participations: Propositions
@@ -93,6 +96,9 @@ fr:
             contribution: Contribution
           index:
             title: Propositions
+            unmoderate: A traiter
+            questions: Questions
+            moderated: Traitées
           new:
             create: Créer
             title: Créer une proposition
@@ -113,7 +119,15 @@ fr:
           notification_title: La proposition <a href="%{resource_path}">%{resource_title}</a> a été créée par <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
       models:
         participation:
+          date: Date
+          delay: Délai
+          answer_status: Statut réponse
+          recipient: Destinataire
+          published_on: Publié le
+          status: Statut
           fields:
+            body: Participation
+            type: Type
             category: Catégorie
             id: ID
             official_participation: Proposition officielle
