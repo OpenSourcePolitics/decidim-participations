@@ -51,7 +51,7 @@ module Decidim
           event: "decidim.events.participations.participation_created",
           event_class: Decidim::Participations::ParticipationCreatedEvent,
           resource: participation,
-          recipient_ids: participation.author
+          recipient_ids: participation.author.id
         )
       end
 
