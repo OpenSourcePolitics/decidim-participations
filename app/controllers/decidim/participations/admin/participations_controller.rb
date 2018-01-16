@@ -11,9 +11,14 @@ module Decidim
         helper_method :participations, :query
 
         def index
-          @param_unmoderate = true if params[:status].nil? || params[:status] == "unmoderate"
-          @param_questions = true if params[:status] == "questions"
-          @param_moderated = true if params[:status]== "moderated"
+          case params[:status]
+            when nil || "unmoderate"
+              @param_unmoderate = true
+            when "questions"
+              @param_questions = true
+            when "moderated"
+              @param_moderated = true
+          end
         end
 
         def new
