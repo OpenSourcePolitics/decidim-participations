@@ -3,6 +3,7 @@ fr:
     home:
       statistics:
         participations_count: Participations
+        participations_accepted: Participations acceptées
   activemodel:
     attributes:
       participation:
@@ -15,6 +16,12 @@ fr:
       participation_answer:
         answer: Répondre
   decidim:
+    admin:
+      models:
+        participatory_process_user_role:
+          roles:
+            cpdp: CPDP
+            moa: Maîtrise d'ouvrage
     events:
       participation_created:
         notification_title: Nouvelle proposition de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
@@ -101,6 +108,10 @@ fr:
           form:
             attachment_legend: "(Facultatif) Ajouter une pièce jointe"
             select_a_category: Sélectionner une catégorie
+            type: Type
+            question: Question
+            opinion: Avis
+            contribution: Contribution
           index:
             title: Propositions
             unmoderate: A traiter
@@ -157,6 +168,10 @@ fr:
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
           title: Modifier la proposition
+          type: Type
+          question: Question
+          opinion: Avis
+          contribution: Contribution
         filters:
           accepted: Retenue
           activity: Activité
@@ -193,6 +208,10 @@ fr:
           select_a_category: Veuillez sélectionner une catégorie
           send: Publier
           title: Nouvelle proposition
+          type: Type
+          question: Question
+          opinion: Avis
+          contribution: Contribution
         orders:
           label: 'Classement des propositions par:'
           most_voted: Les plus votées

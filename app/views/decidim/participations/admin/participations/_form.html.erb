@@ -5,10 +5,6 @@
 
   <div class="card-section">
     <div class="row column">
-      <%= form.text_field :title %>
-    </div>
-
-    <div class="row column">
       <%= form.text_area :body, rows: 10 %>
     </div>
 
@@ -17,6 +13,10 @@
         <%= form.text_field :address %>
       </div>
     <% end %>
+
+    <div class="row column">
+      <%= form.select :participation_type, options_for_select([t(".question"), t(".opinion"), t(".contribution")]), prompt: t(".select_a_category"), label: t(".type")  %>
+    </div>
 
     <% if @form.categories&.any? %>
       <div class="row column">
@@ -30,21 +30,19 @@
       </div>
     <% end %>
 
-    <% if feature_settings.attachments_allowed? %>
-      <div class="row column">
-        <fieldset>
-          <legend><%= t('.attachment_legend') %></legend>
-          <%= form.fields_for :attachment, @form.attachment do |form| %>
-            <div class="row column">
-              <%= form.text_field :title %>
-            </div>
+    <div class="row column">
+      <fieldset>
+        <legend><%= t('.attachment_legend') %></legend>
+        <%= form.fields_for :attachment, @form.attachment do |form| %>
+          <div class="row column">
+            <%= form.text_field :title %>
+          </div>
 
-            <div class="row column">
-              <%= form.upload :file, optional: false %>
-            </div>
-          <% end %>
-        </fieldset>
-      </div>
-    <% end %>
+          <div class="row column">
+            <%= form.upload :file, optional: false %>
+          </div>
+        <% end %>
+      </fieldset>
+    </div>
   </div>
 </div>

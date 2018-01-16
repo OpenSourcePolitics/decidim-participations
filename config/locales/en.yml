@@ -4,6 +4,7 @@ en:
     home:
       statistics:
         participations_count: Participations
+        participations_accepted: Accepted Participations
   activemodel:
     attributes:
       participation:
@@ -16,6 +17,13 @@ en:
       participation_answer:
         answer: Answer
   decidim:
+    admin:
+      models:
+        participatory_process_user_role:
+          roles:
+            cpdp: CPDP
+            moa: Maîtrise d'ouvrage
+
     events:
       participation_created:
         notification_title: There is a new participation from %{author_name} in <a href="%{resource_path}">%{resource_title}</a>
@@ -103,6 +111,10 @@ en:
           form:
             attachment_legend: "(Optional) Add an attachment"
             select_a_category: Select a category
+            type: Type
+            question: Question
+            opinion: Opinion
+            contribution: Contribution
           index:
             title: Participations
             unmoderate: Treat
@@ -162,6 +174,10 @@ en:
           select_a_category: Please select a category
           send: Send
           title: Edit participation
+          type: Type
+          question: Question
+          opinion: Opinion
+          contribution: Contribution
         filters:
           accepted: Accepted
           activity: Activity
@@ -198,6 +214,10 @@ en:
           select_a_category: Please select a category
           send: Send
           title: New participation
+          type: Type
+          question: Question
+          opinion: Opinion
+          contribution: Contribution
         orders:
           label: 'Order participations by:'
           most_voted: Most voted
