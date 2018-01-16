@@ -19,7 +19,7 @@ module Decidim
 
       has_many :votes, foreign_key: "decidim_participation_id", class_name: "ParticipationVote", dependent: :destroy, counter_cache: "participation_votes_count"
 
-      validates :title, :body, presence: true
+      validates :body, presence: true
 
       geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
 

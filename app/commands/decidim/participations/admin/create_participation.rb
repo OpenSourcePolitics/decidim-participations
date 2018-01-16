@@ -40,8 +40,8 @@ module Decidim
 
         def create_participation
           @participation = Participation.create!(
-            title: form.title,
             body: form.body,
+            participation_type: form.participation_type,
             category: form.category,
             scope: form.scope,
             feature: form.feature,
@@ -76,7 +76,7 @@ module Decidim
         end
 
         def attachments_allowed?
-          form.current_feature.settings.attachments_allowed?
+          true
         end
 
         def process_attachments?

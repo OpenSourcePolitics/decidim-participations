@@ -21,9 +21,6 @@
 
       <div class="card__content">
         <%= decidim_form_for(@form) do |form| %>
-          <div class="field">
-            <%= form.text_field :title %>
-          </div>
 
           <div class="field">
             <%= form.text_area :body, rows: 10 %>
@@ -37,6 +34,10 @@
               <%= form.text_field :address %>
             </div>
           <% end %>
+
+          <div class="row column">
+            <%= form.select :participation_type, options_for_select([t(".question"), t(".opinion"), t(".contribution")]), prompt: t(".select_a_category"), label: t(".type")  %>
+          </div>
 
           <% if @form.categories&.any? %>
             <div class="field">
@@ -56,20 +57,18 @@
             </div>
           <% end %>
 
-          <% if feature_settings.attachments_allowed? %>
-            <fieldset>
-              <legend><%= t('.attachment_legend') %></legend>
-              <%= form.fields_for :attachment, @form.attachment do |form| %>
-                <div class="field">
-                  <%= form.text_field :title %>
-                </div>
+          <fieldset>
+            <legend><%= t('.attachment_legend') %></legend>
+            <%= form.fields_for :attachment, @form.attachment do |form| %>
+              <div class="field">
+                <%= form.text_field :title %>
+              </div>
 
-                <div class="field">
-                  <%= form.upload :file, optional: false %>
-                </div>
-              <% end %>
-            </fieldset>
-          <% end %>
+              <div class="field">
+                <%= form.upload :file, optional: false %>
+              </div>
+            <% end %>
+          </fieldset>
 
           <div class="actions">
             <%= form.submit t(".send"), class: "button expanded", data: { disable: true } %>

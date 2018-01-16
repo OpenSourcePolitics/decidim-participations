@@ -10,7 +10,7 @@ module Decidim
         I18n.t(
           "decidim.events.participation_created.notification_title",
           resource_title: resource_title,
-          resource_path: resource_locator.path(url_params),
+          resource_path: resource_locator.path,
           author_name: participation.author.name
         ).html_safe
       end
@@ -18,7 +18,7 @@ module Decidim
       def email_url
         I18n.t(
           "decidim.events.participation_created.url",
-          resource_url: resource_locator.url(url_params)
+          resource_url: resource_locator.url
         ).html_safe
       end
 
@@ -41,7 +41,7 @@ module Decidim
         I18n.t(
           "decidim.events.participation_created.moderation.email_subject",
           resource_title: resource_title,
-          resource_url: resource_locator.url(url_params),
+          resource_url: resource_locator.url,
           author_name: participation.author.name
         ).html_safe
       end
@@ -57,10 +57,6 @@ module Decidim
 
       def participation
         @participation ||= Decidim::Participations::Participation.find(resource.id)
-      end
-
-      def url_params
-        { anchor: "participation_#{participation.id}" }
       end
     end
   end

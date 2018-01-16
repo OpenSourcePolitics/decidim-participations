@@ -49,9 +49,9 @@ module Decidim
 
         Decidim::EventsManager.publish(
           event: "decidim.events.participations.participation_created",
-          event_class: Decidim::Participations::CreateParticipationEvent,
+          event_class: Decidim::Participations::ParticipationCreatedEvent,
           resource: participation,
-          recipient_ids: participation.author.followers.pluck(:id)
+          recipient_ids: participation.author.id
         )
       end
 
@@ -59,8 +59,8 @@ module Decidim
 
       def create_participation
         @participation = Participation.create!(
-          title: form.title,
           body: form.body,
+          participation_type: form.participation_type,
           category: form.category,
           scope: form.scope,
           author: @current_user,
@@ -79,7 +79,7 @@ module Decidim
           resource: @participation,
           recipient_ids: (@participation.users_to_notify_on_participation_created - [@participation.author]).pluck(:id),
           extra: {
-            moderation_event: @participation.moderation.upstream_activated? ? true : false,
+            moderation_event: true,
             new_content: true,
             process_slug: @participation.feature.participatory_space.slug
           }
@@ -111,7 +111,7 @@ module Decidim
       end
 
       def attachments_allowed?
-        form.current_feature.settings.attachments_allowed?
+        true
       end
 
       def process_attachments?
