@@ -12,7 +12,7 @@ fr:
         has_address: A une adresse
         scope_id: Zone d'application
         title: Titre
-        user_group_id: Créer une proposition en tant que
+        user_group_id: Créer une participation en tant que
       participation_answer:
         answer: Répondre
   decidim:
@@ -24,13 +24,13 @@ fr:
             moa: Maîtrise d'ouvrage
     events:
       participation_created:
-        notification_title: Nouvelle proposition de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
-        url: "Url de la proposition : %{resource_url}"
-        email_subject: 'Nouvelle proposition de %{author_name}'
+        notification_title: Nouvelle participation de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
+        url: "Url de la participation : %{resource_url}"
+        email_subject: 'Nouvelle participation de %{author_name}'
         moderation:
-          email_intro: "%{author_name} a publié une nouvelle proposition dans"
+          email_intro: "%{author_name} a publié une nouvelle participation dans"
           moderation_url: "Vous pouvez modérer le contenu en suivant ce lien : %{moderation_url}"
-          email_subject: 'Nouvelle proposition de %{author_name} en attente de modération'
+          email_subject: 'Nouvelle participation de %{author_name} en attente de modération'
     participatory_processes:
       statistics:
         participations_count: Participations
@@ -39,27 +39,27 @@ fr:
         actions:
           create: Créer
           vote: Voter
-        name: Propositions
+        name: Participations
         settings:
           global:
             announcement: Message d'annonce
             attachments_allowed: Autoriser les pièces jointes
             comments_enabled: Commentaires activés
             geocoding_enabled: Géocodage activé
-            maximum_votes_per_participation: Nombre maximum de votes par proposition
-            new_participation_help_text: Nouveau texte d'aide à la proposition
-            official_participations_enabled: Propositions officielles activées
-            participation_answering_enabled: '"Réponses aux propositions" activé'
-            participation_edit_before_minutes: Les propositions peuvent être éditées par les auteurs avant que ces minutes soit écoulées
-            participation_limit: Maximum de propositions par utilisateur
+            maximum_votes_per_participation: Nombre maximum de votes par participation
+            new_participation_help_text: Nouveau texte d'aide à la participation
+            official_participations_enabled: Participations officielles activées
+            participation_answering_enabled: '"Réponses aux participations" activé'
+            participation_edit_before_minutes: Les participations peuvent être éditées par les auteurs avant que ces minutes soit écoulées
+            participation_limit: Maximum de participations par utilisateur
             vote_limit: Nombre maximum de votes par utilisateur
-            upstream_moderation_enabled: Modération à priori des propositions activée
+            upstream_moderation_enabled: Modération à priori des participations activée
             comments_upstream_moderation_enabled: Modération à priori des commentaires activée
           step:
             announcement: Message d'annonce
             comments_blocked: Commentaires bloqués
-            creation_enabled: Module propositions activé
-            participation_answering_enabled: '"Réponses aux propositions" activé'
+            creation_enabled: Module participations activé
+            participation_answering_enabled: '"Réponses aux participations" activé'
             votes_blocked: Votes bloqués
             votes_enabled: Votes activés
             votes_hidden: Cacher les votes (si les votes sont activés, le compte des votes sera caché)
@@ -76,24 +76,24 @@ fr:
           edit: Modifier
         exports:
           comments: Commentaires
-          participations: Propositions
+          participations: Participations
         models:
           participation:
-            name: Proposition
+            name: Participation
         participation_answers:
           edit:
             accepted: Retenue
             answer_participation: Répondre
             evaluating: En cours d'évaluation
             rejected: Refusée
-            title: Réponse à la proposition %{title}
+            title: Réponse à la participation %{title}
         participations:
           answer:
-            invalid: Il y a eu un problème concernant la réponse à cette proposition
-            success: La réponse à la proposition a publiée avec succès
+            invalid: Il y a eu un problème concernant la réponse à cette participation
+            success: La réponse à la participation a publiée avec succès
           create:
-            invalid: Il y a eu un problème lors de la création de cette proposition
-            success: Proposition créée avec succès.
+            invalid: Il y a eu un problème lors de la création de cette participation
+            success: Participation créée avec succès.
           form:
             attachment_legend: "(Facultatif) Ajouter une pièce jointe"
             select_a_category: Sélectionner une catégorie
@@ -102,28 +102,28 @@ fr:
             opinion: Avis
             contribution: Contribution
           index:
-            title: Propositions
+            title: Participations
             unmoderate: A traiter
             questions: Questions
             moderated: Traitées
           new:
             create: Créer
-            title: Créer une proposition
+            title: Créer une participation
       answers:
         accepted: Retenue
         evaluating: En cours d'évaluation
         not_answered: Resté sans réponse
         rejected: Refusée
       create:
-        error: Il y a eu des erreurs lors de la sauvegarde de la proposition.
-        success: Proposition créée avec succès. Elle sera publiée dès qu'un administrateur l'aura validée.
+        error: Il y a eu des erreurs lors de la sauvegarde de la participation.
+        success: Participation créée avec succès. Elle sera publiée dès qu'un administrateur l'aura validée.
       events:
         create_participation_event:
           email_intro: |-
-            Bonjour, %{author_name} %{author_nickname}, que vous suivez, a créé une nouvelle proposition. Prenez-en connaissance et contribuez :
+            Bonjour, %{author_name} %{author_nickname}, que vous suivez, a créé une nouvelle participation. Prenez-en connaissance et contribuez :
           email_outro: Vous avez reçu cette notification, car vous suivez %{author_nickname}. Vous pouvez arrêter de recevoir des notifications à partir du lien précédent.
-          email_subject: Nouvelle proposition par %{author_nickname}
-          notification_title: La proposition <a href="%{resource_path}">%{resource_title}</a> a été créée par <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
+          email_subject: Nouvelle participation par %{author_nickname}
+          notification_title: La participation <a href="%{resource_path}">%{resource_title}</a> a été créée par <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
       models:
         participation:
           date: Date
@@ -137,26 +137,26 @@ fr:
             type: Type
             category: Catégorie
             id: ID
-            official_participation: Proposition officielle
+            official_participation: Participation officielle
             scope: Zone d'application
             state: Etat
             title: Titre
             votes: Votes
       new:
-        limit_reached: Vous ne pouvez pas créer de nouvelles propositions car vous avez dépassé le nombre autorisé.
+        limit_reached: Vous ne pouvez pas créer de nouvelles participations car vous avez dépassé le nombre autorisé.
       participation_votes:
         create:
-          error: Des erreurs se sont produites lors du vote de la proposition.
+          error: Des erreurs se sont produites lors du vote de la participation.
       participations:
         count:
           participations_count:
-            one: 1 proposition
-            other: "%{count} propositions"
+            one: 1 participation
+            other: "%{count} participations"
         edit:
           back: Retour
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
-          title: Modifier la proposition
+          title: Modifier la participation
           type: Type
           question: Question
           opinion: Avis
@@ -167,9 +167,9 @@ fr:
           all: Toutes
           category: Catégorie
           category_prompt: Sélectionner une catégorie
-          citizens: Citoyens >> Propositions citoyennes
+          citizens: Citoyens >> Participations citoyennes
           evaluating: En cours d'évaluation
-          official: Elu-e-s >> Propositions officielles
+          official: Elu-e-s >> Participations officielles
           origin: Auteurs
           rejected: Refusée
           related_to: Liée à
@@ -182,8 +182,8 @@ fr:
           filter_by: Filtrer par
           unfold: Déplier
         index:
-          new_participation: Nouvelle proposition
-          view_participation: Voir la proposition
+          new_participation: Nouvelle participation
+          view_participation: Voir la participation
         linked_participations:
           participation_votes:
             one: voter
@@ -192,28 +192,28 @@ fr:
           attachment_legend: "(Facultatif) Ajouter une pièce jointe"
           back: Retour
           participation_edit_before_minutes:
-            one: Vous serez en mesure de modifier cette proposition pendant un minute après la création de la proposition. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la proposition.
-            other: Vous serez en mesure de modifier cette proposition au cours des premières %{count} minutes après la création de la proposition. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la proposition.
+            one: Vous serez en mesure de modifier cette participation pendant un minute après la création de la participation. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la participation.
+            other: Vous serez en mesure de modifier cette participation au cours des premières %{count} minutes après la création de la participation. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la participation.
           select_a_category: Veuillez sélectionner une catégorie
           send: Publier
-          title: Nouvelle proposition
+          title: Nouvelle participation
           type: Type
           question: Question
           opinion: Avis
           contribution: Contribution
         orders:
-          label: 'Classement des propositions par:'
+          label: 'Classement des participations par:'
           most_voted: Les plus votées
           random: Aléatoire
           recent: Les plus récents
         participation:
           creation_date: 'Création: %{date}'
-          view_participation: Voir la proposition
+          view_participation: Voir la participation
         show:
-          edit_participation: Modifier la proposition
-          participation_accepted_reason: 'Cette proposition a été retenue parce que :'
-          participation_in_evaluation_reason: Cette proposition est en cours d'évaluation
-          participation_rejected_reason: 'Cette proposition a été refusée parce que:'
+          edit_participation: Modifier la participation
+          participation_accepted_reason: 'Cette participation a été retenue parce que :'
+          participation_in_evaluation_reason: Cette participation est en cours d'évaluation
+          participation_rejected_reason: 'Cette participation a été refusée parce que:'
           report: Signaler
         vote_button:
           already_voted: Déjà voté
@@ -228,18 +228,18 @@ fr:
             other: VOTES
         voting_rules:
           maximum_votes_per_participation:
-            description: Chaque proposition peut recevoir un maximum de %{limit} votes.
+            description: Chaque participation peut recevoir un maximum de %{limit} votes.
           participation_limit:
-            description: Vous pouvez créer jusqu'à %{limit} propositions.
+            description: Vous pouvez créer jusqu'à %{limit} participations.
           title: 'Le vote est soumis aux règles suivantes:'
           vote_limit:
-            description: Vous pouvez voter pour %{limit} propositions au maximum.
+            description: Vous pouvez voter pour %{limit} participations au maximum.
             left: Restant
             votes: Votes
       update:
-        error: Des erreurs se sont produites lors de l'enregistrement de la proposition.
-        success: Proposition mise à jour avec succès.
+        error: Des erreurs se sont produites lors de l'enregistrement de la participation.
+        success: Participation mise à jour avec succès.
     resource_links:
       included_participations:
-        participation_projects: 'Proposition figurant dans ces projets :'
-        participation_results: 'Proposition figurant dans ces résultats :'
+        participation_projects: 'Participation figurant dans ces projets :'
+        participation_results: 'Participation figurant dans ces résultats :'
