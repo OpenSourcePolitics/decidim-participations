@@ -23,7 +23,6 @@ Decidim.register_feature(:participations) do |feature|
     settings.attribute :participation_answering_enabled, type: :boolean, default: true
     settings.attribute :official_participations_enabled, type: :boolean, default: true
     settings.attribute :comments_enabled, type: :boolean, default: true
-    settings.attribute :upstream_moderation_enabled, type: :boolean, default: false
     settings.attribute :comments_upstream_moderation_enabled, type: :boolean, default: false
     settings.attribute :geocoding_enabled, type: :boolean, default: false
     settings.attribute :announcement, type: :text, translated: true, editor: true
