@@ -4,6 +4,7 @@ en:
     home:
       statistics:
         participations_count: Participations
+        participations_accepted: Accepted Participations
   activemodel:
     attributes:
       participation:
