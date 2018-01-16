@@ -3,6 +3,7 @@ fr:
     home:
       statistics:
         participations_count: Participations
+        participations_accepted: Participations acceptées
   activemodel:
     attributes:
       participation:
@@ -15,6 +16,12 @@ fr:
       participation_answer:
         answer: Répondre
   decidim:
+    admin:
+      models:
+        participatory_process_user_role:
+          roles:
+            cpdp: CPDP
+            moa: Maîtrise d'ouvrage
     events:
       participation_created:
         notification_title: Nouvelle proposition de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>

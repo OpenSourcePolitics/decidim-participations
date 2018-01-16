@@ -4,7 +4,7 @@ en:
     home:
       statistics:
         participations_count: Participations
-        participations_accepted: Accepted
+        participations_accepted: Accepted Participations
   activemodel:
     attributes:
       participation:
@@ -17,6 +17,13 @@ en:
       participation_answer:
         answer: Answer
   decidim:
+    admin:
+      models:
+        participatory_process_user_role:
+          roles:
+            cpdp: CPDP
+            moa: Maîtrise d'ouvrage
+
     events:
       participation_created:
         notification_title: There is a new participation from %{author_name} in <a href="%{resource_path}">%{resource_title}</a>
