@@ -12,12 +12,14 @@ module Decidim
 
         def index
           case params[:status]
-            when nil || "unmoderate"
+            when "unmoderate"
               @param_unmoderate = true
             when "questions"
               @param_questions = true
             when "moderated"
               @param_moderated = true
+            else
+              @param_unmoderate = true
           end
         end
 
@@ -54,15 +56,15 @@ module Decidim
           authorize! :edit, Participation
           @form = form(Admin::ParticipationForm).from_params(params)
 
-          Admin::UpdateParticipation.call(@form) do
+          Admin::UpdateParticipation.call(@form, current_user, participation) do
             on(:ok) do
-              flash[:notice] = I18n.t("participations.create.success", scope: "decidim.participations.admin")
+              flash[:notice] = I18n.t("participations.update.success", scope: "decidim.participations.admin")
               redirect_to participations_path
             end
 
             on(:invalid) do
-              flash.now[:alert] = I18n.t("participations.create.invalid", scope: "decidim.participations.admin")
-              render action: "new"
+              flash.now[:alert] = I18n.t("participations.update.invalid", scope: "decidim.participations.admin")
+              render action: "edit"
             end
           end
         end

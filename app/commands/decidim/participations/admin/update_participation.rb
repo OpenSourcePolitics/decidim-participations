@@ -21,11 +21,8 @@ module Decidim
         # Returns nothing.
         def call
           return broadcast(:invalid) if form.invalid?
-          return broadcast(:invalid) unless participation.editable_by?(current_user)
-          return broadcast(:invalid) if participation_limit_reached?
 
           transaction do
-            binding.pry
             update_participation
             update_moderation
           end
@@ -38,14 +35,13 @@ module Decidim
         attr_reader :form, :participation, :current_user
 
         def update_participation
-          binding.pry
           @participation.update_attributes!(
             body: form.body,
             participation_type: form.participation_type,
             category: form.category,
             scope: form.scope,
             author: current_user,
-            decidim_user_group_id: user_group.try(:id),
+            # decidim_user_group_id: user_group.try(:id),
             address: form.address,
             latitude: form.latitude,
             longitude: form.longitude
@@ -56,6 +52,7 @@ module Decidim
           @moderation = @participation.moderation.update_attributes(
             upstream_moderation: form.moderation.upstream_moderation,
             justification: form.moderation.justification,
+            id: @participation.moderation.id
           )
         end
 

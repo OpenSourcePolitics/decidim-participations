@@ -9,8 +9,9 @@ module Decidim
 
         attribute :justification, String
         attribute :upstream_moderation, String
+        attribute :id, Integer
 
-        validate :upstream_moderation
+        validates :upstream_moderation, presence: true
       end
     end
   end
