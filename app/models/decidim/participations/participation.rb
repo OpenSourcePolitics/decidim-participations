@@ -40,6 +40,10 @@ module Decidim
         where(feature: current_feature)
       end
 
+      def question?
+        participation_type == "Question"
+      end
+
       def self.find_participations(participations)
         where(id: participations.map(&:id))
       end

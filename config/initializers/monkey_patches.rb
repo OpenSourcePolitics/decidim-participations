@@ -1,1 +1,1 @@
-require 'decidim/mailer/email_notification_generator'
+require 'decidim/monkey_patches'

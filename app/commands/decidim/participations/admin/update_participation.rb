@@ -50,12 +50,17 @@ module Decidim
 
         def update_moderation
           @moderation = @participation.moderation.update_attributes(
-            upstream_moderation: form.moderation.upstream_moderation,
+            upstream_moderation: set_upstream_moderation,
             justification: form.moderation.justification,
             id: @participation.moderation.id
           )
         end
 
+        def set_upstream_moderation
+          if @participation.question? && form.moderation.upstream_moderation == "authorized"
+            "waiting_for_answer"
+          end
+        end
 
         def participation_limit_reached?
           participation_limit = form.current_feature.settings.participation_limit

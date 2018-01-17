@@ -15,8 +15,8 @@
     </div>
     <div class="row column">
       <%= f.fields_for :moderation do |fm| %>
-        <%= fm.radio_button :upstream_moderation, true, label: t(".accepted"), require: true %>
-        <%= fm.radio_button :upstream_moderation, false, label: t(".refused"), require: true %>
+        <%= fm.radio_button :upstream_moderation, "authorized", label: t(".accepted"), require: true %>
+        <%= fm.radio_button :upstream_moderation, "refused", label: t(".refused"), require: true %>
       <% end %>
     </div>
 
