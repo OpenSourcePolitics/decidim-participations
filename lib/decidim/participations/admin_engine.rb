@@ -13,6 +13,8 @@ module Decidim
           resources :participation_answers, only: [:edit, :update]
         end
 
+        resources :moderation, only: [:update]
+
         root to: "participations#index"
       end
 

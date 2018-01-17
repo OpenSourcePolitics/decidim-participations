@@ -15,6 +15,7 @@ module Decidim
         attribute :category_id, Integer
         attribute :scope_id, Integer
         attribute :attachment, AttachmentForm
+        attribute :moderation, ModerationForm
 
         validates :address, geocoding: true, if: -> { current_feature.settings.geocoding_enabled? }
         validates :participation_type, presence: true

@@ -17,6 +17,8 @@ module Decidim
 
       feature_manifest_name "participations"
 
+      accepts_nested_attributes_for :moderation
+
       has_many :votes, foreign_key: "decidim_participation_id", class_name: "ParticipationVote", dependent: :destroy, counter_cache: "participation_votes_count"
 
       validates :body, presence: true

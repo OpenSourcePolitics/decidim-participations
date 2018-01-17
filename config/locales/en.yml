@@ -92,13 +92,16 @@ en:
         participations:
           edit:
             title: Title
-            create: Create
+            create: Publier
             qualification: Qualification
             select_a_category: Select a category
             question: Question
             opinion: Opinion
             contribution: Contribution
             content: Content
+            original: Original
+            accepted: Accepted
+            refused: Refused
             fields:
               type: Type
           edit_form:
