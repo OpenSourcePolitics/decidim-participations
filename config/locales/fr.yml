@@ -108,6 +108,9 @@ fr:
           create:
             invalid: Il y a eu un problème lors de la création de cette proposition
             success: Proposition créée avec succès.
+          update:
+            invalid: Il y a eu un problème lors de la mise à jour de cette participation
+            success: Participation mise à jour avec succès.
           form:
             attachment_legend: "(Facultatif) Ajouter une pièce jointe"
             select_a_category: Sélectionner une catégorie

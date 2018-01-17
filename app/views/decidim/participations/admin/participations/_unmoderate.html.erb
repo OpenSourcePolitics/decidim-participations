@@ -7,7 +7,7 @@
             <%= sort_link(query, :created_at, t("models.participation.date", scope: "decidim.participations"), default_order: :desc ) %>
           </th>
           <th>
-            <%= sort_link(query, :type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
+            <%= sort_link(query, :participation_type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
           </th>
           <th>
             <%= t("models.participation.fields.body", scope: "decidim.participations")%>
@@ -27,7 +27,7 @@
               <%= l(participation.created_at, format: :short) %><br />
             </td>
             <td>
-              TODO
+              <%= participation.participation_type %><br />
             </td>
             <td>
               <%= participation.body.truncate(50) %><br />
