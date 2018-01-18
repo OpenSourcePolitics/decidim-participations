@@ -8,6 +8,13 @@ module Decidim
         helper_method :participation
 
         def edit
+          if current_user.roles.include?("moderator")
+            @moderator_view = true
+          elsif current_user.roles.include?("cpdp")
+            @cpdp_view = true
+          elsif current_user.roles.include?("moa")
+            @moa_view = true
+          end 
           authorize! :update, participation
           @form = form(Admin::ParticipationAnswerForm).from_model(participation)
         end
