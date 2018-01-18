@@ -41,7 +41,11 @@ module Decidim
       end
 
       def question?
-        participation_type == "Question"
+        type == "question"
+      end
+
+      def type
+        participation_type
       end
 
       def self.find_participations(participations)

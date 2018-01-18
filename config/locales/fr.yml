@@ -90,9 +90,11 @@ fr:
         participations:
           edit:
             title: Title
-            create: Publier
+            publish: Publier
+            notify: Publier et notifier l'auteur
             qualification: Qualification
             select_a_category: Sélectionner une catégorie
+            select_a_type: Sélectionner un type
             question: Question
             opinion: Opinion
             contribution: Contribution
@@ -211,13 +213,16 @@ fr:
           participation_edit_before_minutes:
             one: Vous serez en mesure de modifier cette proposition pendant un minute après la création de la proposition. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la proposition.
             other: Vous serez en mesure de modifier cette proposition au cours des premières %{count} minutes après la création de la proposition. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la proposition.
-          select_a_category: Veuillez sélectionner une catégorie
+          select_a_type: Veuillez sélectionner un type
+          select_a_category: Veuillez sélectionner un category
           send: Publier
           title: Nouvelle proposition
           type: Type
           question: Question
           opinion: Avis
           contribution: Contribution
+          fields:
+            type: Type
         orders:
           label: 'Classement des propositions par:'
           most_voted: Les plus votées

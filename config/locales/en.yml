@@ -92,9 +92,11 @@ en:
         participations:
           edit:
             title: Title
-            create: Publier
+            publish: Publier
+            notify: Publish and notify the author
             qualification: Qualification
             select_a_category: Select a category
+            select_a_type: Select a type
             question: Question
             opinion: Opinion
             contribution: Contribution
@@ -217,6 +219,7 @@ en:
           participation_edit_before_minutes:
             one: You will be able to edit this participation during the first minute after the participation was created. Once this time window passes, you will not be able to edit the participation.
             other: You will be able to edit this participation during the first %{count} minutes after the participation was created. Once this time window passes, you will not be able to edit the participation.
+          select_a_type: Please select a type
           select_a_category: Please select a category
           send: Send
           title: New participation
@@ -224,6 +227,8 @@ en:
           question: Question
           opinion: Opinion
           contribution: Contribution
+          fields:
+            type: Type
         orders:
           label: 'Order participations by:'
           most_voted: Most voted

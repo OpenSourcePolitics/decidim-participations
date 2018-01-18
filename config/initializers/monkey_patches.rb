@@ -1,1 +1,1 @@
-require 'decidim/monkey_patches'
+require 'decidim/monkey_patches/mailer/email_notification_generator.rb'

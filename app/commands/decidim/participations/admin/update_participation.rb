@@ -39,12 +39,6 @@ module Decidim
             body: form.body,
             participation_type: form.participation_type,
             category: form.category,
-            scope: form.scope,
-            author: current_user,
-            # decidim_user_group_id: user_group.try(:id),
-            address: form.address,
-            latitude: form.latitude,
-            longitude: form.longitude
           )
         end
 
@@ -59,6 +53,8 @@ module Decidim
         def set_upstream_moderation
           if @participation.question? && form.moderation.upstream_moderation == "authorized"
             "waiting_for_answer"
+          else
+            form.moderation.upstream_moderation
           end
         end
 
@@ -72,10 +68,6 @@ module Decidim
           else
             current_user_participations.count >= participation_limit
           end
-        end
-
-        def user_group
-          @user_group ||= Decidim::UserGroup.where(organization: organization, id: form.user_group_id).first
         end
 
         def organization
