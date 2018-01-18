@@ -34,12 +34,13 @@
 <% end %>
 
 <script type="text/javascript">
-$('participation_answer_state_retained').change(function() {
-  if (this.value == "retained") {
-    $('div#justification_field').hide()
-  }
-  else if (this.value == "incomplete") {
-    $('div#justification_field').show()
-  }
-});
+  $('#justification_field').hide();
+  $('input[name="participation_answer[state]"]').change(function() {
+    var a = $('input[name="participation_answer[state]"]:checked').val();
+    if (a == "incomplete") {
+      $('#justification_field').show(500);
+      } else {
+      $('#justification_field').hide();
+      }
+  })
 </script>
