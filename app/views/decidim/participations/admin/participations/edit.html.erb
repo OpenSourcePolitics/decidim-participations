@@ -1,57 +1,64 @@
- <script>
- $("input['name=body']").change(function(){
-    $("input['name=justification']").attr("required", "true");
- })
- </script>
-
- <div class="card">
+<div class="card">
   <div class="card-divider">
     <h2 class="card-title"><%= @form.body.truncate(50) %></h2>
   </div>
-<br/>
-  <%=  decidim_form_for(@form, html: { class: "form edit_participation" }, method: "put") do |f| %>
-    <div class="card-divider">
-      <h2 class="card-title"><%= t(".qualification") %></h2>
-    </div>
-    <div class="row column">
-      <%= f.fields_for :moderation do |fm| %>
-        <%= fm.radio_button :upstream_moderation, "authorized", label: t(".accepted"), require: true %>
-        <%= fm.radio_button :upstream_moderation, "refused", label: t(".refused"), require: true %>
-      <% end %>
-    </div>
-
-    <div class="card-section">
-      <% if @form.categories&.any? %>
-        <div class="row column">
-          <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+  <br/>
+  <div class="card-section">
+    <%=  decidim_form_for(@form, html: { class: "form edit_participation" }, method: "put") do |f| %>
+      <div class="card">
+        <div class="card-divider">
+          <h2 class="card-title"><%= t(".qualification") %></h2>
         </div>
-      <% end %>
-      <div class="row column">
-        <%= f.select :participation_type, options_for_select([t(".question"), t(".opinion"), t(".contribution")]), prompt: t(".select_a_category"), label: t(".fields.type")  %>
-      </div>
-    </div>
+        <br/>
+        <div class="card-section">
+          <div class="row column">
+            <%= f.fields_for :moderation do |fm| %>
+              <%= fm.radio_button :upstream_moderation, "authorized", label: t(".accepted"), require: true %>
+              <%= fm.radio_button :upstream_moderation, "refused", label: t(".refused"), require: true %>
+            <% end %>
+          </div>
 
-    <div class="card-divider">
-      <h2 class="card-title"><%= t(".content") %></h2>
-    </div>
-      <div class="row column">
-        <h6 class="heading6 bold"><%= t(".original") %></h2>
-        <%= @form.body%>
+          <% if @form.categories&.any? %>
+            <div class="row column">
+              <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+            </div>
+          <% end %>
+          <div class="row column">
+            <%= f.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), label: t(".fields.type") %>
+          </div>
+        </div>
       </div>
+      <div class="card">
+        <div class="card-divider">
+          <h2 class="card-title"><%= t(".content") %></h2>
+        </div>
+        <br/>
+        <div class="card-section">
+          <div class="row column">
+            <h6 class="heading6 bold"><%= t(".original") %></h6>
+            <%= @form.body%>
+          </div>
+          <br/>
 
-      <div class="row column">
-        <%=f.text_area :body, rows: 10, label: false %>
+          <div class="row column">
+            <%=f.text_area :body, rows: 10, label: false %>
+          </div>
+
+          <div class="row column">
+            <%= f.fields_for :moderation do |fm| %>
+              <%=fm.text_field :justification %>
+            <% end %>
+          </div>
+
+          <div class="button--double form-general-submit notify hidden">
+            <%= f.submit t(".notify") %>
+          </div>
+
+          <div class="button--double form-general-submit publish">
+            <%= f.submit t(".publish") %>
+          </div>
+        </div>
       </div>
-
-      <div class="row column">
-        <%= f.fields_for :moderation do |fm| %>
-          <%=fm.text_field :justification %>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="button--double form-general-submit">
-      <%= f.submit t(".create") %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
