@@ -1,3 +1,16 @@
+<script type="text/javascript">
+if (typeof jQuery.ui === 'undefined') {
+  console.log(" jQuery is NOT available")
+} else {
+  console.log("jQuery is available")
+}
+ $("#participation_body").change(function(){
+    $("#participation_moderation_justification").attr("required", "true");
+    $(".notify").css("display", "flex")
+    $(".publish").css("display", "none")
+ })
+</script>
+
 <div class="card">
   <div class="card-divider">
     <h2 class="card-title"><%= @form.body.truncate(50) %></h2>
