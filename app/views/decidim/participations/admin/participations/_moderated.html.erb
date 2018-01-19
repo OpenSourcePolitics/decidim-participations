@@ -24,7 +24,9 @@
         <% participations.each do |participation| %>
           <tr data-id="<%= participation.id %>">
             <td>
-              TODO
+            <% if participation.published_on %>
+              <%= l(participation.published_on, format: :short) %><br />
+            <%end%>
             </td>
             <td>
               <%= participation.type %><br />

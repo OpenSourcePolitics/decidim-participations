@@ -17,7 +17,8 @@ module Decidim
         @participations = search
                       .results
                       .not_hidden
-                      .authorized
+                      .exclude("unmoderate")
+                      .exclude("refused")
                       .includes(:author)
                       .includes(:category)
                       .includes(:scope)

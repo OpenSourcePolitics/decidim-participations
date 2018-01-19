@@ -21,7 +21,7 @@
           </div>
 
           <div class="row column">
-            <%= f.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]]), prompt: t(".select_a_type"), label: t(".fields.type") %>
+            <%= form.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), prompt: t(".select_a_type"), label: t(".fields.type") %>
           </div>
 
           <% if @form.categories&.any? %>

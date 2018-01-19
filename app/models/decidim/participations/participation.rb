@@ -26,11 +26,13 @@ module Decidim
       geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
 
       # upstream moderation => MOA dashboard
-      scope :unmoderate, ->(current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where(upstream_moderation: "unmoderate")) }
-      scope :moderated, -> (current_feature){ current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
+      scope :untreated, ->(current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where(upstream_moderation: "unmoderate")) }
+      scope :treated, -> (current_feature){ current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
       scope :questions_with_unpublished_answer, -> (current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where.not(['upstream_moderation = ? OR upstream_moderation = ? OR upstream_moderation = ?', 'unmoderate', 'authorized', 'refused'])) }
 
-      # useless for this feature
+      # participations index
+      scope :exclude, lambda { |status |left_outer_joins(:moderation).where(Decidim::Moderation.arel_table[:upstream_moderation].not_eq(status))}
+
       scope :accepted, -> { where(state: "accepted") }
       scope :rejected, -> { where(state: "rejected") }
       scope :evaluating, -> { where(state: "evaluating") }
@@ -44,9 +46,34 @@ module Decidim
         type == "question"
       end
 
+      def published?
+        published_on.present?
+      end
+
+      def not_publish?
+        published_on.nil?
+      end
+
+      def publishable?
+        moderation.upstream_moderation == "authorized" || moderation.upstream_moderation == "waiting_for_answer"
+      end
+
       def type
         participation_type
       end
+
+      def refused?
+        moderation.upstream_moderation == "refused"
+      end
+
+      def generate_title # count the number of authorized and waiting for answer status. Then generate the title thanks to this number
+        status = self.class.where(participation_type: type).map(&:moderation).map(&:upstream_moderation)
+        status.delete("refused")
+        status.delete("unmoderate")
+        number = status.count
+        "#{type.capitalize}" + " n°" + "#{number}"
+      end
+
 
       def self.find_participations(participations)
         where(id: participations.map(&:id))

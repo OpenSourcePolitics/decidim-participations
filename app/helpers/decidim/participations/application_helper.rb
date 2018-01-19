@@ -48,6 +48,22 @@ module Decidim
       end
 
 
+      def published_status(participation)
+        if participation.published? && !participation.question?
+          content_tag(:strong, class: 'text-success') do
+            t("published" , scope: "decidim.participations.admin.participations.index")
+          end
+        elsif participation.published? && participation.anwser.nil? # TODO #22 => Voir si des méthodes ont été créées dans cette issue pour refacto
+          content_tag(:strong, class: 'text-success') do
+            t("answer_published" , scope: "decidim.participations.admin.participations.index")
+          end
+        else
+          content_tag(:strong, class: 'text-alert') do
+            t("refused" , scope: "decidim.participations.admin.participations.index")
+          end
+        end
+      end
+
       # Public: The css class applied based on the participation state to
       #         the participation badge.
       #

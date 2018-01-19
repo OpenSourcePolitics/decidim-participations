@@ -74,11 +74,11 @@ module Decidim
         def query
           @query ||=
             if @param_unmoderate
-              Participation.unmoderate(current_feature).ransack(params[:q])
+              Participation.untreated(current_feature).ransack(params[:q])
             elsif @param_questions
                Participation.questions_with_unpublished_answer(current_feature).ransack(params[:q])
             elsif @param_moderated
-              Participation.moderated(current_feature).ransack(params[:q])
+              Participation.treated(current_feature).ransack(params[:q])
             end
         end
 

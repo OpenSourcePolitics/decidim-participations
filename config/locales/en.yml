@@ -95,7 +95,7 @@ en:
         participations:
           edit:
             title: Title
-            publish: Publier
+            publish: Publish
             notify: Publish and notify the author
             qualification: Qualification
             select_a_category: Select a category
@@ -131,6 +131,9 @@ en:
             unmoderate: Untreated
             questions: Questions
             moderated: Treated
+            published: Published
+            answer_published: Answer published
+            refused: Refused
           new:
             create: Create
             title: Create participation
@@ -183,12 +186,14 @@ en:
         edit:
           back: Back
           select_a_category: Please select a category
+          select_a_type: Please select a type
           send: Send
           title: Edit participation
-          type: Type
           question: Question
           opinion: Opinion
           contribution: Contribution
+          fields:
+            type: Type
         filters:
           accepted: Accepted
           activity: Activity

@@ -25,6 +25,7 @@ module Decidim
           transaction do
             update_participation
             update_moderation
+            update_publishing
           end
 
           broadcast(:ok, participation)
@@ -81,6 +82,24 @@ module Decidim
 
         def user_group_participations
           Participation.where(user_group: user_group, feature: form.current_feature).where.not(id: participation.id)
+        end
+
+        def update_publishing
+          if @participation.not_publish? && @participation.publishable?
+            @participation.update_attributes(published_on: Time.zone.now)
+            update_title
+          else !@participation.publishable?
+            @participation.update_attributes(published_on: nil)
+            update_title
+          end
+        end
+
+        def update_title
+          if @participation.not_publish? && @participation.publishable?
+            @participation.update_attributes(title: @participation.generate_title)
+          else !@participation.publishable?
+            @participation.update_attributes(title: nil)
+          end
         end
       end
     end

@@ -109,7 +109,7 @@ fr:
             success: La réponse à la participation a publiée avec succès
           create:
             invalid: Il y a eu un problème lors de la création de cette proposition
-            success: Proposition créée avec succès.
+            success: Participation créée avec succès.
           update:
             invalid: Il y a eu un problème lors de la mise à jour de cette participation
             success: Participation mise à jour avec succès.
@@ -125,6 +125,9 @@ fr:
             unmoderate: A traiter
             questions: Questions
             moderated: Traitées
+            published: Publiée
+            answer_published: Réponse publiée
+            refused: Réfusée
           new:
             create: Créer
             title: Créer une participation
@@ -173,13 +176,15 @@ fr:
             other: "%{count} participations"
         edit:
           back: Retour
+          select_a_type: Veuillez sélectionner un type
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
           title: Modifier la participation
-          type: Type
           question: Question
           opinion: Avis
           contribution: Contribution
+          fields:
+            type: Type
         filters:
           accepted: Retenue
           activity: Activité
