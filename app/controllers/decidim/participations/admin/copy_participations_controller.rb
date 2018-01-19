@@ -2,14 +2,9 @@ module Decidim
     module Participations
       module Admin
         # This controller allows admins to answer participations in a participatory process.
-        class CopyParticipationsController < Admin::ApplicationController
+        class CopyParticipationsController <  Decidim::Admin::Features::CustomBaseController
           helper_method :participation
 
-          # Here we use show to copy the participations as all actions 
-          #apart from index and show require to manage the current_feature
-          def manage_authorization
-            authorize! :duplicate, participation
-          end
           
 
           def create
@@ -32,6 +27,14 @@ module Decidim
           def participation
             @participation ||= Participation.current_feature_participations(current_feature).find(params[:participation_id])
           end
+
+          protected
+          # Here we use show to copy the participations as all actions 
+          #apart from index and show require to manage the current_feature
+          def manage_authorization
+            authorize! :duplicate, participation
+          end
+
         end
       end
     end

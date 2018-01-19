@@ -5,7 +5,7 @@ module Decidim
     module Features
       # This controller is the abstract class from which all feature
       # controllers in their admin engines should inherit from.
-      class BaseController < Admin::ApplicationController
+      class CustomBaseController < Admin::ApplicationController
         skip_authorize_resource
         include Settings
 
@@ -20,8 +20,8 @@ module Decidim
           extend current_participatory_space.admin_extension_module
         end
 
-        before_action manage_authorization, except: [:index, :show]
-        before_action read_authorization, on: [:index, :show]
+        before_action :manage_authorization, except: [:index, :show]
+        before_action :read_authorization, on: [:index, :show]
 
         def current_feature
           request.env["decidim.current_feature"]
