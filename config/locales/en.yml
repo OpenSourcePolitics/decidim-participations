@@ -89,6 +89,9 @@ en:
             evaluating: Evaluating
             rejected: Rejected
             title: Answer for participation %{title}
+            content: Content
+            retained: Retained
+            incomplete: Incomplete
         participations:
           edit:
             title: Title

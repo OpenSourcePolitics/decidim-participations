@@ -11,15 +11,19 @@ module Decidim
         helper_method :participations, :query
 
         def index
-          case params[:status]
-            when "unmoderate"
-              @param_unmoderate = true
-            when "questions"
-              @param_questions = true
-            when "moderated"
-              @param_moderated = true
-            else
-              @param_unmoderate = true
+          if can? :update, Decidim::Participations::Participation
+            case params[:status]
+              when "unmoderate"
+                @param_unmoderate = true
+              when "questions"
+                @param_questions = true
+              when "moderated"
+                @param_moderated = true
+              else
+                @param_unmoderate = true
+            end
+          else
+            @param_questions = true
           end
         end
 
