@@ -33,10 +33,9 @@
               <%= participation.title %><br />
             </td>
             <td>
-              TODO
+              <%= published_status(participation) %>
             </td>
             <td class="table-list__actions">
-            <!-- TODO path des boutons -->
               <%= icon_link_to "pencil", edit_participation_path(participation), t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
               <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
             </td>
