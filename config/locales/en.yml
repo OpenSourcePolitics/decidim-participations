@@ -91,6 +91,7 @@ en:
             title: Answer for participation %{title}
         participations:
           copy:
+            prefix: Copy of
             invalid: There's been a problem copying this participation
             success: Participation successfully copied
           answer:

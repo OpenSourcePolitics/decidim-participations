@@ -33,7 +33,7 @@ module Decidim
   
           def copy_participation
             @copied_process = Participation.create!(
-                body: "Copie de " + @participation.original_body.to_s,
+                body: [I18n.t("participations.copy.prefix", scope: "decidim.participations.admin"), @participation.original_body.to_s].join(" "),
                 original_body: @participation.body,
                 participation_type: @participation.participation_type,
                 category: @participation.category,
