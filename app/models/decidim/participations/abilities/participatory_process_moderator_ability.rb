@@ -11,28 +11,9 @@ module Decidim
 
           # Dispaly functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
-          can :manage, Feature do |feature|
+          can :read, Feature do |feature|
             feature.manifest_name == "participations"
           end  
-          
-
-          # Here list all manage actions we don't want
-          # this is needed because of inheritence from Admin Controller
-          cannot :create, Feature do |feature|
-            feature.manifest_name == "participations"
-          end
-
-          cannot :edit, Feature do |feature|
-            feature.manifest_name == "participations"
-          end
-          
-          cannot :update, Feature do |feature|
-            feature.manifest_name == "participations"
-          end
-
-          cannot :delete, Feature do |feature|
-            feature.manifest_name == "participations"
-          end
 
           can [:read, :duplicate], Participation
 

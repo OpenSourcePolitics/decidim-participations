@@ -9,8 +9,9 @@ module Decidim
       paths["db/migrate"] = nil
 
       routes do
+
         resources :participations, only: [:index, :new, :create] do
-          post :copy, on: :member
+          resources :copy_participations, only: [:create]
           resources :participation_answers, only: [:edit, :update]
           
         end
