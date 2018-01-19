@@ -37,6 +37,16 @@ module Decidim
           "text-warning"
         end
       end
+            def published_status(participation)
+        if participation.published? && participation.question?
+          "Réponse publiée"
+        elsif participation.published?
+          "Publiée"
+        else
+          "Refusée"
+        end
+      end
+
 
       # Public: The css class applied based on the participation state to
       #         the participation badge.
