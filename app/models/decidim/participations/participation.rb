@@ -46,6 +46,10 @@ module Decidim
         type == "question"
       end
 
+      def publish?
+        published_on.present?
+      end
+
       def type
         participation_type
       end

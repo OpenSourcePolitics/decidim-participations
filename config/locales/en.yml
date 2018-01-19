@@ -92,7 +92,7 @@ en:
         participations:
           edit:
             title: Title
-            publish: Publier
+            publish: Publish
             notify: Publish and notify the author
             qualification: Qualification
             select_a_category: Select a category

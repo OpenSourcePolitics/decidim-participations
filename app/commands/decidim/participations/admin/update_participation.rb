@@ -25,6 +25,7 @@ module Decidim
           transaction do
             update_participation
             update_moderation
+            publish!
           end
 
           broadcast(:ok, participation)
@@ -81,6 +82,12 @@ module Decidim
 
         def user_group_participations
           Participation.where(user_group: user_group, feature: form.current_feature).where.not(id: participation.id)
+        end
+
+        def publish!
+          unless @participation.publish?
+            @participation.update_attributes(published_on: Time.zone.now)
+          end
         end
       end
     end
