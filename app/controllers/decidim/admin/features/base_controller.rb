@@ -20,13 +20,8 @@ module Decidim
           extend current_participatory_space.admin_extension_module
         end
 
-        before_action except: [:index, :show] do
-          authorize! :manage, current_feature
-        end
-
-        before_action on: [:index, :show] do
-          authorize! :read, current_feature
-        end
+        before_action manage_authorization, except: [:index, :show]
+        before_action read_authorization, on: [:index, :show]
 
         def current_feature
           request.env["decidim.current_feature"]
@@ -38,6 +33,16 @@ module Decidim
 
         def parent_path
           @parent_path ||= EngineRouter.admin_proxy(current_participatory_space).features_path
+        end
+
+        protected 
+
+        def manage_authorization
+          authorize! :manage, current_feature
+        end
+
+        def read_authorization
+          authorize! :read, current_feature
         end
       end
     end
