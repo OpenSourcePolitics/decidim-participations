@@ -37,16 +37,22 @@ module Decidim
           "text-warning"
         end
       end
-            def published_status(participation)
-        if participation.published? && participation.question?
-          "Réponse publiée"
-        elsif participation.published?
-          "Publiée"
+
+      def published_status(participation)
+        if participation.published? && !participation.question?
+          content_tag(:strong, class: 'text-success') do
+            "Publiée"
+          end
+        elsif participation.published? && participation.anwser.nil? # TODO #22 => Voir si des méthodes ont été créées dans cette issue pour refacto
+          content_tag(:strong, class: 'text-success') do
+            "Réponse publiée"
+          end
         else
-          "Refusée"
+          content_tag(:strong, class: 'text-alert') do
+            "Refusée"
+          end
         end
       end
-
 
       # Public: The css class applied based on the participation state to
       #         the participation badge.
