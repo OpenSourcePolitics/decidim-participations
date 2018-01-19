@@ -10,7 +10,9 @@ module Decidim
 
       routes do
         resources :participations, only: [:index, :new, :create] do
+          post :copy, on: :member
           resources :participation_answers, only: [:edit, :update]
+          
         end
 
         root to: "participations#index"

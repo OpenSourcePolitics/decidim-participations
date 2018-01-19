@@ -90,6 +90,9 @@ en:
             rejected: Rejected
             title: Answer for participation %{title}
         participations:
+          copy:
+            invalid: There's been a problem copying this participation
+            success: Participation successfully copied
           answer:
             invalid: There's been a problem answering this participation
             success: Participation successfully answered

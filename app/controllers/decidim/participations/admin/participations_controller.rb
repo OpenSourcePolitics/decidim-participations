@@ -11,6 +11,7 @@ module Decidim
         helper_method :participations, :query
 
         def index
+          authorize! :read, Participation
           case params[:status]
             when nil || "unmoderate"
               @param_unmoderate = true
@@ -41,6 +42,23 @@ module Decidim
             on(:invalid) do
               flash.now[:alert] = I18n.t("participations.create.invalid", scope: "decidim.participations.admin")
               render action: "new"
+            end
+          end
+        end
+
+
+        def copy
+          authorize! :duplicate, participation
+
+          Admin::CopyParticipation.call(@participation) do
+            on(:ok) do
+              flash[:notice] = I18n.t("participations.copy.success", scope: "decidim.participations.admin")
+              redirect_to participations_path
+            end
+
+            on(:invalid) do
+              flash.now[:alert] =  I18n.t("participations.copy.invalid", scope: "decidim.participations.admin")
+              redirect_to participations_path
             end
           end
         end

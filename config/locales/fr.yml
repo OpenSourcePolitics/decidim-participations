@@ -88,6 +88,9 @@ fr:
             rejected: Refusée
             title: Réponse à la participation %{title}
         participations:
+          copy:
+            invalid: Il y a eu un problème concernant la copie de cette participation
+            success: La participation a été copiée avec succès
           answer:
             invalid: Il y a eu un problème concernant la réponse à cette participation
             success: La réponse à la participation a publiée avec succès
