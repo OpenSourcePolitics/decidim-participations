@@ -17,6 +17,8 @@
       </div>
     </h2>
   </div>
+
+    <%= render "questions" %>
   <% if @param_unmoderate %>
     <%= render "unmoderate" %>
   <% elsif @param_questions %>
@@ -25,3 +27,4 @@
     <%= render "moderated" %>
   <%end%>
 </div>
+
