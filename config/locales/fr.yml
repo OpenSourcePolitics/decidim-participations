@@ -109,7 +109,7 @@ fr:
             success: La réponse à la participation a publiée avec succès
           create:
             invalid: Il y a eu un problème lors de la création de cette proposition
-            success: Proposition créée avec succès.
+            success: Participation créée avec succès.
           update:
             invalid: Il y a eu un problème lors de la mise à jour de cette participation
             success: Participation mise à jour avec succès.
@@ -176,12 +176,7 @@ fr:
           select_a_type: Veuillez sélectionner un type
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
-<<<<<<< HEAD
-          title: Modifier la proposition
-=======
           title: Modifier la participation
-          type: Type
->>>>>>> master
           question: Question
           opinion: Avis
           contribution: Contribution
@@ -218,16 +213,10 @@ fr:
           attachment_legend: "(Facultatif) Ajouter une pièce jointe"
           back: Retour
           participation_edit_before_minutes:
-<<<<<<< HEAD
-            one: Vous serez en mesure de modifier cette proposition pendant un minute après la création de la proposition. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la proposition.
-            other: Vous serez en mesure de modifier cette proposition au cours des premières %{count} minutes après la création de la proposition. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la proposition.
-          select_a_type: Veuillez sélectionner un type
-          select_a_category: Veuillez sélectionner un category
-=======
             one: Vous serez en mesure de modifier cette participation pendant un minute après la création de la participation. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la participation.
             other: Vous serez en mesure de modifier cette participation au cours des premières %{count} minutes après la création de la participation. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la participation.
+          select_a_type: Veuillez sélectionner un type
           select_a_category: Veuillez sélectionner une catégorie
->>>>>>> master
           send: Publier
           title: Nouvelle participation
           type: Type
