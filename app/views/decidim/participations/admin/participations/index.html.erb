@@ -2,29 +2,33 @@
   <div class="card-divider">
     <h2 class="card-title">
       <%= t(".title") %>
-
-      <div class="button--title">
-        <%= export_dropdown %>
-      </div>
-      <div class="card__filter" style= "margin-right: 20px">
-        <% if can? :create, Decidim::Participations::Participation %>
-          <%= link_to t("index.unmoderate", scope: "decidim.participations.admin.participations"), participations_path(status: "unmoderate"), class: "#{'bold' if @param_unmoderate}" %>
-          |
-          <%= link_to t("index.questions", scope: "decidim.participations.admin.participations"), participations_path(status: "questions"), class: "#{'bold' if @param_questions}" %>
-          |
-          <%= link_to t("index.moderated", scope: "decidim.participations.admin.participations"), participations_path(status: "moderated"), class: "#{'bold' if @param_moderated}" %>
-        <% end %>
-      </div>
+      <% if can? :update, Decidim::Participations::Participation %>
+        <div class="button--title">
+          <%= export_dropdown %>
+        </div>
+        <div class="card__filter" style= "margin-right: 20px">
+          <% if can? :create, Decidim::Participations::Participation %>
+            <%= link_to t("index.unmoderate", scope: "decidim.participations.admin.participations"), participations_path(status: "unmoderate"), class: "#{'bold' if @param_unmoderate}" %>
+            |
+            <%= link_to t("index.questions", scope: "decidim.participations.admin.participations"), participations_path(status: "questions"), class: "#{'bold' if @param_questions}" %>
+            |
+            <%= link_to t("index.moderated", scope: "decidim.participations.admin.participations"), participations_path(status: "moderated"), class: "#{'bold' if @param_moderated}" %>
+          <% end %>
+        </div>
+      <% end %>
     </h2>
   </div>
 
+  <% if can? :update, Decidim::Participations::Participation %>
+    <% if @param_unmoderate %>
+      <%= render "unmoderate" %>
+    <% elsif @param_questions %>
+      <%= render "questions" %>
+    <% elsif @param_moderated %>
+      <%= render "moderated" %>
+    <%end%>
+  <% else %>
     <%= render "questions" %>
-  <% if @param_unmoderate %>
-    <%= render "unmoderate" %>
-  <% elsif @param_questions %>
-    <%= render "questions" %>
-  <% elsif @param_moderated %>
-    <%= render "moderated" %>
-  <%end%>
+  <% end%>
 </div>
 
