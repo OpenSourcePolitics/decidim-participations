@@ -41,15 +41,15 @@ module Decidim
       def published_status(participation)
         if participation.published? && !participation.question?
           content_tag(:strong, class: 'text-success') do
-            "Publiée"
+            t("published" , scope: "decidim.participations.admin.participations.index")
           end
         elsif participation.published? && participation.anwser.nil? # TODO #22 => Voir si des méthodes ont été créées dans cette issue pour refacto
           content_tag(:strong, class: 'text-success') do
-            "Réponse publiée"
+            t("answer_published" , scope: "decidim.participations.admin.participations.index")
           end
         else
           content_tag(:strong, class: 'text-alert') do
-            "Refusée"
+            t("refused" , scope: "decidim.participations.admin.participations.index")
           end
         end
       end

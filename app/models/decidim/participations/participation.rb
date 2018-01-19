@@ -50,12 +50,20 @@ module Decidim
         published_on.present?
       end
 
+      def not_publish?
+        published_on.nil?
+      end
+
       def publishable?
         moderation.upstream_moderation == "authorized" || moderation.upstream_moderation == "waiting_for_answer"
       end
 
       def type
         participation_type
+      end
+
+      def refused?
+        moderation.upstream_moderation == "refused"
       end
 
       def generate_title # count the number of authorized and waiting for answer status. Then generate the title thanks to this number

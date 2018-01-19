@@ -128,6 +128,9 @@ en:
             unmoderate: Untreated
             questions: Questions
             moderated: Treated
+            published: Published
+            answer_published: Answer published
+            refused: Refused
           new:
             create: Create
             title: Create participation

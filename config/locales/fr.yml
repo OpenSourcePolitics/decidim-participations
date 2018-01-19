@@ -125,6 +125,9 @@ fr:
             unmoderate: A traiter
             questions: Questions
             moderated: Traitées
+            published: Publiée
+            answer_published: Réponse publiée
+            refused: Réfusée
           new:
             create: Créer
             title: Créer une participation
