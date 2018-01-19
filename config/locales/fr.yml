@@ -173,13 +173,15 @@ fr:
             other: "%{count} propositions"
         edit:
           back: Retour
+          select_a_type: Veuillez sélectionner un type
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
           title: Modifier la proposition
-          type: Type
           question: Question
           opinion: Avis
           contribution: Contribution
+          fields:
+            type: Type
         filters:
           accepted: Retenue
           activity: Activité

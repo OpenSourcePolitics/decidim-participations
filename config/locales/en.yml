@@ -180,12 +180,14 @@ en:
         edit:
           back: Back
           select_a_category: Please select a category
+          select_a_type: Please select a type
           send: Send
           title: Edit participation
-          type: Type
           question: Question
           opinion: Opinion
           contribution: Contribution
+          fields:
+            type: Type
         filters:
           accepted: Accepted
           activity: Activity

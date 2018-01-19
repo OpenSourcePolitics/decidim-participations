@@ -46,13 +46,26 @@ module Decidim
         type == "question"
       end
 
-      def publish?
+      def published?
         published_on.present?
+      end
+
+      def publishable?
+        moderation.upstream_moderation == "authorized" || moderation.upstream_moderation == "waiting_for_answer"
       end
 
       def type
         participation_type
       end
+
+      def generate_title # count the number of authorized and waiting for answer status. Then generate the title thanks to this number
+        status = self.class.where(participation_type: type).map(&:moderation).map(&:upstream_moderation)
+        status.delete("refused")
+        status.delete("unmoderate")
+        number = status.count
+        "#{type.capitalize}" + " n°" + "#{number}"
+      end
+
 
       def self.find_participations(participations)
         where(id: participations.map(&:id))

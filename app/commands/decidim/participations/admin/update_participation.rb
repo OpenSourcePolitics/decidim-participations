@@ -85,9 +85,14 @@ module Decidim
         end
 
         def publish!
-          unless @participation.publish?
+          if !@participation.published? && @participation.publishable?
             @participation.update_attributes(published_on: Time.zone.now)
+            create_title
           end
+        end
+
+        def create_title
+          @participation.update_attributes(title: @participation.generate_title)
         end
       end
     end
