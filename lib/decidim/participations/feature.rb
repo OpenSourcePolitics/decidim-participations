@@ -45,7 +45,7 @@ Decidim.register_feature(:participations) do |feature|
   end
 
   feature.register_stat :participations_count, primary: true, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
-    Decidim::Participations::FilteredParticipations.for(features, start_at, end_at).not_hidden.authorized.count
+    Decidim::Participations::FilteredParticipations.for(features, start_at, end_at).count
   end
 
   feature.register_stat :participations_accepted, primary: true, priority: Decidim::StatsRegistry::HIGH_PRIORITY do |features, start_at, end_at|
