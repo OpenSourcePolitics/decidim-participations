@@ -102,6 +102,7 @@ fr:
             original: Original
             accepted: Retenue
             refused: Refusée
+            recipient_role: Destinataire
             fields:
               type: Type
           copy:

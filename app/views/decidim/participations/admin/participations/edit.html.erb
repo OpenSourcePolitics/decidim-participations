@@ -39,6 +39,11 @@ if (typeof jQuery.ui === 'undefined') {
           <div class="row column">
             <%= f.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), label: t(".fields.type") %>
           </div>
+
+          <div class="row column" id="recipient_role_container">
+             <%= f.select :recipient_role, options_for_select(Decidim::ParticipatoryProcessUserRole::ROLES), include_blank: true,  label: t(".recipient_role") %>
+          </div>
+
         </div>
       </div>
       <div class="card">
@@ -75,3 +80,17 @@ if (typeof jQuery.ui === 'undefined') {
     <% end %>
   </div>
 </div>
+
+<script type="text/javascript">
+  $('document').ready(function(){
+    $('#recipient_role_container').hide();
+    $('#participation_participation_type').change(function() {
+      var type = $('#participation_participation_type').val();
+      if (type == "question") {
+        $('#recipient_role_container').show(500);
+        } else {
+        $('#recipient_role_container').hide();
+        }
+    })
+  });
+</script>
