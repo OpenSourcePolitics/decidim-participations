@@ -83,6 +83,7 @@ fr:
             name: Participation
         participation_answers:
           edit:
+            content: Contenu
             accepted: Retenue
             answer_participation: Répondre
             evaluating: En cours d'évaluation

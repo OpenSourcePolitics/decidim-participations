@@ -84,6 +84,7 @@ en:
             name: Participation
         participation_answers:
           edit:
+            content: Content
             accepted: Accepted
             answer_participation: Answer
             evaluating: Evaluating
