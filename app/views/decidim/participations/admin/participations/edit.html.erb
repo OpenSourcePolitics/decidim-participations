@@ -41,7 +41,10 @@ if (typeof jQuery.ui === 'undefined') {
           </div>
 
           <div class="row column" id="recipient_role_container">
-             <%= f.select :recipient_role, options_for_select(Decidim::ParticipatoryProcessUserRole::ROLES), include_blank: true,  label: t(".recipient_role") %>
+            <label for="recipient_role"><%= t('.recipient_role') %> <abbr>*</abbr><br />
+
+             <%= f.collection_radio_buttons :recipient_role, participation_roles, :first, :last, prompt: true %>
+            </label>
           </div>
 
         </div>
@@ -83,9 +86,13 @@ if (typeof jQuery.ui === 'undefined') {
 
 <script type="text/javascript">
   $('document').ready(function(){
-    $('#recipient_role_container').hide();
+    var shouldHideRecipientRole = <%= (@form.participation_type != "question") %>;
+    if(shouldHideRecipientRole) {
+      $('#recipient_role_container').hide();
+    }
     $('#participation_participation_type').change(function() {
       var type = $('#participation_participation_type').val();
+      console.log(type)
       if (type == "question") {
         $('#recipient_role_container').show(500);
         } else {

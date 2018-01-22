@@ -15,7 +15,7 @@ module Decidim
         attribute :justification, String
         attribute :moderation, ModerationForm
         validates :participation_type, :moderation, presence: true
-        validates :recipient_role, presence: true, if: ->(form) { form.participation_type.present? }
+        validates :recipient_role, presence: true, if: ->(form) { form.participation_type == "question" }
 
         validates :category, presence: true, if: ->(form) { form.category_id.present? }
         delegate :categories, to: :current_feature
