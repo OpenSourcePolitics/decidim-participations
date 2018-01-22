@@ -60,6 +60,7 @@ module Decidim
       def create_participation
         @participation = Participation.create!(
           body: form.body,
+          original_body: form.body,
           participation_type: form.participation_type,
           category: form.category,
           scope: form.scope,

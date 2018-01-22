@@ -106,7 +106,10 @@ en:
             refused: Refused
             fields:
               type: Type
-          edit_form:
+          copy:
+            prefix: Copy of
+            invalid: There's been a problem copying this participation
+            success: Participation successfully copied
           answer:
             invalid: There's been a problem answering this participation
             success: Participation successfully answered
