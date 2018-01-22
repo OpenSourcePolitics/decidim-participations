@@ -20,26 +20,16 @@ module Decidim
             can_manage_process?(process)
           end
 
-          can :manage, Moderation do |moderation|
-            can_manage_process?(moderation.participatory_space)
-          end
-
-          cannot :read, Decidim::Moderation
-
           # Display functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
           can :read, Feature do |feature|
             feature.manifest_name == "participations"
           end
 
-          can [:read, :duplicate], Participation
+          can [:read], Participation
 
           can :update, Participation do |participation|
             participation.moderation.upstream_moderation == "waiting_for_answer" ||participation.moderation.upstream_moderation == "accepted"
-          end
-
-          can [:unreport, :hide], Participation do |participation|
-            can_manage_process?(participation.feature.participatory_space)
           end
         end
       end
