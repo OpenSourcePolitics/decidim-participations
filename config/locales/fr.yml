@@ -22,6 +22,7 @@ fr:
           roles:
             cpdp: CPDP
             moa: Maîtrise d'ouvrage
+            moderator: Moderateur
     events:
       participation_created:
         notification_title: Nouvelle participation de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
@@ -82,11 +83,13 @@ fr:
             name: Participation
         participation_answers:
           edit:
+            content: Contenu
             accepted: Retenue
             answer_participation: Répondre
             evaluating: En cours d'évaluation
             rejected: Refusée
             title: Réponse à la participation %{title}
+            incomplete: Incomplète
         participations:
           edit:
             title: Title
