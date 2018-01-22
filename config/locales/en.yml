@@ -23,7 +23,7 @@ en:
           roles:
             cpdp: CPDP
             moa: Maîtrise d'ouvrage
-
+            moderator: Moderator
     events:
       participation_created:
         notification_title: There is a new participation from %{author_name} in <a href="%{resource_path}">%{resource_title}</a>
@@ -89,6 +89,7 @@ en:
             evaluating: Evaluating
             rejected: Rejected
             title: Answer for participation %{title}
+            incomplete: Incomplete
         participations:
           edit:
             title: Title
