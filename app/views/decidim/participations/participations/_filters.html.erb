@@ -13,19 +13,11 @@
   </div>
 
   <% if feature_settings.official_participations_enabled %>
-    <%= form.collection_radio_buttons :origin, [["all", t('.all')], ["official", t('.official')], ["citizens", t('.citizens')]], :first, :last, legend_title: t('.origin') %>
-  <% end %>
-
-  <% if feature_settings.participation_answering_enabled && current_settings.participation_answering_enabled %>
-    <%= form.collection_radio_buttons :state, [["all", t('.all')], ["accepted", t('.accepted')], ["rejected", t('.rejected')], ["evaluating", t('.evaluating')]], :first, :last, legend_title: t('.state') %>
+    <%= form.collection_radio_buttons :participation_type, [["all", t('.all')], ["questions", t('.questions')], ["contributions", t('.contributions')], ["opinions", t('.opinions')]], :first, :last, legend_title: t('.participation_type') %>
   <% end %>
 
   <% if linked_classes_for(Decidim::Participations::Participation).any? %>
     <%= form.collection_radio_buttons :related_to, linked_classes_filter_values_for(Decidim::Participations::Participation), :first, :last, legend_title: t('.related_to') %>
-  <% end %>
-
-  <% if current_user && current_settings.votes_enabled? %>
-    <%= form.collection_check_boxes :activity, [["voted", t('.voted')]], :first, :last, legend_title: t('.activity') %>
   <% end %>
 
   <% if current_participatory_space.has_subscopes? %>

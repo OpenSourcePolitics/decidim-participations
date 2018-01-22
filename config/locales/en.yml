@@ -209,6 +209,10 @@ en:
           search: Search
           state: State
           voted: Voted
+          questions: Questions
+          contributions: Contributions
+          opinions: Opinions
+          participation_type: Filter by type
         filters_small_view:
           close_modal: Close modal
           filter: Filter
@@ -245,6 +249,9 @@ en:
         participation:
           creation_date: 'Creation: %{date}'
           view_participation: View participation
+          view_question: View question
+          view_opinion: View opinion
+          view_contribution: Voir la contribution
         show:
           edit_participation: Edit participation
           participation_accepted_reason: 'This participation has been accepted because:'
