@@ -88,6 +88,9 @@ fr:
             rejected: Refusée
             title: Réponse à la participation %{title}
         participations:
+          questions:
+            waiting_for_answer: Attente d'une réponse
+            waiting_for_validation: Attente d'une validation
           edit:
             title: Title
             publish: Publier
