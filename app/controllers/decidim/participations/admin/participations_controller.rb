@@ -20,7 +20,7 @@ module Decidim
             when "moderated"
               @param_moderated = true
             else
-              @param_unmoderate = true
+              default_param
           end
         end
 
@@ -71,6 +71,14 @@ module Decidim
         end
 
         private
+
+        def default_param
+          if can? :manage, Decidim::Participations::Participation
+            @param_unmoderate = true
+          else
+            @param_questions = true
+          end
+        end
 
         def query
           @query ||=
