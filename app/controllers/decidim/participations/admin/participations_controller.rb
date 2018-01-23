@@ -49,12 +49,12 @@ module Decidim
         end
 
         def edit
-          authorize! :edit, Participation
+          authorize! :update, Participation
           @form = form(Admin::ParticipationForm).from_model(participation)
         end
 
         def update
-          authorize! :edit, Participation
+          authorize! :update, Participation
           @form = form(Admin::ParticipationForm).from_params(params)
 
           Admin::UpdateParticipation.call(@form, current_user, participation) do

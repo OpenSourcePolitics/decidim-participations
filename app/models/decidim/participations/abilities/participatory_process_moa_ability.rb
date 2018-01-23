@@ -14,7 +14,7 @@ module Decidim
         def define_participatory_process_abilities
           super
 
-          # Dispaly functions and menu
+          # Display functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
           can [:read], ParticipatoryProcess do |process|
             can_manage_process?(process)
