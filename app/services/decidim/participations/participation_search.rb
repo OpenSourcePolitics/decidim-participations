@@ -32,6 +32,19 @@ module Decidim
         end
       end
 
+      # Handle the type filter
+      def search_participation_type
+        if participation_type == "questions"
+          query.where(participation_type: "Question")
+        elsif participation_type == "contributions"
+          query.where(participation_type: "Contribution")
+        elsif participation_type == "opinions"
+          query.where(participation_type: "Opinion")
+        else # Assume 'all'
+          query
+        end
+      end
+
       # Handle the activity filter
       def search_activity
         if activity.include? "voted"
@@ -50,10 +63,8 @@ module Decidim
         case state
         when "accepted"
           query.accepted
-        when "rejected"
-          query.rejected
-        when "evaluating"
-          query.evaluating
+        when "waiting_answers"
+          query.where(state: nil)
         else # Assume 'all'
           query
         end

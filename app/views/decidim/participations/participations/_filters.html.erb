@@ -12,8 +12,12 @@
     </div>
   </div>
 
-  <% if feature_settings.official_participations_enabled %>
+   <% if feature_settings.official_participations_enabled %>
     <%= form.collection_radio_buttons :participation_type, [["all", t('.all')], ["questions", t('.questions')], ["contributions", t('.contributions')], ["opinions", t('.opinions')]], :first, :last, legend_title: t('.participation_type') %>
+  <% end %>
+
+  <% if feature_settings.official_participations_enabled %>
+    <%= form.collection_radio_buttons :state, [["all", t('.all')], ["accepted", t('.accepted')], ["waiting_answers", t('.waiting_answers')]], :first, :last, legend_title: t('.state') %>
   <% end %>
 
   <% if linked_classes_for(Decidim::Participations::Participation).any? %>
