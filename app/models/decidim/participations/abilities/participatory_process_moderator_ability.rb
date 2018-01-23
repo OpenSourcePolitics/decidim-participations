@@ -15,6 +15,8 @@ module Decidim
             feature.manifest_name == "participations"
           end  
 
+          can :answer_as_moderator, Participation
+
           can [:read, :duplicate], Participation
 
           can [:unreport, :hide], Participation do |participation|

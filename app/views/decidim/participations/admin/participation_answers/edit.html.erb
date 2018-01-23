@@ -14,7 +14,7 @@
         <%= f.translated :editor, :answer, autofocus: true, rows: 15 %>
       </div>
 
-      <% if @moderator_view %>
+      <% if can? :answer_as_moderator, Decidim::Participations::Participation %>
       <div class="row column">
         <%= f.collection_radio_buttons :state, [["accepted", t('.accepted')], ["incomplete", t('.incomplete')]], :first, :last, prompt: true %>
       </div>
