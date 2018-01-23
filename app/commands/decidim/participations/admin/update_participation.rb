@@ -39,7 +39,8 @@ module Decidim
           @participation.update_attributes!(
             body: form.body,
             participation_type: form.participation_type,
-            category: form.category
+            category: form.category,
+            recipient_role: form.recipient_role
             # justification: form.justification
           )
         end

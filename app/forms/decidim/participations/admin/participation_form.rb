@@ -8,11 +8,15 @@ module Decidim
         mimic :participation
 
         attribute :body, String
+        attribute :original_body, String
         attribute :participation_type, String
+        attribute :recipient_role, String
         attribute :category_id, Integer
         attribute :justification, String
         attribute :moderation, ModerationForm
         validates :participation_type, :moderation, presence: true
+        validates :recipient_role, presence: true, if: ->(form) { form.participation_type == "question" }
+
         validates :category, presence: true, if: ->(form) { form.category_id.present? }
         delegate :categories, to: :current_feature
 

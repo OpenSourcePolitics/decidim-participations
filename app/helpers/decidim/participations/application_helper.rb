@@ -98,6 +98,14 @@ module Decidim
       def current_user_participations
         Participation.where(feature: current_feature, author: current_user)
       end
+
+      def participation_roles
+        
+        [
+          ["moa", t('decidim.admin.models.participatory_process_user_role.roles.moa')], 
+          ["cpdp", t('decidim.admin.models.participatory_process_user_role.roles.cpdp')]
+        ]
+      end
     end
   end
 end

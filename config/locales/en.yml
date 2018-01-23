@@ -107,6 +107,8 @@ en:
             original: Original
             accepted: Accepted
             refused: Refused
+            recipient_role: Recipient
+
             fields:
               type: Type
           copy:
