@@ -85,10 +85,30 @@ module Decidim
             if @param_unmoderate
               Participation.untreated(current_feature).ransack(params[:q])
             elsif @param_questions
-               Participation.questions_with_unpublished_answer(current_feature).ransack(params[:q])
+              filtered_questions
             elsif @param_moderated
-              Participation.treated(current_feature).ransack(params[:q])
+              filtered_treated
             end
+        end
+
+        def filtered_questions
+          if can? :manage, Decidim::Participations::Participation
+            Participation.filtered_questions(current_feature).ransack(params[:q])
+          else
+            Participation.filtered_questions_per_role(current_feature, current_user_role, "waiting_for_answer").ransack(params[:q])
+          end
+        end
+
+        def filtered_treated
+          if can? :manage, Decidim::Participations::Participation
+            Participation.treated(current_feature).ransack(params[:q])
+          else
+            Participation.filtered_questions_per_role(current_feature, current_user_role, "authorized").ransack(params[:q])
+          end
+        end
+
+        def current_user_role
+          ParticipatoryProcessUserRole.where(user: current_user).first.role
         end
 
         def participations
