@@ -94,7 +94,7 @@ fr:
           edit:
             title: Title
             publish: Publier
-            notify: Publier et notifier l'auteur
+            notify: Notifier l'auteur
             qualification: Qualification
             select_a_category: Sélectionner une catégorie
             select_a_type: Sélectionner un type

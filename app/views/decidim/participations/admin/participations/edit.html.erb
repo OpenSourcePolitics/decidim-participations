@@ -31,13 +31,23 @@ if (typeof jQuery.ui === 'undefined') {
             <% end %>
           </div>
 
-          <% if @form.categories&.any? %>
+          <div id="show_while_others_hide">
             <div class="row column">
-              <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+              <%= f.fields_for :moderation do |fm| %>
+                <%=fm.text_area :justification, rows: 5 %>
+              <% end %>
             </div>
-          <% end %>
-          <div class="row column">
-            <%= f.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), label: t(".fields.type") %>
+          </div>
+
+          <div class="card" id="hidable_content_contener_2">
+            <% if @form.categories&.any? %>
+              <div class="row column">
+                <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+              </div>
+            <% end %>
+            <div class="row column">
+              <%= f.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), label: t(".fields.type") %>
+            </div>
           </div>
 
           <div class="row column" id="recipient_role_container">
@@ -49,7 +59,7 @@ if (typeof jQuery.ui === 'undefined') {
 
         </div>
       </div>
-      <div class="card">
+      <div class="card" id="hidable_content_contener">
         <div class="card-divider">
           <h2 class="card-title"><%= t(".content") %></h2>
         </div>
@@ -70,16 +80,18 @@ if (typeof jQuery.ui === 'undefined') {
               <%=fm.text_field :justification %>
             <% end %>
           </div>
-
-<!--           <div class="button--double form-general-submit notify hidden">
-            </%= f.submit t(".notify") %>
-          </div>
- -->
           <div class="button--double form-general-submit publish">
             <%= f.submit t(".publish") %>
           </div>
         </div>
       </div>
+
+      <div class="button--double form-general-submit notify" id="show_while_others_hide_2">
+        <%= f.submit t(".notify") %>
+      </div>
+
+          
+     
     <% end %>
   </div>
 </div>
@@ -97,6 +109,25 @@ if (typeof jQuery.ui === 'undefined') {
         $('#recipient_role_container').show(500);
         } else {
         $('#recipient_role_container').hide();
+        }
+    })
+
+
+    $('#show_while_others_hide').hide();
+    $('#show_while_others_hide_2').hide();
+    $('input[name="participation[moderation][upstream_moderation]"]').change(function() {
+      var a = $('input[name="participation[moderation][upstream_moderation]"]:checked').val();
+      console.log(a)
+      if (a == "authorized") {
+          $('#hidable_content_contener').show(500);
+          $('#hidable_content_contener_2').show(500);
+          $('#show_while_others_hide').hide();
+          $('#show_while_others_hide_2').hide();
+        } else {
+          $('#hidable_content_contener').hide(500);
+          $('#hidable_content_contener_2').hide(500);
+          $('#show_while_others_hide').show(500);
+          $('#show_while_others_hide_2').show(500);
         }
     })
   });
