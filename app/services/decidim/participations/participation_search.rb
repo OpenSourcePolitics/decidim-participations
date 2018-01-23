@@ -37,7 +37,7 @@ module Decidim
         if participation_type == "questions"
           query.where(participation_type: "question")
         elsif participation_type == "contributions"
-          query.where(participation_type: "qontribution")
+          query.where(participation_type: "contribution")
         elsif participation_type == "opinions"
           query.where(participation_type: "opinion")
         else # Assume 'all'
