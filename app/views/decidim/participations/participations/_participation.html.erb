@@ -6,10 +6,7 @@
           <h5 class="card__title"><%= participation.title %></h5>
         <% end %>
         <div class="card__author author-data author-data--small">
-          <%= render partial: "decidim/shared/author_reference", locals: { author: present(participation).author } %>
-        </div>
-        <div class="tech-info tech-info--text-left">
-          <%= t(".creation_date", date: l(participation.created_at, format: :decidim_short)) %>
+          <%= render partial: "decidim/shared/author_reference", locals: { author: present(participation).author } %><%= t(".creation_date_lite", date: l(participation.created_at, format: :day_of_year)) %>
         </div>
         <%= feature_reference(participation, class: "tech-info--text-left") %>
       </div>
@@ -20,11 +17,11 @@
     <div class="card__footer">
       <div class="card__support">
           <div class="card__support__data"></div>
-          <% if participation.participation_type == "Question" %>
+          <% if participation.participation_type == "question" %>
             <%= link_to t(".view_question"), participation, class: "card__button button small primary" %>
-          <% elsif participation.participation_type == "Contribution" %>
-            <%= link_to t(".view_contribution"), participation, class: "card__button button small success" %>
-          <% elsif participation.participation_type == "Opinion" %>
+          <% elsif participation.participation_type == "contribution" %>
+            <%= link_to t(".view_contribution"), participation, class: "card__button button small secondary" %>
+          <% elsif participation.participation_type == "opinion" %>
             <%= link_to t(".view_opinion"), participation, class: "card__button button small secondary" %>
           <% else %>
             <%= link_to t(".view_participation"), participation, class: "card__button button small warning" %>

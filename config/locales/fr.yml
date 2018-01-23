@@ -243,6 +243,7 @@ fr:
           random: Aléatoire
           recent: Les plus récents
         participation:
+          creation_date_lite: '%{date}'
           creation_date: 'Création: %{date}'
           view_participation: Voir la participation
           view_question: Voir la question
