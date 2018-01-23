@@ -35,11 +35,11 @@ module Decidim
       # Handle the type filter
       def search_participation_type
         if participation_type == "questions"
-          query.where(participation_type: "Question")
+          query.where(participation_type: "question")
         elsif participation_type == "contributions"
-          query.where(participation_type: "Contribution")
+          query.where(participation_type: "qontribution")
         elsif participation_type == "opinions"
-          query.where(participation_type: "Opinion")
+          query.where(participation_type: "opinion")
         else # Assume 'all'
           query
         end
