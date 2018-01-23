@@ -7,12 +7,14 @@
         <%= export_dropdown %>
       </div>
       <div class="card__filter" style= "margin-right: 20px">
-        <% if can? :create, Decidim::Participations::Participation %>
+        <% if can? :read, Decidim::Participations::Participation %>
           <%= link_to t("index.unmoderate", scope: "decidim.participations.admin.participations"), participations_path(status: "unmoderate"), class: "#{'bold' if @param_unmoderate}" %>
           |
           <%= link_to t("index.questions", scope: "decidim.participations.admin.participations"), participations_path(status: "questions"), class: "#{'bold' if @param_questions}" %>
           |
           <%= link_to t("index.moderated", scope: "decidim.participations.admin.participations"), participations_path(status: "moderated"), class: "#{'bold' if @param_moderated}" %>
+          <% else %>
+          asfdgn <%= @current_user.inspect %>
         <% end %>
       </div>
     </h2>

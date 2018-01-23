@@ -11,6 +11,7 @@ module Decidim
         helper_method :participations, :query
 
         def index
+          authorize! :read, Participation
           case params[:status]
             when "unmoderate"
               @param_unmoderate = true

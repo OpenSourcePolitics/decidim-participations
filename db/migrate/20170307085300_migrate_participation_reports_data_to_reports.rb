@@ -9,7 +9,8 @@ class MigrateParticipationReportsDataToReports < ActiveRecord::Migration[5.0]
   def change
     Decidim::Participations::ParticipationReport.find_each do |participation_report|
       moderation = Decidim::Moderation.find_or_create_by!(reportable: participation_report.participation,
-                                                          participatory_process: participation_report.participation.feature.participatory_space)
+                                                          participatory_process: participation_report.participation.feature.participatory_space,
+                                                          upstream_moderation: 'unmoderate')
       Decidim::Report.create!(moderation: moderation,
                               user: participation_report.user,
                               reason: participation_report.reason,

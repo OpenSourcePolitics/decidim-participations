@@ -39,7 +39,8 @@ module Decidim
           @participation.update_attributes!(
             body: form.body,
             participation_type: form.participation_type,
-            category: form.category
+            category: form.category,
+            recipient_role: form.recipient_role
             # justification: form.justification
           )
         end
@@ -86,18 +87,18 @@ module Decidim
 
         def update_publishing
           if @participation.not_publish? && @participation.publishable?
+            update_title
             @participation.update_attributes(published_on: Time.zone.now)
-            update_title
           else !@participation.publishable?
-            @participation.update_attributes(published_on: nil)
             update_title
+            @participation.update_attributes(published_on: nil)
           end
         end
 
         def update_title
           if @participation.not_publish? && @participation.publishable?
             @participation.update_attributes(title: @participation.generate_title)
-          else !@participation.publishable?
+          elsif !@participation.publishable?
             @participation.update_attributes(title: nil)
           end
         end

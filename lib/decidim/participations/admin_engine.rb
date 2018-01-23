@@ -10,7 +10,9 @@ module Decidim
 
       routes do
         resources :participations do
+          resources :copy_participations, only: [:create]
           resources :participation_answers, only: [:edit, :update]
+
         end
 
         resources :moderation, only: [:update]
