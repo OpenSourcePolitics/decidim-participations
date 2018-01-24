@@ -212,7 +212,7 @@ fr:
           contributions: Contributions
           opinions: Opinions
           participation_type: Filtrer par type
-          waiting_answers: En attente de réponse
+          waiting_for_answer: En attente de réponse
         filters_small_view:
           close_modal: Fermer la fenêtre de dialogue
           filter: Filtrer
@@ -247,6 +247,7 @@ fr:
           random: Aléatoire
           recent: Les plus récents
         participation:
+          creation_date_lite: '%{date}'
           creation_date: 'Création: %{date}'
           view_participation: Voir la participation
           view_question: Voir la question
