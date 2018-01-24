@@ -24,6 +24,7 @@ module Decidim
           return broadcast(:invalid) if form.invalid?
 
           answer_participation
+          update_moderation
           broadcast(:ok)
         end
 
@@ -33,10 +34,22 @@ module Decidim
 
         def answer_participation
           participation.update_attributes!(
-            state: @form.state,
+            state: state,
             answer: @form.answer,
-            answered_at: Time.current
+            answered_at: Time.current,
           )
+        end
+
+        def state
+          if @form.state
+            @form.state
+          else
+            "waiting_for_validation"
+          end
+        end
+
+        def update_moderation
+          participation.moderation.update_attributes(upstream_moderation: "authorized") if participation.state == "accepted"
         end
       end
     end

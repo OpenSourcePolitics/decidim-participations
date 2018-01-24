@@ -10,9 +10,9 @@ module Decidim
 
         translatable_attribute :answer, String
         attribute :state, String
+        attribute :moderation, ModerationForm
 
-        validates :state, presence: true, inclusion: { in: %w(accepted rejected evaluating) }
-        validates :answer, translatable_presence: true, if: ->(form) { form.state == "rejected" }
+        # validates :state, presence: true, inclusion: { in: %w(accepted rejected evaluating) }
       end
     end
   end

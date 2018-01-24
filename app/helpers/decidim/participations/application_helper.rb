@@ -58,9 +58,19 @@ module Decidim
           "text-warning"
         end
       end
+            def published_status(participation)
+        if participation.published? && participation.question?
+          "Réponse publiée"
+        elsif participation.published?
+          "Publiée"
+        else
+          "Refusée"
+        end
+      end
 
-      def anwser_state(participation)
-        state = participation.answer_state
+
+      def state(participation)
+        state = participation.state
         case state
         when "waiting_for_answer"
           content_tag(:strong, class: "text-warning") do
@@ -70,17 +80,21 @@ module Decidim
           content_tag(:strong, class: "text-info") do
             t(".#{state}")
           end
+        when "incomplete"
+          content_tag(:strong, class: "text-alert") do
+            t(".#{state}")
+          end
         end
       end
 
       def published_status(participation)
-        if participation.published? && !participation.question?
-          content_tag(:strong, class: 'text-success') do
-            t("published" , scope: "decidim.participations.admin.participations.index")
-          end
-        elsif participation.published? && participation.anwser.nil? # TODO #22 => Voir si des méthodes ont été créées dans cette issue pour refacto
+        if participation.answered?
           content_tag(:strong, class: 'text-success') do
             t("answer_published" , scope: "decidim.participations.admin.participations.index")
+          end
+        elsif participation.published?
+          content_tag(:strong, class: 'text-success') do
+            t("published" , scope: "decidim.participations.admin.participations.index")
           end
         else
           content_tag(:strong, class: 'text-alert') do

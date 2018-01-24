@@ -6,16 +6,47 @@
 
     <div class="card-section">
       <div class="row column">
-        <%= f.collection_radio_buttons :state, [["accepted", t('.accepted')], ["rejected", t('.rejected')], ["evaluating", t('.evaluating')]], :first, :last, prompt: true %>
+        <h2>Contenu de la participation</h2>
+        <p><%= participation.body %></p>
       </div>
 
       <div class="row column">
         <%= f.translated :editor, :answer, autofocus: true, rows: 15 %>
       </div>
+
+      <% if can? :manage, Decidim::Participations::Participation %>
+      <div class="row column">
+        <%= f.collection_radio_buttons :state, [["accepted", t('.accepted')], ["incomplete", t('.incomplete')]], :first, :last, prompt: true %>
+      </div>
+
+      <div class="row column" id="justification_field">
+        <%= f.fields_for :moderation do |fm| %>
+          <%=fm.text_field :justification %>
+        <% end %>
+      </div>
+      <% end %>
     </div>
   </div>
 
   <div class="button--double form-general-submit">
-    <%= f.submit t(".answer_participation") %>
+    <% if can? :manage, participation %>
+      <%= f.submit t(".publish") %>
+    <% else %>
+      <%= f.submit t(".answer_participation") %>
+    <%end%>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  $('#justification_field').hide();
+  $('input[name="participation_answer[state]"]').change(function() {
+    var a = $('input[name="participation_answer[state]"]:checked').val();
+    if (a == "incomplete") {
+      $('#justification_field').show(500);
+      $('#participation_answer_moderation_justification').attr("required", "true");
+    } else {
+      $('#justification_field').hide();
+      $('#participation_answer_moderation_justification').removeAttr("required");
+    }
+  })
+</script>
