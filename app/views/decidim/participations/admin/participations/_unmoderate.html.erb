@@ -39,7 +39,7 @@
             </td>
             <td class="table-list__actions">
                 <%= icon_link_to "clipboard", participation_copy_participations_path(participation_id: participation.id), t("actions.duplicate", scope: "decidim.participations.admin"), class: "action-icon--preview", method: :post if can? :duplicate, Decidim::Participations::Participation %>
-                <%= icon_link_to "pencil", edit_participation_path(participation), t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                <%= icon_link_to "pencil", edit_participation_path(participation), t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank if can? :manage, Decidim::Participations::Participation %>
                 <%= icon_link_to "envelope-closed", current_or_new_conversation_path_with(participation.author), t("actions.contact", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
             </td>
           </tr>

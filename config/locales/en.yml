@@ -90,6 +90,9 @@ en:
             rejected: Rejected
             title: Answer for participation %{title}
         participations:
+          questions:
+            waiting_for_answer: Waiting for answer
+            waiting_for_validation: Waiting for validation
           edit:
             title: Title
             publish: Publish

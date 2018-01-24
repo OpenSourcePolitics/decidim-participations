@@ -88,6 +88,9 @@ fr:
             rejected: Refusée
             title: Réponse à la participation %{title}
         participations:
+          questions:
+            waiting_for_answer: Attente d'une réponse
+            waiting_for_validation: Attente d'une validation
           edit:
             title: Title
             publish: Publier
@@ -196,9 +199,9 @@ fr:
           all: Toutes
           category: Catégorie
           category_prompt: Sélectionner une catégorie
-          citizens: Citoyens >> Participations citoyennes
+          citizens: Participations citoyennes
           evaluating: En cours d'évaluation
-          official: Elu-e-s >> Participations officielles
+          official: Participations officielles
           origin: Auteurs
           rejected: Refusée
           related_to: Liée à

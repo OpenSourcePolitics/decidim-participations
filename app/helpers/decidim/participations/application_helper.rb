@@ -38,6 +38,20 @@ module Decidim
         end
       end
 
+      def anwser_state(participation)
+        state = participation.answer_state
+        case state
+        when "waiting_for_answer"
+          content_tag(:strong, class: "text-warning") do
+            t(".#{state}")
+          end
+        when "waiting_for_validation"
+          content_tag(:strong, class: "text-info") do
+            t(".#{state}")
+          end
+        end
+      end
+
       def published_status(participation)
         if participation.published? && !participation.question?
           content_tag(:strong, class: 'text-success') do

@@ -26,9 +26,27 @@ module Decidim
       geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
 
       # upstream moderation => MOA dashboard
-      scope :untreated, ->(current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where(upstream_moderation: "unmoderate")) }
-      scope :treated, -> (current_feature){ current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
-      scope :questions_with_unpublished_answer, -> (current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where.not(['upstream_moderation = ? OR upstream_moderation = ? OR upstream_moderation = ?', 'unmoderate', 'authorized', 'refused'])) }
+      scope :untreated, ->(current_feature) {
+        current_feature_participations(current_feature)
+        .joins(:moderation)
+        .merge(Moderation.where(upstream_moderation: "unmoderate")) }
+
+
+      scope :filtered_questions, -> (current_feature) { current_feature_participations(current_feature)
+        .joins(:moderation)
+        .merge(Moderation.where.not(['upstream_moderation = ? OR upstream_moderation = ? OR upstream_moderation = ?', 'unmoderate', 'authorized', 'refused'])) }
+
+      scope :filtered_questions_per_role,  lambda { |current_feature, role, state|
+        current_feature_participations(current_feature)
+          .where(participation_type: "question", recipient_role: role)
+          .joins(:moderation)
+          .merge(Moderation.where(['upstream_moderation = ?', state]))
+      }
+
+      scope :treated, -> (current_feature){
+        current_feature_participations(current_feature)
+        .joins(:moderation)
+        .merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
 
       # participations index
       scope :exclude, lambda { |status |left_outer_joins(:moderation).where(Decidim::Moderation.arel_table[:upstream_moderation].not_eq(status))}
