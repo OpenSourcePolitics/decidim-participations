@@ -20,4 +20,3 @@ $(() => {
 
   window.DecidimParticipations.bindParticipationAddress();
 });
-
