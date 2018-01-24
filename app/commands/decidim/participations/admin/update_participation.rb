@@ -26,6 +26,8 @@ module Decidim
             update_participation
             update_moderation
             update_publishing
+            update_title
+            set_deadline
           end
 
           broadcast(:ok, participation)
@@ -87,11 +89,9 @@ module Decidim
 
         def update_publishing
           if @participation.not_publish? && @participation.publishable?
-            update_title
             @participation.update_attributes(published_on: Time.zone.now)
             update_answer_state
           else !@participation.publishable?
-            update_title
             @participation.update_attributes(published_on: nil)
           end
         end
@@ -108,6 +108,10 @@ module Decidim
           if @participation.question? && @participation.answer.nil?
             @participation.update_attributes(answer_state: "waiting_for_answer")
           end
+        end
+
+        def set_deadline
+          @participation.update_attributes(answer_deadline: @participation.published_on + 15.days) if @participation.question? && participation.published?
         end
       end
     end

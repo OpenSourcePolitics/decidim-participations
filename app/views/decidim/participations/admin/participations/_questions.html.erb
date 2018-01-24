@@ -27,7 +27,7 @@
         <% participations.each do |participation| %>
           <tr data-id="<%= participation.id %>">
             <td>
-              TODO
+              <%= answer_deadline(participation) %>
             </td>
             <td>
               <%= anwser_state(participation) %>

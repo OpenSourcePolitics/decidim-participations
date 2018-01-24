@@ -11,6 +11,27 @@ module Decidim
       include Decidim::MapHelper
       include Decidim::Participations::MapHelper
 
+      def answer_deadline(participation)
+        delay = participation.answer_deadline.mjd - DateTime.now.mjd
+        if delay <= 15 && delay >= 10
+          content_tag(:strong, class: "text-success") do
+            "#{delay}j"
+          end
+        elsif  delay <= 9 && delay >= 5
+          content_tag(:strong, class: "text-info") do
+            "#{delay}j"
+          end
+        elsif  delay <= 4 && delay >= 1
+          content_tag(:strong, class: "text-warning") do
+            "#{delay}j"
+          end
+        else
+          content_tag(:strong, class: "text-alert") do
+            "#{delay}j"
+          end
+        end
+      end
+
       # Public: The state of a participation in a way a human can understand.
       #
       # state - The String state of the participation.
@@ -100,9 +121,9 @@ module Decidim
       end
 
       def participation_roles
-        
+
         [
-          ["moa", t('decidim.admin.models.participatory_process_user_role.roles.moa')], 
+          ["moa", t('decidim.admin.models.participatory_process_user_role.roles.moa')],
           ["cpdp", t('decidim.admin.models.participatory_process_user_role.roles.cpdp')]
         ]
       end
