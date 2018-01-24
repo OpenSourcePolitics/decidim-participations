@@ -260,9 +260,8 @@ fr:
           view_contribution: Voir la contribution
         show:
           edit_participation: Modifier la participation
-          participation_accepted_reason: 'Cette participation a été retenue parce que :'
-          participation_in_evaluation_reason: Cette participation est en cours d'évaluation
-          participation_rejected_reason: 'Cette participation a été refusée parce que:'
+          answer_from_moa: Réponse officielle de la maîtrise d'oeuvre
+          answer_from_cpdp: Réponse officielle de la CPDP
           report: Signaler
         vote_button:
           already_voted: Déjà voté

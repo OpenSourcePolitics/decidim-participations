@@ -266,9 +266,8 @@ en:
           view_contribution: Voir la contribution
         show:
           edit_participation: Edit participation
-          participation_accepted_reason: 'This participation has been accepted because:'
-          participation_in_evaluation_reason: This participation is being evaluated
-          participation_rejected_reason: 'This participation has been rejected because:'
+          answer_from_moa: Official answer from the project manager
+          answer_from_cpdp: Official answer from the CPDP
           report: Report
         vote_button:
           already_voted: Already voted

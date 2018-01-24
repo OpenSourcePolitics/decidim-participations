@@ -58,7 +58,8 @@ module Decidim
           "text-warning"
         end
       end
-            def published_status(participation)
+
+      def published_status(participation)
         if participation.published? && participation.question?
           "Réponse publiée"
         elsif participation.published?
@@ -67,7 +68,6 @@ module Decidim
           "Refusée"
         end
       end
-
 
       def state(participation)
         state = participation.state

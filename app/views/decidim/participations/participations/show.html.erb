@@ -50,29 +50,13 @@
       <% end %>
       <%= render partial: "decidim/shared/tags", locals: { resource: @participation, tags_class_extra: "tags--participation" } %>
     </div>
-    <% if @participation.answered? && translated_attribute(@participation.answer).present? %>
-      <% if @participation.accepted? %>
-        <div class="section">
-          <div class="callout success">
-            <h5><%= t(".participation_accepted_reason") %></h5>
-            <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
-          </div>
+    <% if @participation.published_answer? %>
+      <div class="section">
+        <div class="callout success">
+          <h5><%= t(".answer_from_#{@participation.recipient_role}") %></h5>
+          <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
         </div>
-      <% elsif @participation.rejected? %>
-        <div class="section">
-          <div class="callout warning">
-            <h5><%= t(".participation_rejected_reason") %></h5>
-            <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
-          </div>
-        </div>
-      <% else %>
-        <div class="section">
-          <div class="callout secondary">
-            <h5><%= t(".participation_in_evaluation_reason") %></h5>
-            <p><%= decidim_sanitize translated_attribute @participation.answer %></p>
-          </div>
-        </div>
-      <% end %>
+      </div>
     <% end %>
     <%= linked_resources_for @participation, :results, "included_participations" %>
     <%= linked_resources_for @participation, :projects, "included_participations" %>
