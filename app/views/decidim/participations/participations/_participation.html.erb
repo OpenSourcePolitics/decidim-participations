@@ -18,11 +18,11 @@
       <div class="card__support">
           <div class="card__support__data"></div>
           <% if participation.participation_type == "question" %>
-            <%= link_to t(".view_question"), participation, class: "card__button button small primary" %>
+            <%= link_to t(".view_question"), participation, class: "card__button button small" %>
           <% elsif participation.participation_type == "contribution" %>
-            <%= link_to t(".view_contribution"), participation, class: "card__button button small secondary" %>
+            <%= link_to t(".view_contribution"), participation, class: "card__button button small secondary" , style: "color: white" %>
           <% elsif participation.participation_type == "opinion" %>
-            <%= link_to t(".view_opinion"), participation, class: "card__button button small secondary" %>
+            <%= link_to t(".view_opinion"), participation, class: "card__button button small", style: "background-color: #8C838A" %>
           <% else %>
             <%= link_to t(".view_participation"), participation, class: "card__button button small warning" %>
           <% end%>
