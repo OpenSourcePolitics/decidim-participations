@@ -90,8 +90,8 @@ if (typeof jQuery.ui === 'undefined') {
         <%= f.submit t(".notify") %>
       </div>
 
-          
-     
+
+
     <% end %>
   </div>
 </div>
@@ -104,7 +104,6 @@ if (typeof jQuery.ui === 'undefined') {
     }
     $('#participation_participation_type').change(function() {
       var type = $('#participation_participation_type').val();
-      console.log(type)
       if (type == "question") {
         $('#recipient_role_container').show(500);
         } else {
@@ -117,16 +116,17 @@ if (typeof jQuery.ui === 'undefined') {
     $('#show_while_others_hide_2').hide();
     $('input[name="participation[moderation][upstream_moderation]"]').change(function() {
       var a = $('input[name="participation[moderation][upstream_moderation]"]:checked').val();
-      console.log(a)
       if (a == "authorized") {
           $('#hidable_content_contener').show(500);
           $('#hidable_content_contener_2').show(500);
           $('#show_while_others_hide').hide();
           $('#show_while_others_hide_2').hide();
+          $('#participation_moderation_justification').removeAttr("required");
         } else {
           $('#hidable_content_contener').hide(500);
           $('#hidable_content_contener_2').hide(500);
           $('#show_while_others_hide').show(500);
+          $('#participation_moderation_justification').attr("required", "true");
           $('#show_while_others_hide_2').show(500);
         }
     })
