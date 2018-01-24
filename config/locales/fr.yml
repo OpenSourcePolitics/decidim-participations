@@ -22,6 +22,7 @@ fr:
           roles:
             cpdp: CPDP
             moa: Maîtrise d'ouvrage
+            moderator: Moderateur
     events:
       participation_created:
         notification_title: Nouvelle participation de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
@@ -82,19 +83,23 @@ fr:
             name: Participation
         participation_answers:
           edit:
+            content: Contenu
             accepted: Retenue
+            publish: Publier
             answer_participation: Répondre
             evaluating: En cours d'évaluation
             rejected: Refusée
             title: Réponse à la participation %{title}
+            incomplete: Incomplète
         participations:
           questions:
             waiting_for_answer: Attente d'une réponse
             waiting_for_validation: Attente d'une validation
+            incomplete: Demande de modification
           edit:
             title: Title
             publish: Publier
-            notify: Publier et notifier l'auteur
+            notify: Notifier l'auteur
             qualification: Qualification
             select_a_category: Sélectionner une catégorie
             select_a_type: Sélectionner un type
@@ -114,7 +119,7 @@ fr:
             success: La participation a été copiée avec succès
           answer:
             invalid: Il y a eu un problème concernant la réponse à cette participation
-            success: La réponse à la participation a publiée avec succès
+            success: La réponse à été mise à jour avec succès
           create:
             invalid: Il y a eu un problème lors de la création de cette proposition
             success: Participation créée avec succès.
@@ -199,15 +204,20 @@ fr:
           all: Toutes
           category: Catégorie
           category_prompt: Sélectionner une catégorie
-          citizens: Citoyens >> Participations citoyennes
+          citizens: Participations citoyennes
           evaluating: En cours d'évaluation
-          official: Elu-e-s >> Participations officielles
+          official: Participations officielles
           origin: Auteurs
           rejected: Refusée
           related_to: Liée à
           search: Rechercher
           state: État
           voted: Votées
+          questions: Questions
+          contributions: Contributions
+          opinions: Opinions
+          participation_type: Filtrer par type
+          waiting_for_answer: En attente de réponse
         filters_small_view:
           close_modal: Fermer la fenêtre de dialogue
           filter: Filtrer
@@ -242,8 +252,12 @@ fr:
           random: Aléatoire
           recent: Les plus récents
         participation:
+          creation_date_lite: '%{date}'
           creation_date: 'Création: %{date}'
           view_participation: Voir la participation
+          view_question: Voir la question
+          view_opinion: Voir l'opinion
+          view_contribution: Voir la contribution
         show:
           edit_participation: Modifier la participation
           participation_accepted_reason: 'Cette participation a été retenue parce que :'

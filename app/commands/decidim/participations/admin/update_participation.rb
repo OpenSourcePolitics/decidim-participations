@@ -41,7 +41,6 @@ module Decidim
             participation_type: form.participation_type,
             category: form.category,
             recipient_role: form.recipient_role
-            # justification: form.justification
           )
         end
 
@@ -89,7 +88,7 @@ module Decidim
           if @participation.not_publish? && @participation.publishable?
             update_title
             @participation.update_attributes(published_on: Time.zone.now)
-            update_answer_state
+            update_state
           else !@participation.publishable?
             update_title
             @participation.update_attributes(published_on: nil)
@@ -104,9 +103,9 @@ module Decidim
           end
         end
 
-        def update_answer_state
+        def update_state
           if @participation.question? && @participation.answer.nil?
-            @participation.update_attributes(answer_state: "waiting_for_answer")
+            @participation.update_attributes(state: "waiting_for_answer")
           end
         end
       end

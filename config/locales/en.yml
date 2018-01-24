@@ -23,7 +23,7 @@ en:
           roles:
             cpdp: CPDP
             moa: Maîtrise d'ouvrage
-
+            moderator: Moderator
     events:
       participation_created:
         notification_title: There is a new participation from %{author_name} in <a href="%{resource_path}">%{resource_title}</a>
@@ -84,19 +84,23 @@ en:
             name: Participation
         participation_answers:
           edit:
+            content: Content
             accepted: Accepted
+            publish: Publish
             answer_participation: Answer
             evaluating: Evaluating
             rejected: Rejected
             title: Answer for participation %{title}
+            incomplete: Incomplete
         participations:
           questions:
             waiting_for_answer: Waiting for answer
             waiting_for_validation: Waiting for validation
+            incomplete: Revision required
           edit:
             title: Title
             publish: Publish
-            notify: Publish and notify the author
+            notify: Notify the author
             qualification: Qualification
             select_a_category: Select a category
             select_a_type: Select a type
@@ -214,6 +218,11 @@ en:
           search: Search
           state: State
           voted: Voted
+          questions: Questions
+          contributions: Contributions
+          opinions: Opinions
+          participation_type: Filter by type
+          waiting_for_answer: Waiting for answers
         filters_small_view:
           close_modal: Close modal
           filter: Filter
@@ -248,8 +257,12 @@ en:
           random: Random
           recent: Recent
         participation:
+          creation_date_lite: '%{date}'
           creation_date: 'Creation: %{date}'
           view_participation: View participation
+          view_question: View question
+          view_opinion: View opinion
+          view_contribution: Voir la contribution
         show:
           edit_participation: Edit participation
           participation_accepted_reason: 'This participation has been accepted because:'
