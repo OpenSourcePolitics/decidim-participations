@@ -39,7 +39,7 @@ if (typeof jQuery.ui === 'undefined') {
             </div>
           </div>
 
-          <div class="card" id="hidable_content_contener_2">
+          <div id="hidable_content_contener_2">
             <% if @form.categories&.any? %>
               <div class="row column">
                 <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
