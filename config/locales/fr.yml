@@ -95,6 +95,7 @@ fr:
           questions:
             waiting_for_answer: Attente d'une réponse
             waiting_for_validation: Attente d'une validation
+            incomplete: Demande de modification
           edit:
             title: Title
             publish: Publier
@@ -118,7 +119,7 @@ fr:
             success: La participation a été copiée avec succès
           answer:
             invalid: Il y a eu un problème concernant la réponse à cette participation
-            success: La réponse à la participation a publiée avec succès
+            success: La réponse à été mise à jour avec succès
           create:
             invalid: Il y a eu un problème lors de la création de cette proposition
             success: Participation créée avec succès.

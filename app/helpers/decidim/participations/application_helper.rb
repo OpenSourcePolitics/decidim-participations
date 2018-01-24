@@ -38,8 +38,8 @@ module Decidim
         end
       end
 
-      def answer_state(participation)
-        state = participation.answer_state
+      def state(participation)
+        state = participation.state
         case state
         when "waiting_for_answer"
           content_tag(:strong, class: "text-warning") do
@@ -47,6 +47,10 @@ module Decidim
           end
         when "waiting_for_validation"
           content_tag(:strong, class: "text-info") do
+            t(".#{state}")
+          end
+        when "incomplete"
+          content_tag(:strong, class: "text-alert") do
             t(".#{state}")
           end
         end

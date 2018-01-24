@@ -96,6 +96,7 @@ en:
           questions:
             waiting_for_answer: Waiting for answer
             waiting_for_validation: Waiting for validation
+            incomplete: Revision required
           edit:
             title: Title
             publish: Publish

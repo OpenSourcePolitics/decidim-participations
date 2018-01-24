@@ -24,7 +24,6 @@ module Decidim
           return broadcast(:invalid) if form.invalid?
 
           answer_participation
-          update_answer_state
           update_moderation
           broadcast(:ok)
         end
@@ -35,16 +34,17 @@ module Decidim
 
         def answer_participation
           participation.update_attributes!(
-            state: @form.state,
+            state: state,
             answer: @form.answer,
             answered_at: Time.current,
-            #justification
           )
         end
 
-        def update_answer_state
-          if participation.answer_state == "waiting_for_answer" && participation.answer.present?
-            participation.update_attributes(answer_state: "waiting_for_validation")
+        def state
+          if @form.state
+            @form.state
+          else
+            "waiting_for_validation"
           end
         end
 
