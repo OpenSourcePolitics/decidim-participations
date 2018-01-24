@@ -25,8 +25,8 @@ module Decidim
           transaction do
             update_participation
             update_moderation
-            update_publishing
             update_title
+            update_publishing
             set_deadline
           end
 
@@ -91,7 +91,7 @@ module Decidim
           if @participation.not_publish? && @participation.publishable?
             @participation.update_attributes(published_on: Time.zone.now)
             update_answer_state
-          else !@participation.publishable?
+          elsif !@participation.publishable?
             @participation.update_attributes(published_on: nil)
           end
         end

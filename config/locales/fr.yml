@@ -99,7 +99,7 @@ fr:
             select_a_category: Sélectionner une catégorie
             select_a_type: Sélectionner un type
             question: Question
-            opinion: Opinion
+            opinion: Avis
             contribution: Contribution
             content: Content
             original: Original
@@ -210,7 +210,7 @@ fr:
           voted: Votées
           questions: Questions
           contributions: Contributions
-          opinions: Opinions
+          opinions: Avis
           participation_type: Filtrer par type
           waiting_answers: En attente de réponse
         filters_small_view:
