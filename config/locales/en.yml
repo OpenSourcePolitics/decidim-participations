@@ -86,6 +86,7 @@ en:
           edit:
             content: Content
             accepted: Accepted
+            publish: Publish
             answer_participation: Answer
             evaluating: Evaluating
             rejected: Rejected
