@@ -14,11 +14,11 @@
         <%= f.translated :editor, :answer, autofocus: true, rows: 15 %>
       </div>
 
-      <% if can? :answer_as_moderator, Decidim::Participations::Participation %>
+      <% if can? :manage, Decidim::Participations::Participation %>
       <div class="row column">
         <%= f.collection_radio_buttons :state, [["accepted", t('.accepted')], ["incomplete", t('.incomplete')]], :first, :last, prompt: true %>
       </div>
-      
+
       <div class="row column" id="justification_field">
         <%= f.fields_for :moderation do |fm| %>
           <%=fm.text_field :justification %>
@@ -29,7 +29,11 @@
   </div>
 
   <div class="button--double form-general-submit">
-    <%= f.submit t(".answer_participation") %>
+    <% if can? :manage, participation %>
+      <%= f.submit t(".publish") %>
+    <% else %>
+      <%= f.submit t(".answer_participation") %>
+    <%end%>
   </div>
 <% end %>
 
