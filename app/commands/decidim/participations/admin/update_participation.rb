@@ -84,23 +84,17 @@ module Decidim
         end
 
         def send_notification_new_question
-          Rails.logger.info ">>>>>>>>> participation.recipient_role " + participation.recipient_role.inspect
-          Rails.logger.info ">>>>>>>>> @current_participatory_process.id" + @current_participatory_process.id.inspect
           recipient_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id, role: participation.recipient_role).map(&:decidim_user_id)
-          Rails.logger.info ">>>>>>>>> recipient_ids " + recipient_ids.inspect
-          Rails.logger.info ">>>>>>>>>  Decidim::EventsManager begin"
-          # event, event_class, resource, recipient_ids, extra
+          title = @current_participatory_process.title.is_a?(Hash) ? @current_participatory_process.title[I18n.locale.to_s] : @current_participatory_process.title
+
           Decidim::EventsManager.publish(
             event: "decidim.events.participations.new_question",
             event_class: Decidim::Participations::NewParticipationQuestionEvent,
             resource: @participation, #.root_commentable
             recipient_ids: recipient_ids.uniq,
             extra: {
-            #   comment_id: @comment.id,
-            #   moderation_event: @comment.moderation.upstream_activated? ? true : false,
-            #   new_content: true,
-            #   process_slug: @comment.root_commentable.feature.participatory_space.slug
-                question_attributed: true
+              question_attributed: true,
+              participatory_process_title: title
             }
           )
           Rails.logger.info ">>>>>>>>>  Decidim::EventsManager finished"

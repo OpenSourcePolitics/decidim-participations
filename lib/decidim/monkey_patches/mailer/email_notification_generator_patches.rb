@@ -2,18 +2,6 @@
 
 module EmailNotificationGeneratorPatch 
 
-  # def generate
-  #   Rails.logger.info ">>>>>>>>> generate " + resource.inspect
-  #   return unless resource
-  #   Rails.logger.info ">>>>>>>>> generate resource present"
-  #   return unless event_class.types.include?(:email)
-  #   Rails.logger.info ">>>>>>>>> generate event_class.types.include?(:email)"
-
-  #   recipient_ids.each do |recipient_id|
-  #     send_email_to(recipient_id)
-  #   end
-  # end
-
   def send_email_to(recipient_id)
     Rails.logger.info ">>>>>>>>> send_email_to " + recipient_id.inspect
     recipient = Decidim::User.where(id: recipient_id).first
@@ -37,7 +25,7 @@ module EmailNotificationGeneratorPatch
   private 
   
   def send_new_question_attributed(recipient)
-    NotificationMailer
+    Decidim::NotificationMailer
     .new_question_attributed(
       event,
       event_class.name,
@@ -75,12 +63,22 @@ module EmailNotificationGeneratorPatch
 
 end
 
-puts "now"
-
-
 Decidim::EmailNotificationGenerator.class_eval do
   prepend(EmailNotificationGeneratorPatch)
-
 end
 
-Decidim::EmailNotificationGenerator.hello
+  
+
+# module ClassMethods
+#   def hello
+#     puts "hey"
+#     Rails.logger.info "foo"
+#   end
+# end  
+
+# def self.prepended(base)
+#   class << base
+#     prepend ClassMethods
+#   end  
+# end  
+
