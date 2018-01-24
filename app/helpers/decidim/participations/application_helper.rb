@@ -38,7 +38,7 @@ module Decidim
         end
       end
 
-      def anwser_state(participation)
+      def answer_state(participation)
         state = participation.answer_state
         case state
         when "waiting_for_answer"
@@ -53,13 +53,13 @@ module Decidim
       end
 
       def published_status(participation)
-        if participation.published? && !participation.question?
-          content_tag(:strong, class: 'text-success') do
-            t("published" , scope: "decidim.participations.admin.participations.index")
-          end
-        elsif participation.published? && participation.anwser.nil? # TODO #22 => Voir si des méthodes ont été créées dans cette issue pour refacto
+        if participation.answered?
           content_tag(:strong, class: 'text-success') do
             t("answer_published" , scope: "decidim.participations.admin.participations.index")
+          end
+        elsif participation.published?
+          content_tag(:strong, class: 'text-success') do
+            t("published" , scope: "decidim.participations.admin.participations.index")
           end
         else
           content_tag(:strong, class: 'text-alert') do
@@ -100,9 +100,9 @@ module Decidim
       end
 
       def participation_roles
-        
+
         [
-          ["moa", t('decidim.admin.models.participatory_process_user_role.roles.moa')], 
+          ["moa", t('decidim.admin.models.participatory_process_user_role.roles.moa')],
           ["cpdp", t('decidim.admin.models.participatory_process_user_role.roles.cpdp')]
         ]
       end
