@@ -46,6 +46,14 @@ module Decidim
         type == "question"
       end
 
+      def opinion?
+        type == "opinion"
+      end
+
+      def contribution?
+        type == "contribution"
+      end
+
       def published?
         published_on.present?
       end
@@ -123,7 +131,12 @@ module Decidim
 
       # Public: Overrides the `commentable?` Commentable concern method.
       def commentable?
-        feature.settings.comments_enabled?
+        if question? && answered? && published?
+          return feature.settings.comments_enabled?
+        elsif opinion? || contribution?
+          return feature.settings.comments_enabled?
+        end
+        return false
       end
 
       # Public: Overrides the `accepts_new_comments?` Commentable concern method.
