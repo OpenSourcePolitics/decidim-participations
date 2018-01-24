@@ -149,7 +149,7 @@ module Decidim
 
       # Public: Overrides the `commentable?` Commentable concern method.
       def commentable?
-        if question? && answered? && published?
+        if question? && answered? && published? && state == "accepted"
           return feature.settings.comments_enabled?
         elsif opinion? || contribution?
           return feature.settings.comments_enabled?
