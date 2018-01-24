@@ -25,7 +25,9 @@ module Decidim
           config.admin_abilities += [
             "Decidim::Participations::Abilities::AdminAbility",
             "Decidim::Participations::Abilities::ParticipatoryProcessAdminAbility",
-            "Decidim::Participations::Abilities::ParticipatoryProcessModeratorAbility"
+            "Decidim::Participations::Abilities::ParticipatoryProcessModeratorAbility",
+            "Decidim::Participations::Abilities::ParticipatoryProcessMoaAbility",
+            "Decidim::Participations::Abilities::ParticipatoryProcessCpdpAbility"
           ]
         end
       end

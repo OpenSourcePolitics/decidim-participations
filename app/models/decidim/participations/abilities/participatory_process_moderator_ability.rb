@@ -3,7 +3,7 @@
 module Decidim
   module Participations
     module Abilities
-      # Defines the abilities related to participations for a logged in process admin user.
+      # Defines the abilities related to participations for a logged in process moderator user.
       # Intended to be used with `cancancan`.
       class ParticipatoryProcessModeratorAbility < Decidim::Abilities::ParticipatoryProcessModeratorAbility
         def define_participatory_process_abilities
@@ -13,7 +13,7 @@ module Decidim
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
           can :read, Feature do |feature|
             feature.manifest_name == "participations"
-          end  
+          end
 
           can :answer_as_moderator, Participation
 

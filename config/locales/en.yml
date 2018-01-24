@@ -92,6 +92,9 @@ en:
             title: Answer for participation %{title}
             incomplete: Incomplete
         participations:
+          questions:
+            waiting_for_answer: Waiting for answer
+            waiting_for_validation: Waiting for validation
           edit:
             title: Title
             publish: Publish
@@ -106,6 +109,8 @@ en:
             original: Original
             accepted: Accepted
             refused: Refused
+            recipient_role: Recipient
+
             fields:
               type: Type
           copy:
@@ -211,6 +216,11 @@ en:
           search: Search
           state: State
           voted: Voted
+          questions: Questions
+          contributions: Contributions
+          opinions: Opinions
+          participation_type: Filter by type
+          waiting_answers: Waiting for answers
         filters_small_view:
           close_modal: Close modal
           filter: Filter
@@ -247,6 +257,9 @@ en:
         participation:
           creation_date: 'Creation: %{date}'
           view_participation: View participation
+          view_question: View question
+          view_opinion: View opinion
+          view_contribution: Voir la contribution
         show:
           edit_participation: Edit participation
           participation_accepted_reason: 'This participation has been accepted because:'
