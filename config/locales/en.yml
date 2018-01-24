@@ -215,7 +215,7 @@ en:
           contributions: Contributions
           opinions: Opinions
           participation_type: Filter by type
-          waiting_answers: Waiting for answers
+          waiting_for_answer: Waiting for answers
         filters_small_view:
           close_modal: Close modal
           filter: Filter
@@ -250,6 +250,7 @@ en:
           random: Random
           recent: Recent
         participation:
+          creation_date_lite: '%{date}'
           creation_date: 'Creation: %{date}'
           view_participation: View participation
           view_question: View question
