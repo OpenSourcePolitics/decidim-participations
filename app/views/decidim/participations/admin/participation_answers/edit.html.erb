@@ -14,11 +14,11 @@
         <%= f.translated :editor, :answer, autofocus: true, rows: 15 %>
       </div>
 
-      <% if @moderator_view %>
+      <% if can? :manage, Decidim::Participations::Participation %>
       <div class="row column">
-        <%= f.collection_radio_buttons :state, [["retained", t('.retained')], ["incomplete", t('.incomplete')]], :first, :last, prompt: true, input_html: { name: 'wecanhidejustification' }  %>
+        <%= f.collection_radio_buttons :state, [["accepted", t('.accepted')], ["incomplete", t('.incomplete')]], :first, :last, prompt: true %>
       </div>
-      
+
       <div class="row column" id="justification_field">
         <%= f.fields_for :moderation do |fm| %>
           <%=fm.text_field :justification %>
@@ -29,7 +29,11 @@
   </div>
 
   <div class="button--double form-general-submit">
-    <%= f.submit t(".answer_participation") %>
+    <% if can? :manage, participation %>
+      <%= f.submit t(".publish") %>
+    <% else %>
+      <%= f.submit t(".answer_participation") %>
+    <%end%>
   </div>
 <% end %>
 
@@ -39,8 +43,10 @@
     var a = $('input[name="participation_answer[state]"]:checked').val();
     if (a == "incomplete") {
       $('#justification_field').show(500);
-      } else {
+      $('#participation_answer_moderation_justification').attr("required", "true");
+    } else {
       $('#justification_field').hide();
-      }
+      $('#participation_answer_moderation_justification').removeAttr("required");
+    }
   })
 </script>

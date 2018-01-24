@@ -30,10 +30,10 @@
               TODO
             </td>
             <td>
-              TODO
+              <%= state(participation) %>
             </td>
             <td>
-              TODO
+              <%= participation.recipient_role %>
             </td>
             <td>
               <%= participation.title %>
@@ -44,9 +44,9 @@
               <% end %>
             </td>
             <td class="table-list__actions">
-                <%= icon_link_to "chat", edit_participation_participation_answer_path(participation_id: participation.id, id: participation.id), t("actions.answer", scope: "decidim.participations"), class: "action-icon--edit-answer" %>
+              <%= icon_link_to "chat", edit_participation_participation_answer_path(participation_id: participation.id, id: participation.id), t("actions.answer", scope: "decidim.participations"), class: "action-icon--edit-answer" %>
 
-                <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+              <%= icon_link_to "eye", resource_locator(participation).path, t("actions.preview", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
             </td>
           </tr>
         <% end %>

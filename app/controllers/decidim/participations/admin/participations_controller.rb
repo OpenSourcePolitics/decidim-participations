@@ -20,7 +20,7 @@ module Decidim
             when "moderated"
               @param_moderated = true
             else
-              @param_unmoderate = true
+              default_param
           end
         end
 
@@ -49,12 +49,12 @@ module Decidim
         end
 
         def edit
-          authorize! :edit, Participation
+          authorize! :update, Participation
           @form = form(Admin::ParticipationForm).from_model(participation)
         end
 
         def update
-          authorize! :edit, Participation
+          authorize! :update, Participation
           @form = form(Admin::ParticipationForm).from_params(params)
 
           Admin::UpdateParticipation.call(@form, current_user, participation) do
@@ -72,15 +72,43 @@ module Decidim
 
         private
 
+        def default_param
+          if can? :manage, Decidim::Participations::Participation
+            @param_unmoderate = true
+          else
+            @param_questions = true
+          end
+        end
+
         def query
           @query ||=
             if @param_unmoderate
               Participation.untreated(current_feature).ransack(params[:q])
             elsif @param_questions
-               Participation.questions_with_unpublished_answer(current_feature).ransack(params[:q])
+              filtered_questions
             elsif @param_moderated
-              Participation.treated(current_feature).ransack(params[:q])
+              filtered_treated
             end
+        end
+
+        def filtered_questions
+          if can? :manage, Decidim::Participations::Participation
+            Participation.filtered_questions(current_feature).ransack(params[:q])
+          else
+            Participation.filtered_questions_per_role(current_feature, current_user_role, "waiting_for_answer").ransack(params[:q])
+          end
+        end
+
+        def filtered_treated
+          if can? :manage, Decidim::Participations::Participation
+            Participation.treated(current_feature).ransack(params[:q])
+          else
+            Participation.filtered_questions_per_role(current_feature, current_user_role, "authorized").ransack(params[:q])
+          end
+        end
+
+        def current_user_role
+          ParticipatoryProcessUserRole.where(user: current_user).first.role
         end
 
         def participations

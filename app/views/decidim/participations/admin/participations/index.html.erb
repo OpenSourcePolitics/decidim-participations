@@ -7,26 +7,28 @@
         <%= export_dropdown %>
       </div>
       <div class="card__filter" style= "margin-right: 20px">
-        <% if can? :read, Decidim::Participations::Participation %>
+        <% if can? :manage, Decidim::Participations::Participation %>
           <%= link_to t("index.unmoderate", scope: "decidim.participations.admin.participations"), participations_path(status: "unmoderate"), class: "#{'bold' if @param_unmoderate}" %>
           |
+        <% end %>
+        <% if can? :update, Decidim::Participations::Participation %>
           <%= link_to t("index.questions", scope: "decidim.participations.admin.participations"), participations_path(status: "questions"), class: "#{'bold' if @param_questions}" %>
           |
+        <%end%>
+        <% if can? :update, Decidim::Participations::Participation %>
           <%= link_to t("index.moderated", scope: "decidim.participations.admin.participations"), participations_path(status: "moderated"), class: "#{'bold' if @param_moderated}" %>
-          <% else %>
-          asfdgn <%= @current_user.inspect %>
         <% end %>
       </div>
     </h2>
   </div>
-
-    <%= render "questions" %>
-  <% if @param_unmoderate %>
-    <%= render "unmoderate" %>
-  <% elsif @param_questions %>
-    <%= render "questions" %>
-  <% elsif @param_moderated %>
-    <%= render "moderated" %>
+  <% if can? :update, Decidim::Participations::Participation %>
+    <% if @param_unmoderate %>
+      <%= render "unmoderate" %>
+    <% elsif @param_questions %>
+      <%= render "questions" %>
+    <% elsif @param_moderated %>
+      <%= render "moderated" %>
+    <%end%>
   <%end%>
 </div>
 
