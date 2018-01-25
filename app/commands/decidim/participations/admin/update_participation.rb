@@ -31,8 +31,7 @@ module Decidim
             update_title
             update_publishing
             set_deadline
-            Rails.logger.info ">>>>>>>>>" + should_notify.inspect
-            send_notification_new_question #if should_notify
+            send_notification_new_question if should_notify
           end
 
           broadcast(:ok, participation)
@@ -90,15 +89,13 @@ module Decidim
           Decidim::EventsManager.publish(
             event: "decidim.events.participations.new_question",
             event_class: Decidim::Participations::NewParticipationQuestionEvent,
-            resource: @participation, #.root_commentable
+            resource: @participation,
             recipient_ids: recipient_ids.uniq,
             extra: {
               question_attributed: true,
               participatory_process_title: title
             }
           )
-          Rails.logger.info ">>>>>>>>>  Decidim::EventsManager finished"
-
         end
 
         def organization

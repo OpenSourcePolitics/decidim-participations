@@ -3,17 +3,10 @@
 module EmailNotificationGeneratorPatch 
 
   def send_email_to(recipient_id)
-    Rails.logger.info ">>>>>>>>> send_email_to " + recipient_id.inspect
     recipient = Decidim::User.where(id: recipient_id).first
-    Rails.logger.info ">>>>>>>>> send_email_to recipient" + recipient.inspect
-
     return unless recipient
-    Rails.logger.info ">>>>>>>>> send_email_to recipient.email_on_notification?" + recipient.email_on_notification?.inspect
-
     return unless recipient.email_on_notification?
-    Rails.logger.info ">>>>>>>>> send_email_to @extra" + @extra.inspect
     if @extra[:question_attributed]
-      Rails.logger.info ">>>>>>>>> question_attributed "
       send_new_question_attributed(recipient)
     elsif @extra[:new_content]
       send_new_content_received(recipient)
