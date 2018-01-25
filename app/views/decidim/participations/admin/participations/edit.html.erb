@@ -85,10 +85,13 @@
 
 <script type="text/javascript">
   $('document').ready(function(){
+     var isNotQuestion = <%= (@form.participation_type != "question") %>;
+
     // refused justification
     $('#show_while_others_hide').hide();
     $('input[name="participation[moderation][upstream_moderation]"]').change(
       function() {
+      var isAQuestion = $("#participation_participation_type").val() == "question";
         var a = $('input[name="participation[moderation][upstream_moderation]"]:checked').val();
         if (a == "authorized") {
             $('#hidable_content_contener').show(500);
@@ -97,6 +100,9 @@
             $('#participation_moderation_justification').removeAttr("required");
             $(".notify").css("display", "none")
             $(".publish").css("display", "flex")
+            if (isAQuestion){
+              $('#recipient_role_container').show(500);
+            }
 
           } else {
             $('#hidable_content_contener').hide(500);
@@ -105,21 +111,21 @@
             $('#participation_moderation_justification').attr("required", "true");
             $(".notify").css("display", "flex")
             $(".publish").css("display", "none")
+            $('#recipient_role_container').hide();
           }
       })
 
     // Recipient field
-    var shouldHideRecipientRole = <%= (@form.participation_type != "question") %>;
-    if(shouldHideRecipientRole) {
+    if(isNotQuestion) {
       $('#recipient_role_container').hide();
     }
     $('#participation_participation_type').change(function() {
       var type = $('#participation_participation_type').val();
       if (type == "question") {
         $('#recipient_role_container').show(500);
-        } else {
+      } else {
         $('#recipient_role_container').hide();
-        }
+      }
     })
 
     // body changes justification
@@ -142,4 +148,5 @@
       }
     })
   });
+
 </script>
