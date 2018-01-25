@@ -23,11 +23,11 @@
   </div>
   <% if can? :update, Decidim::Participations::Participation %>
     <% if @param_unmoderate %>
-      <%= render "unmoderate" %>
+      <%= render "untreated" %>
     <% elsif @param_questions %>
       <%= render "questions" %>
     <% elsif @param_moderated %>
-      <%= render "moderated" %>
+      <%= render "treated" %>
     <%end%>
   <%end%>
 </div>

@@ -94,6 +94,18 @@ en:
             content: Content
             incomplete: Incomplete
         participations:
+          title:
+            contribution: Contribution
+            opinion: Opinion
+            question: Question
+          treated:
+            contribution: Contribution
+            opinion: Opinion
+            question: Question
+          untreated:
+            contribution: Contribution
+            opinion: Opinion
+            question: Question
           questions:
             waiting_for_answer: Waiting for answer
             waiting_for_validation: Waiting for validation

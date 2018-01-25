@@ -97,7 +97,8 @@ module Decidim
         status.delete("refused")
         status.delete("unmoderate")
         number = status.count
-        "#{type.capitalize}" + " n°" + "#{number}"
+        type = I18n.t("decidim.participations.admin.participations.title.#{self.type}")
+        "#{type}" + " n°" + "#{number}"
       end
 
 

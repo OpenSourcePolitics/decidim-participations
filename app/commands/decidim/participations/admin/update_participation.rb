@@ -89,7 +89,7 @@ module Decidim
         def update_publishing
           if @participation.not_publish? && @participation.publishable?
             @participation.update_attributes(published_on: Time.zone.now)
-            update_answer_state
+            update_state
           elsif !@participation.publishable?
             @participation.update_attributes(published_on: nil)
           end
