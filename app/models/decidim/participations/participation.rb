@@ -49,12 +49,20 @@ module Decidim
         .merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
 
       # participations index
+
       scope :exclude, lambda { |status |left_outer_joins(:moderation).where(Decidim::Moderation.arel_table[:upstream_moderation].not_eq(status))}
 
       scope :accepted, -> { where(state: "accepted") }
       scope :rejected, -> { where(state: "rejected") }
       scope :evaluating, -> { where(state: "evaluating") }
       after_create :create_participation_moderation
+
+      # filter index
+      scope :filter_per_moderation_status,  lambda { |state|
+        joins(:moderation).merge(Moderation.where(['upstream_moderation = ?', state]))
+      }
+
+      # filter dashboard
 
       ransacker :status do
         query = <<-SQL

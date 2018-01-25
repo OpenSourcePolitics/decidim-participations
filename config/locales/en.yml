@@ -218,7 +218,7 @@ en:
           fields:
             type: Type
         filters:
-          accepted: Accepted
+          published_answer: Answer published
           activity: Activity
           all: All
           category: Category
@@ -230,7 +230,7 @@ en:
           rejected: Rejected
           related_to: Related to
           search: Search
-          state: State
+          questions_filter: Filter questions by
           voted: Voted
           questions: Questions
           contributions: Contributions

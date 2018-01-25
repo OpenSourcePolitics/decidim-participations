@@ -17,7 +17,7 @@
   <% end %>
 
   <% if feature_settings.official_participations_enabled %>
-    <%= form.collection_radio_buttons :state, [["all", t('.all')], ["accepted", t('.accepted')], ["waiting_for_answer", t('.waiting_for_answer')]], :first, :last, legend_title: t('.state') %>
+    <%= form.collection_radio_buttons :state, [["all", t('.all')], ["accepted", t('.published_answer')], ["waiting_for_answer", t('.waiting_for_answer')]], :first, :last, legend_title: t('.questions_filter') %>
   <% end %>
 
   <% if linked_classes_for(Decidim::Participations::Participation).any? %>

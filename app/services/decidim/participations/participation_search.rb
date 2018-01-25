@@ -61,12 +61,13 @@ module Decidim
       # Handle the state filter
       def search_state
         case state
-        when "accepted"
-          query.accepted
-        when "waiting_answers"
-          query.where(state: nil)
+        when "waiting_for_answer"
+          redirect_to decidim_participatory_process_participations_path(participatory_process: query.first.feature.participatory_space, filter: {state: "waiting_for_answer"})
+          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['upstream_moderation = ?', "waiting_for_answer"]))
+        when "published_answer"
+          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['upstream_moderation = ?', "authorized"]))
         else # Assume 'all'
-          query
+          query.where(participation_type: "question")
         end
       end
 
