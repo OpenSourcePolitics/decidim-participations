@@ -64,7 +64,7 @@ module Decidim
           "Réponse publiée"
         elsif participation.published?
           "Publiée"
-        else
+        elsif participation.refused?
           "Refusée"
         end
       end
