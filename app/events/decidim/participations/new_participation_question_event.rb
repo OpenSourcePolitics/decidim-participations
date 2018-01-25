@@ -6,8 +6,10 @@ module Decidim
         include Rails.application.routes.url_helpers
         
         def email_subject
-          # TODO
-          "Publication d’une participation"
+          I18n.t(
+            "decidim.events.new_participation_question_event.email_subject",
+            processus_participatif_title: extra[:participatory_process_title]
+          )
         end
 
         def email_greeting
@@ -29,20 +31,13 @@ module Decidim
         def action_url_name
           I18n.t("decidim.events.new_participation_question_event.action_url_name")
         end
-
-        def resource_url_name
-          I18n.t("decidim.events.new_participation_question_event.resource_url_name")
-        end
   
         def notification_title
-          # TODO: 
-          "notification_title"
-          # I18n.t(
-          #   "decidim.admin.events.new_participation_question_event.notification_title",
-          #   profile_path: official_user.profile_path,
-          #   nickname: official_user.nickname,
-          #   name: official_user.name
-          # ).html_safe
+          I18n.t(
+            "decidim.events.new_participation_question_event.notification",
+            processus_participatif_title: extra[:participatory_process_title],
+            action_url: action_url
+          ).html_safe
         end
 
         private

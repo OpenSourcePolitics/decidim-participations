@@ -59,19 +59,3 @@ end
 Decidim::EmailNotificationGenerator.class_eval do
   prepend(EmailNotificationGeneratorPatch)
 end
-
-  
-
-# module ClassMethods
-#   def hello
-#     puts "hey"
-#     Rails.logger.info "foo"
-#   end
-# end  
-
-# def self.prepended(base)
-#   class << base
-#     prepend ClassMethods
-#   end  
-# end  
-

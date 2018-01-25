@@ -25,10 +25,11 @@ fr:
             moderator: Moderateur
     events:
       new_participation_question_event:
+        notification: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
+        email_subject: Une nouvelle question dans %{processus_participatif_title} attend votre réponse
         email_greetings: Bonjour,
-        email_intro: La question %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
+        email_intro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
         action_url_name: Vous pouvez y répondre en suivant ce lien
-        resource_url_name: Cliquez ici pour la consulter
       participation_created:
         notification_title: Nouvelle participation de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
         url: "Url de la participation : %{resource_url}"
