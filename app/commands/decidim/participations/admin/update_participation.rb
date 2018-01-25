@@ -6,10 +6,12 @@ module Decidim
         #
         # form         - A form object with the params.
         # current_user - The current user.
+        # current_participatory_process - The current participatory process
         # participation - the participation to update.
-        def initialize(form, current_user, participation)
+        def initialize(form, current_user, current_participatory_process, participation)
           @form = form
           @current_user = current_user
+          @current_participatory_process = current_participatory_process
           @participation = participation
         end
 
@@ -23,11 +25,14 @@ module Decidim
           return broadcast(:invalid) if form.invalid?
 
           transaction do
+            should_notify = recipient_role_will_change?
             update_participation
             update_moderation
             update_title
             update_publishing
             set_deadline
+            Rails.logger.info ">>>>>>>>>" + should_notify.inspect
+            send_notification_new_question #if should_notify
           end
 
           broadcast(:ok, participation)
@@ -72,6 +77,34 @@ module Decidim
           else
             current_user_participations.count >= participation_limit
           end
+        end
+
+        def recipient_role_will_change?
+          form.recipient_role != participation.recipient_role && (form.participation_type == "question")
+        end
+
+        def send_notification_new_question
+          Rails.logger.info ">>>>>>>>> participation.recipient_role " + participation.recipient_role.inspect
+          Rails.logger.info ">>>>>>>>> @current_participatory_process.id" + @current_participatory_process.id.inspect
+          recipient_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id, role: participation.recipient_role).map(&:decidim_user_id)
+          Rails.logger.info ">>>>>>>>> recipient_ids " + recipient_ids.inspect
+          Rails.logger.info ">>>>>>>>>  Decidim::EventsManager begin"
+          # event, event_class, resource, recipient_ids, extra
+          Decidim::EventsManager.publish(
+            event: "decidim.events.participations.new_question",
+            event_class: Decidim::Participations::NewParticipationQuestionEvent,
+            resource: @participation, #.root_commentable
+            recipient_ids: recipient_ids.uniq,
+            extra: {
+            #   comment_id: @comment.id,
+            #   moderation_event: @comment.moderation.upstream_activated? ? true : false,
+            #   new_content: true,
+            #   process_slug: @comment.root_commentable.feature.participatory_space.slug
+                question_attributed: true
+            }
+          )
+          Rails.logger.info ">>>>>>>>>  Decidim::EventsManager finished"
+
         end
 
         def organization
