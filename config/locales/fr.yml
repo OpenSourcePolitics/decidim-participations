@@ -92,6 +92,18 @@ fr:
             title: Réponse à la participation %{title}
             incomplete: Incomplète
         participations:
+          title:
+            contribution: Contribution
+            opinion: Avis
+            question: Question
+          treated:
+            contribution: Contribution
+            opinion: Avis
+            question: Question
+          untreated:
+            contribution: Contribution
+            opinion: Avis
+            question: Question
           questions:
             waiting_for_answer: Attente d'une réponse
             waiting_for_validation: Attente d'une validation
@@ -99,7 +111,8 @@ fr:
           edit:
             title: Title
             publish: Publier
-            notify: Publier et notifier l'auteur
+            notify: Notifier l'auteur
+            publish_and_notify: Publier et notifier l'auteur
             qualification: Qualification
             select_a_category: Sélectionner une catégorie
             select_a_type: Sélectionner un type

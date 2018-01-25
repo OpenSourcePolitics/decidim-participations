@@ -13,12 +13,12 @@
         <div class="card-section">
           <div class="row column">
             <%= f.fields_for :moderation do |fm| %>
-              <%= fm.radio_button :upstream_moderation, "authorized", label: t(".accepted"), require: true, checked: @participation.publishable? %>
+              <%= fm.radio_button :upstream_moderation, "authorized", label: t(".accepted"), require: true, checked: @participation.publishable? || @participation.published?%>
               <%= fm.radio_button :upstream_moderation, "refused", label: t(".refused"), require: true, checked: @participation.refused? %>
             <% end %>
           </div>
 
-          <div id="show_while_others_hide">
+          <div class="show_while_others_hide">
             <div class="row column">
               <%= f.fields_for :moderation do |fm| %>
                 <%=fm.text_area :justification, rows: 5 %>
@@ -62,69 +62,96 @@
             <%=f.text_area :body, rows: 10, label: false %>
           </div>
 
-          <div class="row column" id="justification_field">
+          <div class="row column" id="justificationBlock">
             <%= f.fields_for :moderation do |fm| %>
-              <%=fm.text_field :justification, id: "changing_justification" %>
+              <%=fm.text_field :justification, id: "bodyJustificationField" %>
             <% end %>
           </div>
 
-          <div class="button--double form-general-submit notify hidden" style="display: none">
-            <%= f.submit t(".notify") %>
-          </div>
-
-          <div class="button--double form-general-submit publish">
-            <%= f.submit t(".publish") %>
-          </div>
         </div>
-      <% end %>
-    </div>
+      </div>
+      <div class="button--double form-general-submit publish_and_notify" style="display: none">
+        <%= f.submit t(".publish_and_notify") %>
+      </div>
+
+      <div class="button--double form-general-submit publish">
+        <%= f.submit t(".publish") %>
+      </div>
+
+
+      <div class="button--double form-general-submit show_while_others_hide">
+        <%= f.submit t(".notify") %>
+      </div>
+    <% end %>
   </div>
 </div>
+<%= hidden_field_tag :js_original_body, @participation.original_body%>
+<%= hidden_field_tag :js_form_body%>
 
 <script type="text/javascript">
   $('document').ready(function(){
+     var isNotQuestion = <%= (@form.participation_type != "question") %>;
+
     // refused justification
-    $('#show_while_others_hide').hide();
+    $('.show_while_others_hide').hide();
     $('input[name="participation[moderation][upstream_moderation]"]').change(
       function() {
+      var isAQuestion = $("#participation_participation_type").val() == "question";
         var a = $('input[name="participation[moderation][upstream_moderation]"]:checked').val();
         if (a == "authorized") {
             $('#hidable_content_contener').show(500);
             $('#hidable_content_contener_2').show(500);
-            $('#show_while_others_hide').hide();
+            $('.show_while_others_hide').hide();
             $('#participation_moderation_justification').removeAttr("required");
+            $(".publish_and_notify").css("display", "none")
+            $(".publish").css("display", "flex")
+            if (isAQuestion){
+              $('#recipient_role_container').show(500);
+            }
+
           } else {
             $('#hidable_content_contener').hide(500);
             $('#hidable_content_contener_2').hide(500);
-            $('#show_while_others_hide').show(500);
+            $('.show_while_others_hide').show(500);
             $('#participation_moderation_justification').attr("required", "true");
+            $(".publish_and_notify").css("display", "none")
+            $(".publish").css("display", "none")
+            $('#recipient_role_container').hide();
           }
       })
 
     // Recipient field
-    var shouldHideRecipientRole = <%= (@form.participation_type != "question") %>;
-    if(shouldHideRecipientRole) {
+    if(isNotQuestion) {
       $('#recipient_role_container').hide();
     }
     $('#participation_participation_type').change(function() {
       var type = $('#participation_participation_type').val();
       if (type == "question") {
         $('#recipient_role_container').show(500);
-        } else {
+      } else {
         $('#recipient_role_container').hide();
-        }
+      }
     })
 
     // body changes justification
-    $('#justification_field').hide();
-    var bodyHasChange = <%= (@form.body != @participation.original_body) %>;
-    $("#participation_body").change(function(){
-      if (bodyHasChange) {
-        $('#justification_field').show(500);
-        $('#changing_justification').attr("required", "true");
-        $(".notify").css("display", "flex")
+    $('#justificationBlock').hide();
+    var bodyField = $("#participation_body")
+    bodyField.change(function(){
+      var originalBody = $("#js_original_body")
+      var formBody = $("#js_form_body")
+      formBody.val(bodyField.val())
+      if( $("#js_form_body").val() != originalBody.val()){
+        $('#justificationBlock').show(500);
+        $('#bodyJustificationField').attr("required", "true");
+        $(".publish_and_notify").css("display", "flex")
         $(".publish").css("display", "none")
+      } else if (formBody.val() == originalBody.val()) {
+        $('#justificationBlock').hide();
+        $('#bodyJustificationField').removeAttr("required");
+        $(".publish_and_notify").css("display", "none")
+        $(".publish").css("display", "flex")
       }
     })
   });
+
 </script>

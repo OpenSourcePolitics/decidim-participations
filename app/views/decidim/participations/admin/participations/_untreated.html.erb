@@ -27,7 +27,7 @@
               <%= l(participation.created_at, format: :short) %><br />
             </td>
             <td>
-              <%= participation.type %><br />
+              <%= t(".#{participation.type}") %><br />
             </td>
             <td>
               <%= participation.body.truncate(50) %><br />

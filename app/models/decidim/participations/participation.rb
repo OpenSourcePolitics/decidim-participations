@@ -56,6 +56,19 @@ module Decidim
       scope :evaluating, -> { where(state: "evaluating") }
       after_create :create_participation_moderation
 
+      ransacker :status do
+        query = <<-SQL
+              (SELECT decidim_moderations.upstream_moderation
+                 FROM decidim_moderations
+                WHERE decidim_moderations.decidim_reportable_id = decidim_participations_participations.id
+                  AND decidim_moderations.decidim_reportable_type = 'Decidim::Participations::Participation'
+                GROUP BY decidim_moderations.upstream_moderation
+              )
+            SQL
+        Arel.sql(query)
+      end
+
+
       def self.current_feature_participations(current_feature)
         where(feature: current_feature)
       end
@@ -92,12 +105,13 @@ module Decidim
         moderation.upstream_moderation == "refused"
       end
 
-      def generate_title # count the number of authorized and waiting for answer status. Then generate the title thanks to this number
+      def generate_title # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
         status = self.class.where(participation_type: type).map(&:moderation).map(&:upstream_moderation)
         status.delete("refused")
         status.delete("unmoderate")
         number = status.count
-        "#{type.capitalize}" + " n°" + "#{number}"
+        type = I18n.t("decidim.participations.admin.participations.title.#{self.type}")
+        "#{type}" + " n°" + "#{number}"
       end
 
 

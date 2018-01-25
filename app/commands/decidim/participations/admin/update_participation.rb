@@ -89,17 +89,17 @@ module Decidim
         def update_publishing
           if @participation.not_publish? && @participation.publishable?
             @participation.update_attributes(published_on: Time.zone.now)
-            update_answer_state
+            update_state
           elsif !@participation.publishable?
             @participation.update_attributes(published_on: nil)
           end
         end
 
         def update_title
-          if @participation.not_publish? && @participation.publishable?
-            @participation.update_attributes(title: @participation.generate_title)
-          elsif !@participation.publishable?
+          if !@participation.publishable? || @participation.refused?
             @participation.update_attributes(title: nil)
+          else # case : participation is published || A user changed the type of a published participation
+            @participation.update_attributes(title: @participation.generate_title)
           end
         end
 
