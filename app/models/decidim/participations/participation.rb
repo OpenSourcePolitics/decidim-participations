@@ -29,28 +29,28 @@ module Decidim
       scope :untreated, ->(current_feature) {
         current_feature_participations(current_feature)
         .joins(:moderation)
-        .merge(Moderation.where(upstream_moderation: "unmoderate")) }
+        .merge(Moderation.where(sqr_status: "unmoderate")) }
 
 
       scope :filtered_questions, -> (current_feature) { current_feature_participations(current_feature)
         .joins(:moderation)
-        .merge(Moderation.where.not(['upstream_moderation = ? OR upstream_moderation = ? OR upstream_moderation = ?', 'unmoderate', 'authorized', 'refused'])) }
+        .merge(Moderation.where.not(['sqr_status = ? OR sqr_status = ? OR sqr_status = ?', 'unmoderate', 'authorized', 'refused'])) }
 
       scope :filtered_questions_per_role,  lambda { |current_feature, role, state|
         current_feature_participations(current_feature)
           .where(participation_type: "question", recipient_role: role)
           .joins(:moderation)
-          .merge(Moderation.where(['upstream_moderation = ?', state]))
+          .merge(Moderation.where(['sqr_status = ?', state]))
       }
 
       scope :treated, -> (current_feature){
         current_feature_participations(current_feature)
         .joins(:moderation)
-        .merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
+        .merge(Moderation.where('sqr_status = ? OR sqr_status = ?', 'authorized', 'refused')) }
 
       # participations index
 
-      scope :exclude, lambda { |status |left_outer_joins(:moderation).where(Decidim::Moderation.arel_table[:upstream_moderation].not_eq(status))}
+      scope :exclude, lambda { |status |left_outer_joins(:moderation).where(Decidim::Moderation.arel_table[:sqr_status].not_eq(status))}
 
       scope :accepted, -> { where(state: "accepted") }
       scope :rejected, -> { where(state: "rejected") }
@@ -59,23 +59,22 @@ module Decidim
 
       # filter index
       scope :filter_per_moderation_status,  lambda { |state|
-        joins(:moderation).merge(Moderation.where(['upstream_moderation = ?', state]))
+        joins(:moderation).merge(Moderation.where(['sqr_status = ?', state]))
       }
 
       # filter dashboard
 
       ransacker :status do
         query = <<-SQL
-              (SELECT decidim_moderations.upstream_moderation
+              (SELECT decidim_moderations.sqr_status
                  FROM decidim_moderations
                 WHERE decidim_moderations.decidim_reportable_id = decidim_participations_participations.id
                   AND decidim_moderations.decidim_reportable_type = 'Decidim::Participations::Participation'
-                GROUP BY decidim_moderations.upstream_moderation
+                GROUP BY decidim_moderations.sqr_status
               )
             SQL
         Arel.sql(query)
       end
-
 
       def self.current_feature_participations(current_feature)
         where(feature: current_feature)
@@ -102,7 +101,7 @@ module Decidim
       end
 
       def publishable?
-        moderation.upstream_moderation == "authorized" || moderation.upstream_moderation == "waiting_for_answer"
+        moderation.sqr_status == "authorized" || moderation.sqr_status == "waiting_for_answer"
       end
 
       def type
@@ -110,11 +109,11 @@ module Decidim
       end
 
       def refused?
-        moderation.upstream_moderation == "refused"
+        moderation.sqr_status == "refused"
       end
 
       def generate_title # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
-        status = self.class.where(participation_type: type).map(&:moderation).map(&:upstream_moderation)
+        status = self.class.where(participation_type: type).map(&:moderation).map(&:sqr_status)
         status.delete("refused")
         status.delete("unmoderate")
         number = status.count
@@ -276,10 +275,6 @@ module Decidim
       def create_participation_moderation
         participatory_space = self.feature.participatory_space
         self.create_moderation!(participatory_space: participatory_space)
-      end
-
-      def upstream_moderation_activated?
-        feature.settings.upstream_moderation_enabled
       end
     end
   end

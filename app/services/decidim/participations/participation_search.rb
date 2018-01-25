@@ -63,9 +63,9 @@ module Decidim
         case state
         when "waiting_for_answer"
           # redirect_to decidim_participatory_process_participations_path(participatory_process: query.first.feature.participatory_space, filter: {state: "waiting_for_answer"})
-          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['upstream_moderation = ?', "waiting_for_answer"]))
+          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['sqr_status = ?', "waiting_for_answer"]))
         when "published_answer"
-          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['upstream_moderation = ?', "authorized"]))
+          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['sqr_status = ?', "authorized"]))
         else # Assume 'all'
           query.where(participation_type: "question")
         end

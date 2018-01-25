@@ -8,7 +8,7 @@ module Decidim
         mimic :moderation
 
         attribute :justification, String
-        attribute :upstream_moderation, String
+        attribute :sqr_status, String
         attribute :id, Integer
       end
     end

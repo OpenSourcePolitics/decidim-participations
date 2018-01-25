@@ -13,8 +13,8 @@
         <div class="card-section">
           <div class="row column">
             <%= f.fields_for :moderation do |fm| %>
-              <%= fm.radio_button :upstream_moderation, "authorized", label: t(".accepted"), require: true, checked: @participation.publishable? || @participation.published?%>
-              <%= fm.radio_button :upstream_moderation, "refused", label: t(".refused"), require: true, checked: @participation.refused? %>
+              <%= fm.radio_button :sqr_status, "authorized", label: t(".accepted"), require: true, checked: @participation.publishable? || @participation.published?%>
+              <%= fm.radio_button :sqr_status, "refused", label: t(".refused"), require: true, checked: @participation.refused? %>
             <% end %>
           </div>
 
@@ -94,10 +94,10 @@
 
     // refused justification
     $('.show_while_others_hide').hide();
-    $('input[name="participation[moderation][upstream_moderation]"]').change(
+    $('input[name="participation[moderation][sqr_status]"]').change(
       function() {
       var isAQuestion = $("#participation_participation_type").val() == "question";
-        var a = $('input[name="participation[moderation][upstream_moderation]"]:checked').val();
+        var a = $('input[name="participation[moderation][sqr_status]"]:checked').val();
         if (a == "authorized") {
             $('#hidable_content_contener').show(500);
             $('#hidable_content_contener_2').show(500);
