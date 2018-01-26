@@ -274,7 +274,7 @@ module Decidim
 
       def create_participation_moderation
         participatory_space = self.feature.participatory_space
-        self.create_moderation!(participatory_space: participatory_space)
+        self.create_moderation!(participatory_space: participatory_space, upstream_moderation: nil)
       end
     end
   end
