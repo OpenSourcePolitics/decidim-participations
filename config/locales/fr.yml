@@ -30,14 +30,18 @@ fr:
         email_greetings: Bonjour,
         email_intro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
         action_url_name: Vous pouvez y répondre en suivant ce lien
-      participation_created:
-        notification_title: Nouvelle participation de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
-        url: "Url de la participation : %{resource_url}"
-        email_subject: 'Nouvelle participation de %{author_name}'
+      participation_created:        
+        notification_title: Votre participation dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a> a bien été soumise
+        email_greetings: Bonjour %{author_name},
+        email_subject: Votre participation a bien été soumise
+        email_intro: Votre participation dans    
+        email_outro: a bien été soumise et est en attente de modération.         
         moderation:
-          email_intro: "%{author_name} a publié une nouvelle participation dans"
-          moderation_url: "Vous pouvez modérer le contenu en suivant ce lien : %{moderation_url}"
-          email_subject: 'Nouvelle participation de %{author_name} en attente de modération'
+          notification_title: Une nouvelle participation a été soumise dans %{processus_participatif_title}. <a href="%{url}">Cliquez ici pour la traiter</a>
+          email_subject: Nouvelle participation dans %{processus_participatif_title}
+          email_intro: "%{author_name} a publié une nouvelle participation dans %{processus_participatif_title}"
+          action_url_name: Traiter la participation
+
     participatory_processes:
       statistics:
         participations_count: Participations

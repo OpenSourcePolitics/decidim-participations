@@ -6,7 +6,17 @@ module EmailNotificationGeneratorPatch
     recipient = Decidim::User.where(id: recipient_id).first
     return unless recipient
     return unless recipient.email_on_notification?
-    if @extra[:question_attributed]
+    if @extra[:template]
+      Decidim::NotificationMailer
+      .send_custom_email(
+        event,
+        event_class.name,
+        resource,
+        recipient,
+        extra
+      )
+      .deliver_later
+    elsif @extra[:question_attributed]
       send_new_question_attributed(recipient)
     elsif @extra[:new_content]
       send_new_content_received(recipient)
