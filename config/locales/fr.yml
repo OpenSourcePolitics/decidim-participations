@@ -212,7 +212,7 @@ fr:
           fields:
             type: Type
         filters:
-          accepted: Retenue
+          published_answer: Réponse publiée
           activity: Activité
           all: Toutes
           category: Catégorie
@@ -224,7 +224,7 @@ fr:
           rejected: Refusée
           related_to: Liée à
           search: Rechercher
-          state: État
+          questions_filter: Filtrer les questions par
           voted: Votées
           questions: Questions
           contributions: Contributions

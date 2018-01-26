@@ -35,11 +35,11 @@ module Decidim
       # Handle the type filter
       def search_participation_type
         if participation_type == "questions"
-          query.where(participation_type: "question")
+          query#.where(participation_type: "question")
         elsif participation_type == "contributions"
-          query.where(participation_type: "contribution")
+          query#.where(participation_type: "contribution")
         elsif participation_type == "opinions"
-          query.where(participation_type: "opinion")
+          query#.where(participation_type: "opinion")
         else # Assume 'all'
           query
         end
@@ -61,12 +61,13 @@ module Decidim
       # Handle the state filter
       def search_state
         case state
-        when "accepted"
-          query.accepted
-        when "waiting_answers"
-          query.where(state: nil)
+        when "waiting_for_answer"
+          # redirect_to decidim_participatory_process_participations_path(participatory_process: query.first.feature.participatory_space, filter: {state: "waiting_for_answer"})
+          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['sqr_status = ?', "waiting_for_answer"]))
+        when "published_answer"
+          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['sqr_status = ?', "authorized"]))
         else # Assume 'all'
-          query
+          query.where(participation_type: "question")
         end
       end
 
