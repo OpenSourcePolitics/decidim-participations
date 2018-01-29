@@ -85,7 +85,7 @@ en:
         participation_answers:
           edit:
             content: Content
-            accepted: Answer published
+            accepted: Accepted
             publish: Publish
             answer_participation: Answer
             evaluating: Evaluating
@@ -124,7 +124,7 @@ en:
             contribution: Contribution
             content: Content
             original: Original
-            accepted: Answer published
+            accepted: Accepted
             refused: Refused
             recipient_role: Recipient
 
@@ -162,7 +162,7 @@ en:
             create: Create
             title: Create participation
       answers:
-        accepted: Answer published
+        accepted: Accepted
         evaluating: Evaluating
         not_answered: Not answered
         rejected: Rejected

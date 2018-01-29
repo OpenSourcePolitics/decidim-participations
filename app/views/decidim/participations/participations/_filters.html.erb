@@ -36,15 +36,27 @@
 <% end %>
 
 <script type="text/javascript">
-$("input[name='filter[participation_type]']").change(function(){
-  if ($("#filter_participation_type_questions").is(':checked')){
+function disableFilters(){
+  $("#filter_state_all").prop("disabled", true);
+  $("#filter_state_accepted").prop("disabled", true);
+  $("#filter_state_waiting_for_answer").prop("disabled", true);
+}
+function enableFilters(){
     $("#filter_state_all").prop("disabled", false);
     $("#filter_state_accepted").prop("disabled", false);
     $("#filter_state_waiting_for_answer").prop("disabled", false);
-  } else {
-    $("#filter_state_all").prop("disabled", true);
-    $("#filter_state_accepted").prop("disabled", true);
-    $("#filter_state_waiting_for_answer").prop("disabled", true);
-  }
-})
+}
+  $('document').ready(function(){
+
+    if (!$("#filter_participation_type_questions").is(':checked')){
+      disableFilters();
+      }
+    $("input[name='filter[participation_type]']").change(function(){
+      if ($("#filter_participation_type_questions").is(':checked')){
+        enableFilters();
+      }else {
+        disableFilters();
+      }
+    })
+  })
 </script>

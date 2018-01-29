@@ -22,6 +22,7 @@ module Decidim
                       .includes(:author)
                       .includes(:category)
                       .includes(:scope)
+                      binding.pry
 
         @voted_participations = if current_user
                              ParticipationVote.where(
@@ -121,7 +122,7 @@ module Decidim
         {
           participation_type: "all",
           search_text: "",
-          origin: "all",
+          origin: "",
           activity: "",
           category_id: "",
           state: "all",

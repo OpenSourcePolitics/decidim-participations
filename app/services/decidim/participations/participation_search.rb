@@ -34,12 +34,14 @@ module Decidim
 
       # Handle the type filter
       def search_participation_type
-        if participation_type == "questions"
-          query#.where(participation_type: "question")
-        elsif participation_type == "contributions"
-          query#.where(participation_type: "contribution")
-        elsif participation_type == "opinions"
-          query#.where(participation_type: "opinion")
+          binding.pry
+        case participation_type
+        when "questions"
+          query.where(participation_type: "question")
+        when "contributions"
+          query.where(participation_type: "contribution", state: nil)
+        when "opinions"
+          query.where(participation_type: "opinion", state: nil)
         else # Assume 'all'
           query
         end
@@ -58,14 +60,13 @@ module Decidim
         end
       end
 
-      # Handle the state filter
+      # Handle the sqr_status filter
       def search_state
         case state
         when "waiting_for_answer"
-          # redirect_to decidim_participatory_process_participations_path(participatory_process: query.first.feature.participatory_space, filter: {state: "waiting_for_answer"})
-          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['sqr_status = ?', "waiting_for_answer"]))
-        when "published_answer"
-          query.where(participation_type: "question").joins(:moderation).merge(Moderation.where(['sqr_status = ?', "authorized"]))
+          query.where(state: "waiting_for_answer", participation_type: "question")
+        when "accepted"
+          query.where(state: "accepted", participation_type: "question")
         else # Assume 'all'
           query.where(participation_type: "question")
         end
@@ -90,6 +91,7 @@ module Decidim
         to = query
              .joins(:resource_links_to)
              .where(decidim_resource_links: { from_type: related_to.camelcase })
+        binding.pry
 
         query.where(id: from).or(query.where(id: to))
       end
