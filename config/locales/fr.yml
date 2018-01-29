@@ -84,7 +84,7 @@ fr:
         participation_answers:
           edit:
             content: Contenu
-            accepted: Retenue
+            accepted: Réponse publiée
             publish: Publier
             answer_participation: Répondre
             evaluating: En cours d'évaluation
@@ -122,7 +122,7 @@ fr:
             contribution: Contribution
             content: Content
             original: Original
-            accepted: Retenue
+            accepted: Réponse publiée
             refused: Refusée
             recipient_role: Destinataire
             fields:
@@ -159,7 +159,7 @@ fr:
             create: Créer
             title: Créer une participation
       answers:
-        accepted: Retenue
+        accepted: Réponse publiée
         evaluating: En cours d'évaluation
         not_answered: Resté sans réponse
         rejected: Refusée
