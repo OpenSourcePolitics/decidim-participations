@@ -36,11 +36,11 @@ module Decidim
         .joins(:moderation)
         .merge(Moderation.where.not(['sqr_status = ? OR sqr_status = ? OR sqr_status = ?', 'unmoderate', 'authorized', 'refused'])) }
 
-      scope :filtered_questions_per_role,  lambda { |current_feature, role, state|
+      scope :filtered_questions_per_role,  lambda { |current_feature, role, sqr_status|
         current_feature_participations(current_feature)
           .where(participation_type: "question", recipient_role: role)
           .joins(:moderation)
-          .merge(Moderation.where(['sqr_status = ?', state]))
+          .merge(Moderation.where(['sqr_status = ?', sqr_status]))
       }
 
       scope :treated, -> (current_feature){
