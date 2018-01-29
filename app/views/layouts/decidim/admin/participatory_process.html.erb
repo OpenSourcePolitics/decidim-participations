@@ -49,7 +49,7 @@
           <%= aria_selected_link_to t("process_admins", scope: "decidim.admin.menu.participatory_processes_submenu"), decidim_admin_participatory_processes.participatory_process_user_roles_path(current_participatory_process) %>
         </li>
       <% end %>
-      <% if can? :read, Decidim::Moderation %>
+      <% if can? :manage, Decidim::Moderation %>
         <li <% if is_active_link?(decidim_admin_participatory_processes.moderations_path(current_participatory_process)) %> class="is-active" <% end %>>
           <%= aria_selected_link_to t("moderations", scope: "decidim.admin.menu.participatory_processes_submenu"), decidim_admin_participatory_processes.moderations_path(current_participatory_process, moderation_type: "upstream") %>
           <ul>

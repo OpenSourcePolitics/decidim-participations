@@ -6,20 +6,16 @@ module Decidim
       module Admin
         # Defines the abilities for a user in the admin section. Intended to be
         # used with `cancancan`.
-        class ParticipatoryProcessMoaAbility < Decidim::Abilities::ParticipatoryProcessCpdpAbility
+        class ParticipatoryProcessMoaAbility < Decidim::Abilities::ParticipatoryProcessMoaAbility
           def define_abilities
             super
+            can [:read], ParticipatoryProcess do |process|
+              can_manage_process?(process)
+            end
 
-          can [:read], ParticipatoryProcess do |process|
-            can_manage_process?(process)
-          end
-
-          can [:update, :read], Participation do |participation|
-            can_manage_process?(participation.feature.participatory_space)
-          end
-
-          can [:read, :manage], Feature do |feature|
-            feature.manifest_name == "participations"
+            can :read, Moderation do |moderation|
+              can_manage_process?(moderation.participatory_space)
+            end
           end
         end
       end

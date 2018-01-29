@@ -16,6 +16,7 @@ module Decidim
 
           # Display functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
+
           can [:read], ParticipatoryProcess do |process|
             can_manage_process?(process)
           end
