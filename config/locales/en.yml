@@ -91,6 +91,7 @@ en:
             evaluating: Evaluating
             rejected: Rejected
             title: Answer for participation %{title}
+            title_content: Participation's content
             content: Content
             incomplete: Incomplete
         participations:

@@ -90,6 +90,7 @@ fr:
             evaluating: En cours d'évaluation
             rejected: Refusée
             title: Réponse à la participation %{title}
+            title_content: Contenu de la participation
             incomplete: Incomplète
         participations:
           title:
