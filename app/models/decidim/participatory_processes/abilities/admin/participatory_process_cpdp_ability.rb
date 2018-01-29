@@ -9,10 +9,13 @@ module Decidim
         class ParticipatoryProcessCpdpAbility < Decidim::Abilities::ParticipatoryProcessCpdpAbility
           def define_abilities
             super
+            can [:read], ParticipatoryProcess do |process|
+              can_manage_process?(process)
+            end
 
-            can :manage, ParticipatoryProcess
-            can :manage, ParticipatoryProcessGroup
-            can :manage, ParticipatoryProcessStep
+            can :manage, Moderation do |moderation|
+              can_manage_process?(moderation.participatory_space)
+            end
           end
         end
       end
