@@ -108,11 +108,23 @@ module Decidim
               participatory_process_title: participatory_process_title,
               accepted: @form.moderation.sqr_status == "refused" ? false : true,
               justification: @form.moderation.justification,
-              template: "participation_moderated_event"
-              participation_moderation: true
-
+              template: "participation_moderated_#{set_state}_event",
+              state: set_state,
+              participation_moderated: true
             }
           )
+        end
+
+        def set_state # for translations context
+         if @participation.refused?
+           "refused"
+         else
+            if @form.moderation.justification.present?
+              "modified"
+            else
+              "authorized"
+            end
+          end
         end
 
         def organization

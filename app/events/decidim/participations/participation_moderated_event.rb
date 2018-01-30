@@ -10,23 +10,30 @@ module Decidim
 
       def notification_title
         I18n.t(
-          "decidim.events.participation_moderated.notification_title",
+          "decidim.events.participation_moderated.#{extra[:state]}.notification_title",
           processus_participatif_title: extra[:participatory_process_title],
           processus_participatif_url: processus_participatif_url
         ).html_safe
       end
 
-      # Author email settings
+      def email_subject
+        I18n.t("decidim.events.participation_moderated.#{extra[:state]}.email_subject",
+          processus_participatif_title: extra[:participatory_process_title]
+        )
+      end
 
       def email_greetings
         I18n.t(
-          "decidim.events.participation_moderated.email_greetings",
+          "decidim.events.participation_moderated.#{extra[:state]}.email_greetings",
           author_name: participation.author.name
         ).html_safe
       end
 
       def email_intro
-        I18n.t("decidim.events.participation_moderated.email_intro")
+        I18n.t("decidim.events.participation_moderated.#{extra[:state]}.email_intro",
+          processus_participatif_title: extra[:participatory_process_title],
+          justification: extra[:justification]
+        )
       end
 
       def action_url_name
@@ -35,14 +42,6 @@ module Decidim
 
       def action_url
         processus_participatif_url
-      end
-
-      def email_outro
-        I18n.t("decidim.events.participation_moderated.email_outro")
-      end
-
-      def email_subject
-        I18n.t("decidim.events.participation_moderated.email_subject")
       end
 
       private
