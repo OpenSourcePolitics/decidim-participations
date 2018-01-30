@@ -2,7 +2,7 @@
 
 module Decidim
   module Participations
-    class ParticipationCreatedEventAuthor < Decidim::Events::BaseEvent
+    class ParticipationModeratedEvent < Decidim::Events::BaseEvent
       include Decidim::Events::EmailEvent
       include Decidim::Events::NotificationEvent
 
@@ -10,7 +10,7 @@ module Decidim
 
       def notification_title
         I18n.t(
-          "decidim.events.participation_created.notification_title",
+          "decidim.events.participation_moderated.notification_title",
           processus_participatif_title: extra[:participatory_process_title],
           processus_participatif_url: processus_participatif_url
         ).html_safe
@@ -19,15 +19,15 @@ module Decidim
       # Author email settings
 
       def email_greetings
+        binding.pry
         I18n.t(
-          "decidim.events.participation_created.email_greetings",
+          "decidim.events.participation_moderated.email_greetings",
           author_name: participation.author.name
         ).html_safe
       end
 
       def email_intro
-        I18n.t("decidim.events.participation_created.email_intro",
-          processus_participatif_title: action_url_name )
+        I18n.t("decidim.events.participation_moderated.email_intro")
       end
 
       def action_url_name
@@ -39,11 +39,11 @@ module Decidim
       end
 
       def email_outro
-        I18n.t("decidim.events.participation_created.email_outro")
+        I18n.t("decidim.events.participation_moderated.email_outro")
       end
 
       def email_subject
-        I18n.t("decidim.events.participation_created.email_subject")
+        I18n.t("decidim.events.participation_moderated.email_subject")
       end
 
       private

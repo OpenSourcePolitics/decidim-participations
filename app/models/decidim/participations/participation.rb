@@ -104,6 +104,10 @@ module Decidim
         moderation.sqr_status == "authorized" || moderation.sqr_status == "waiting_for_answer"
       end
 
+      def unmoderate?
+        moderation.sqr_status == "unmoderate"
+      end
+
       def type
         participation_type
       end
