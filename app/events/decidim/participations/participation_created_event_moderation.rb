@@ -2,7 +2,7 @@
 
 module Decidim
   module Participations
-    class ParticipationCreatedEvent < Decidim::Events::BaseEvent
+    class ParticipationCreatedEventModeration < Decidim::Events::BaseEvent
       include Decidim::Events::EmailEvent
       include Decidim::Events::NotificationEvent
 

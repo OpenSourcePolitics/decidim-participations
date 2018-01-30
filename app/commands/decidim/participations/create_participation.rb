@@ -48,14 +48,14 @@ module Decidim
         return if participation.author.blank?
         Decidim::EventsManager.publish(
           event: "decidim.events.participations.participation_created",
-          event_class: Decidim::Participations::ParticipationCreatedEvent,
+          event_class: Decidim::Participations::ParticipationCreatedEventAuthor,
           resource: participation,
           recipient_ids: [participation.author.id],
           extra: {
             template: "participation_created_event_author",
             participatory_process_title: participatory_space_title,
             process_slug: @participation.feature.participatory_space.slug
-          } 
+          }
         )
       end
 
@@ -81,11 +81,11 @@ module Decidim
 
         Decidim::EventsManager.publish(
           event: "decidim.events.participations.participation_created",
-          event_class: Decidim::Participations::ParticipationCreatedEvent,
+          event_class: Decidim::Participations::ParticipationCreatedEventModeration,
           resource: @participation,
           recipient_ids: (@participation.users_to_notify_on_participation_created - [@participation.author]).pluck(:id),
           extra: {
-            template: "participation_created_event_moderator",            
+            template: "participation_created_event_moderator",
             participatory_process_title: participatory_space_title,
             process_slug: @participation.feature.participatory_space.slug
           }
