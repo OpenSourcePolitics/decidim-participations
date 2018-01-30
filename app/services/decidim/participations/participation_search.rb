@@ -34,15 +34,10 @@ module Decidim
 
       # Handle the type filter
       def search_participation_type
-        case participation_type
-        when "question"
-          query.where(participation_type: participation_type)
-        when "contribution"
-          query.where(participation_type: participation_type)
-        when "opinion"
-          query.where(participation_type: participation_type)
-        else # Assume 'all'
+        if participation_type == "all"
           query
+        else
+          query.where(participation_type: participation_type)
         end
       end
 
@@ -59,15 +54,12 @@ module Decidim
         end
       end
 
-      # Handle the sqr_status filter
+      # Handle the state filter
       def search_state
-        case state
-        when "waiting_for_answer"
-          get_query(participation_type, state, query)
-        when "accepted"
-          get_query(participation_type, state, query)
-        else # Assume 'all'
+        if state == "all"
           query
+        else
+          get_query(participation_type, state, query)
         end
       end
 
