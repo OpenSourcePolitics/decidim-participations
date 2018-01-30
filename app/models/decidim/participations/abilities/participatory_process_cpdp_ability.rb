@@ -15,14 +15,6 @@ module Decidim
           super
           # Display functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
-          can [:read], ParticipatoryProcess do |process|
-            can_manage_process?(process)
-          end
-
-          can :manage, Moderation do |moderation|
-            can_manage_process?(moderation.participatory_space)
-          end
-
           can [:manage, :read, :duplicate], Participation do |participation|
             can_manage_process?(participation.feature.participatory_space)
           end

@@ -95,12 +95,13 @@ en:
         participation_answers:
           edit:
             content: Content
-            accepted: Accepted
+            accepted: Answer published
             publish: Publish
             answer_participation: Answer
             evaluating: Evaluating
             rejected: Rejected
             title: Answer for participation %{title}
+            title_content: Participation's content
             content: Content
             incomplete: Incomplete
         participations:
@@ -133,7 +134,7 @@ en:
             contribution: Contribution
             content: Content
             original: Original
-            accepted: Accepted
+            accepted: Answer published
             refused: Refused
             recipient_role: Recipient
 
@@ -171,7 +172,7 @@ en:
             create: Create
             title: Create participation
       answers:
-        accepted: Accepted
+        accepted: Answer published
         evaluating: Evaluating
         not_answered: Not answered
         rejected: Rejected
@@ -228,7 +229,7 @@ en:
           fields:
             type: Type
         filters:
-          accepted: Accepted
+          published_answer: Answer published
           activity: Activity
           all: All
           category: Category
@@ -240,7 +241,7 @@ en:
           rejected: Rejected
           related_to: Related to
           search: Search
-          state: State
+          questions_filter: Filter questions by
           voted: Voted
           questions: Questions
           contributions: Contributions

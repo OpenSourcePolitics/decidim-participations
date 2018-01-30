@@ -119,7 +119,7 @@ module Decidim
 
       def default_filter_params
         {
-          participation_type: "",
+          participation_type: "all",
           search_text: "",
           origin: "all",
           activity: "",

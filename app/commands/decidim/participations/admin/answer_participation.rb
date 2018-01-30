@@ -49,7 +49,7 @@ module Decidim
         end
 
         def update_moderation
-          participation.moderation.update_attributes(upstream_moderation: "authorized") if participation.state == "accepted"
+          participation.moderation.update_attributes(sqr_status: "authorized") if participation.state == "accepted"
         end
       end
     end

@@ -32,6 +32,24 @@ module Decidim
         end
       end
 
+      initializer "decidim.inject_abilities_to_user" do |_app|
+        Decidim.configure do |config|
+          config.abilities << "Decidim::Abilities::ParticipatoryProcessCpdpAbility"
+          config.abilities << "Decidim::Abilities::ParticipatoryProcessMoaAbility"
+        end
+      end
+
+      initializer "decidim_participatory_processes.inject_abilities_to_user" do |_app|
+        Decidim.configure do |config|
+          config.admin_abilities += [
+            "Decidim::ParticipatoryProcesses::Abilities::Admin::ParticipatoryProcessCpdpAbility",
+            "Decidim::ParticipatoryProcesses::Abilities::Admin::ParticipatoryProcessMoaAbility"
+          ]
+        end
+      end
+
+
+
       def load_seed
         nil
       end

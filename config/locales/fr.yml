@@ -94,12 +94,13 @@ fr:
         participation_answers:
           edit:
             content: Contenu
-            accepted: Retenue
+            accepted: Réponse publiée
             publish: Publier
             answer_participation: Répondre
             evaluating: En cours d'évaluation
             rejected: Refusée
             title: Réponse à la participation %{title}
+            title_content: Contenu de la participation
             incomplete: Incomplète
         participations:
           title:
@@ -131,7 +132,7 @@ fr:
             contribution: Contribution
             content: Content
             original: Original
-            accepted: Retenue
+            accepted: Réponse publiée
             refused: Refusée
             recipient_role: Destinataire
             fields:
@@ -168,7 +169,7 @@ fr:
             create: Créer
             title: Créer une participation
       answers:
-        accepted: Retenue
+        accepted: Réponse publiée
         evaluating: En cours d'évaluation
         not_answered: Resté sans réponse
         rejected: Refusée
@@ -222,7 +223,7 @@ fr:
           fields:
             type: Type
         filters:
-          accepted: Retenue
+          published_answer: Réponse publiée
           activity: Activité
           all: Toutes
           category: Catégorie
@@ -234,7 +235,7 @@ fr:
           rejected: Refusée
           related_to: Liée à
           search: Rechercher
-          state: État
+          questions_filter: Filtrer les questions par
           voted: Votées
           questions: Questions
           contributions: Contributions

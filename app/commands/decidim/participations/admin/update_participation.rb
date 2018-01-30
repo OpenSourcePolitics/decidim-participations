@@ -52,17 +52,17 @@ module Decidim
 
         def update_moderation
           @moderation = @participation.moderation.update_attributes(
-            upstream_moderation: set_upstream_moderation,
+            sqr_status: set_sqr_status,
             justification: form.moderation.justification,
             id: @participation.moderation.id
           )
         end
 
-        def set_upstream_moderation
-          if @participation.question? && form.moderation.upstream_moderation == "authorized"
+        def set_sqr_status
+          if @participation.question? && form.moderation.sqr_status == "authorized"
             "waiting_for_answer"
           else
-            form.moderation.upstream_moderation
+            form.moderation.sqr_status
           end
         end
 
