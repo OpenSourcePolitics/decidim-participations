@@ -22,7 +22,6 @@ module Decidim
                       .includes(:author)
                       .includes(:category)
                       .includes(:scope)
-                      binding.pry
 
         @voted_participations = if current_user
                              ParticipationVote.where(

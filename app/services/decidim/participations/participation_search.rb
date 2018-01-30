@@ -34,14 +34,13 @@ module Decidim
 
       # Handle the type filter
       def search_participation_type
-          binding.pry
         case participation_type
-        when "questions"
-          query.where(participation_type: "question")
-        when "contributions"
-          query.where(participation_type: "contribution", state: nil)
-        when "opinions"
-          query.where(participation_type: "opinion", state: nil)
+        when "question"
+          query.where(participation_type: participation_type)
+        when "contribution"
+          query.where(participation_type: participation_type)
+        when "opinion"
+          query.where(participation_type: participation_type)
         else # Assume 'all'
           query
         end
@@ -64,11 +63,11 @@ module Decidim
       def search_state
         case state
         when "waiting_for_answer"
-          query.where(state: "waiting_for_answer", participation_type: "question")
+          get_query(participation_type, state, query)
         when "accepted"
-          query.where(state: "accepted", participation_type: "question")
+          get_query(participation_type, state, query)
         else # Assume 'all'
-          query.where(participation_type: "question")
+          query
         end
       end
 
@@ -91,9 +90,19 @@ module Decidim
         to = query
              .joins(:resource_links_to)
              .where(decidim_resource_links: { from_type: related_to.camelcase })
-        binding.pry
 
         query.where(id: from).or(query.where(id: to))
+      end
+
+      private
+
+      # The state are set when user is making search for questions, then it'll be present as long as the page won't be reload. As we don't want chaining filter for contributions and opinions we have to make the request without the state argument.
+      def get_query(participation_type, state, query)
+        if participation_type == "question"
+          query.where(state: state, participation_type: participation_type)
+        else
+          query
+        end
       end
     end
   end
