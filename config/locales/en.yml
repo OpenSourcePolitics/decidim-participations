@@ -39,17 +39,24 @@ en:
         email_outro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
         action_url_name: Vous pouvez y répondre en suivant ce lien
       participation_created:
-        notification_title: Votre participation dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a> a bien été soumise
-        email_greetings: Bonjour %{author_name},
-        email_subject: Votre participation a bien été soumise
-        email_intro: Votre participation dans %{processus_participatif_title}
-        email_outro: a bien été soumise et est en attente de modération.
+        moderator:
+          notification_title: Une nouvelle participation a été soumise dans <a href="%{processus_participatif_url}">%{processus_participatif_title}"></a>
+          email_subject: Nouvelle participation
+          email_greetings: Bonjour
+          email_intro:  "%{author_name} a publié une nouvelle question dans %{processus_participatif_title}"
+          email_outro: Traiter la participation
+          action_url_name: Vous pouvez y répondre en suivant ce lien
+        author:
+          notification_title: Votre participation dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a> a bien été soumise
+          email_greetings: Bonjour %{author_name},
+          email_subject: Votre participation a bien été soumise
+          email_intro: Votre participation dans %{processus_participatif_title}
+          email_outro: a bien été soumise et est en attente de modération.
         moderation:
           notification_title: Une nouvelle participation a été soumise dans %{processus_participatif_title}. <a href="%{url}">Cliquez ici pour la traiter</a>
           email_subject: Nouvelle participation dans %{processus_participatif_title}
           email_intro: "%{author_name} a publié une nouvelle participation dans %{processus_participatif_title}"
           action_url_name: Traiter la participation
-
     participatory_processes:
       statistics:
         participations_count: Participations
@@ -186,14 +193,6 @@ en:
       create:
         error: There's been errors when saving the participation.
         success: Participation successfully created. It will be published as soon as an administrator will have authorized it.
-      events:
-        create_participation_event:
-          email_intro: |-
-            Hi,
-            %{author_name} %{author_nickname}, who you are following, has created a new participation, check it out and contribute:
-          email_outro: You have received this notification because you are following %{author_nickname}. You can stop receiving notifications following the previous link.
-          email_subject: New participation by %{author_nickname}
-          notification_title: The <a href="%{resource_path}">%{resource_title}</a> participation was created by <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
       models:
         participation:
           date: Date

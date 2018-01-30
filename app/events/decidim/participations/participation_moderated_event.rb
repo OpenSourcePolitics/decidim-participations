@@ -19,7 +19,6 @@ module Decidim
       # Author email settings
 
       def email_greetings
-        binding.pry
         I18n.t(
           "decidim.events.participation_moderated.email_greetings",
           author_name: participation.author.name

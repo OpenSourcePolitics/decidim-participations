@@ -47,7 +47,7 @@ module Decidim
       def send_notification
         return if participation.author.blank?
         Decidim::EventsManager.publish(
-          event: "decidim.events.participations.participation_created",
+          event: "decidim.events.participations.created_event_author",
           event_class: Decidim::Participations::ParticipationCreatedEventAuthor,
           resource: participation,
           recipient_ids: [participation.author.id],
@@ -78,10 +78,9 @@ module Decidim
       end
 
       def send_notification_to_moderators
-
         Decidim::EventsManager.publish(
-          event: "decidim.events.participations.participation_created",
-          event_class: Decidim::Participations::ParticipationCreatedEventModeration,
+          event: "decidim.events.participations.created_event_moderator",
+          event_class: Decidim::Participations::ParticipationCreatedEventModerator,
           resource: @participation,
           recipient_ids: (@participation.users_to_notify_on_participation_created - [@participation.author]).pluck(:id),
           extra: {

@@ -8,7 +8,7 @@ module EmailNotificationGeneratorPatch
     return unless recipient.email_on_notification?
     if @extra[:template] || @extra[:question_attributed]
       Decidim::NotificationMailer
-      .send_custom_email(
+      .event_received(
         event,
         event_class.name,
         resource,
