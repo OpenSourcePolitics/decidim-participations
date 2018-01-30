@@ -159,7 +159,7 @@ fr:
             create: Créer
             title: Créer une participation
       answers:
-        accepted: Retenue
+        accepted: Réponse publiée
         evaluating: En cours d'évaluation
         not_answered: Resté sans réponse
         rejected: Refusée

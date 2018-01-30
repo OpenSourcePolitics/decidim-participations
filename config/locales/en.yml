@@ -162,7 +162,7 @@ en:
             create: Create
             title: Create participation
       answers:
-        accepted: Accepted
+        accepted: Answer published
         evaluating: Evaluating
         not_answered: Not answered
         rejected: Rejected
