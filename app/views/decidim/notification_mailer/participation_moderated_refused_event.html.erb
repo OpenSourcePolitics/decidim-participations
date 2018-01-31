@@ -2,11 +2,10 @@
 
 <p><%= @event_instance.email_intro %></p>
 <div class="email-card">
-  <p><%= @justifcation %></p>
+  <p><%= @event_instance.justification %></p>
 </div>
-<p>
-  <%= @event_instance.action_url %>
-</p>
+
+<p><%= @event_instance.participation_intro %>
 <div class="email-card">
-  <p><%= @participation.original_body %></p>
+  <p><%= @event_instance.participation_content %></p>
 </div>

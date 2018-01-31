@@ -42,6 +42,7 @@ fr:
           email_subject:  Refus de votre participation dans %{processus_participatif_title}
           email_greetings: Bonjour %{author_name},
           email_intro: "Votre participation dans %{processus_participatif_title} a été refusée après modération de la CPDP, pour le motif suivant : "
+          participation_intro: "Votre participation :"
           action_url_name: Votre participation
         modified:
           notification: Votre participation a été publiée dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a>

@@ -28,6 +28,7 @@ module Decidim
             update_participation
             send_notification_moderation if @participation.unmoderate?
             update_moderation
+            # TODO check with @ludivinecp order of all this methods
             update_title
             update_publishing
             set_deadline
@@ -116,7 +117,7 @@ module Decidim
         end
 
         def set_state # for translations context
-         if @participation.refused?
+         if @form.moderation.sqr_status == "refused"
            "refused"
          else
             if @form.moderation.justification.present?

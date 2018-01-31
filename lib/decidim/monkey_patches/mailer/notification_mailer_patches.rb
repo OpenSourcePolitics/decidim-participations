@@ -21,7 +21,6 @@ module NotificationMailerPatch
         @organization = resource.organization
         event_class = event_class_name.constantize
         @event_instance = event_class.new(resource: resource, event_name: event, user: user, extra: extra)
-        @justification = extra[:justification]
 
         subject = @event_instance.email_subject
 

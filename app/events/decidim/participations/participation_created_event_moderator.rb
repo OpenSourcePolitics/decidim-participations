@@ -6,13 +6,13 @@ module Decidim
       include Decidim::Events::EmailEvent
       include Decidim::Events::NotificationEvent
 
-      # Notification for Author
+      # Notification
 
       def notification_title
         I18n.t(
           "decidim.events.participation_created.moderator.notification_title",
           processus_participatif_title: extra[:participatory_process_title],
-          url: action_moderation_url
+          processus_participatif_url: action_moderation_url
         ).html_safe
       end
 
