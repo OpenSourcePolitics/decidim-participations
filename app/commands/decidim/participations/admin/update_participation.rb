@@ -84,6 +84,22 @@ module Decidim
           (form.recipient_role != participation.recipient_role) && form.participation_type == "question" && (form.moderation.sqr_status != "refused" )
         end
 
+        def send_notification_participation_answer_author
+          recipient_ids = [participation.author.id]
+
+          Decidim::EventsManager.publish(
+            event: ParticipationAnseredAuthorEvent::EVENT_NAME,
+            event_class: ParticipationAnseredAuthorEvent,
+            resource: @participation,
+            recipient_ids: recipient_ids.uniq,
+            extra: {
+              participation_moderated: true, # this should go away, ask @ludivinecp
+              participatory_process_title: participatory_process_title,
+              template: "participation_ansered_author_event"
+            }
+          )
+        end
+
         def send_notification_new_question
           recipient_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id, role: participation.recipient_role).map(&:decidim_user_id)
 
