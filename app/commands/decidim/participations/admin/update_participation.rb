@@ -99,7 +99,23 @@ module Decidim
           )
         end
 
-         def send_notification_moderation
+        def send_notification_moderate_moa_response
+          cpdp_moderators_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id).where("role IN (?)", ["cpdp", "moderator"]).map(&:decidim_user_id)
+
+          Decidim::EventsManager.publish(
+            event: "decidim.events.moderate_moa_response",
+            event_class: Decidim::Participations::ModerateMoaResponseEvent,
+            resource: @participation,
+            recipient_ids: cpdp_moderators_ids.uniq,
+            extra: {
+              template: "moderate_moa_response_event",
+              participation_moderated: true, # this should go away, ask @ludivinecp
+              participatory_process_title: participatory_process_title
+            }
+          )
+        end
+
+        def send_notification_moderation
           Decidim::EventsManager.publish(
             event: "decidim.events.participations.participation_moderated",
             event_class: Decidim::Participations::ParticipationModeratedEvent,

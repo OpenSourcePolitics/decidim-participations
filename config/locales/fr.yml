@@ -24,6 +24,12 @@ fr:
             moa: Maîtrise d'ouvrage
             moderator: Moderateur
     events:
+      moderate_moa_response:
+        notification: Une nouvelle réponse de la maîtrise d’ouvrage a été publiée. <a href="%{action_url}">Cliquez ici pour la consulter</a>
+        email_subject: Nouvelle réponse de la maîtrise d’ouvrage
+        email_greetings: Bonjour,
+        email_intro: La maîtrise d’ouvrage a soumis une réponse à la %{question_title} publiée dans %{processus_participatif_title}.
+        action_url_name: Vous pouvez la consulter en suivant ce lien
       new_participation_question_event:
         notification: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
         email_subject: Une nouvelle question dans %{processus_participatif_title} attend votre réponse
