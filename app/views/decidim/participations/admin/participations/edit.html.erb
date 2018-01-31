@@ -21,7 +21,7 @@
           <div class="show_while_others_hide">
             <div class="row column">
               <%= f.fields_for :moderation do |fm| %>
-                <%=fm.text_area :justification, rows: 5 %>
+                <%=fm.text_area :justification, rows: 5, id: "refusedJustificationField" %>
               <% end %>
             </div>
           </div>
@@ -133,6 +133,10 @@
       }
     })
 
+    $('#refusedJustificationField').change(function() {
+        var justification = $('#refusedJustificationField').val()
+        $('#bodyJustificationField').val(justification)
+    });
     // body changes justification
     $('#justificationBlock').hide();
     var bodyField = $("#participation_body")
