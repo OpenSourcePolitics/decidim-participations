@@ -104,6 +104,10 @@ module Decidim
         moderation.sqr_status == "authorized" || moderation.sqr_status == "waiting_for_answer"
       end
 
+      def authorized?
+        moderation.sqr_status == "authorized"
+      end
+
       def unmoderate?
         moderation.sqr_status == "unmoderate"
       end
@@ -135,6 +139,20 @@ module Decidim
           connection.execute("SELECT setseed(#{connection.quote(seed)})")
           order("RANDOM()").load
         end
+      end
+
+      # Public: Check if the participation is waiting for MOA moderation
+      #
+      # Returns Boolean.
+      def waiting_for_validation?
+        state == "waiting_for_validation"
+      end
+      
+      # Public: Check if the participation is incomplete
+      #
+      # Returns Boolean.
+      def incomplete?
+        state == "incomplete"
       end
 
       # Public: Check if the user has voted the participation.

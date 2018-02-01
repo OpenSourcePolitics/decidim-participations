@@ -8,8 +8,8 @@ module Decidim
    
         def notification_title
           I18n.t(
-            "decidim.events.moderate_moa_response.notification_title",
-            url: action_url
+            "decidim.events.moderate_moa_response.notification",
+            action_url: action_url
           ).html_safe
         end
   
@@ -37,16 +37,15 @@ module Decidim
         end
   
         def action_url
-          # TODO http://localhost:3000/admin/participatory_processes/debitis-voluptates/features/14/manage/participations
-          processus_participatif_url
+          admin_router_proxy.send("edit_participation_participation_answer_url", {id: resource.id, participation_id: resource.id})            
         end
   
         private
   
-        def processus_participatif_url
-          resource_locator.send("collection_route", "url", {host:participation.organization.host})
+        def admin_router_proxy
+          admin_router_arg = resource.respond_to?(:feature) ? resource.feature : resource
+          @admin_router_proxy ||= EngineRouter.admin_proxy(admin_router_arg)
         end
-  
       end
     end
   end

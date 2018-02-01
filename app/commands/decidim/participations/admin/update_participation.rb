@@ -28,11 +28,10 @@ module Decidim
             update_participation
             send_notification_moderation if @participation.unmoderate?
             update_moderation
-            # TODO check with @ludivinecp order of all this methods
+            should_notify = recipient_role_will_change?
             update_title
             update_publishing
             set_deadline
-            should_notify = recipient_role_will_change?
             send_notification_new_question if should_notify
           end
 
@@ -84,21 +83,6 @@ module Decidim
           (form.recipient_role != participation.recipient_role) && form.participation_type == "question" && (form.moderation.sqr_status != "refused" )
         end
 
-        def send_notification_participation_answer_author
-          recipient_ids = [participation.author.id]
-
-          Decidim::EventsManager.publish(
-            event: ParticipationAnseredAuthorEvent::EVENT_NAME,
-            event_class: ParticipationAnseredAuthorEvent,
-            resource: @participation,
-            recipient_ids: recipient_ids.uniq,
-            extra: {
-              participation_moderated: true, # this should go away, ask @ludivinecp
-              participatory_process_title: participatory_process_title,
-              template: "participation_ansered_author_event"
-            }
-          )
-        end
 
         def send_notification_new_question
           recipient_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id, role: participation.recipient_role).map(&:decidim_user_id)
@@ -109,23 +93,7 @@ module Decidim
             resource: @participation,
             recipient_ids: recipient_ids.uniq,
             extra: {
-              question_attributed: true,
-              participatory_process_title: participatory_process_title
-            }
-          )
-        end
-
-        def send_notification_moderate_moa_response
-          cpdp_moderators_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id).where("role IN (?)", ["cpdp", "moderator"]).map(&:decidim_user_id)
-
-          Decidim::EventsManager.publish(
-            event: "decidim.events.moderate_moa_response",
-            event_class: Decidim::Participations::ModerateMoaResponseEvent,
-            resource: @participation,
-            recipient_ids: cpdp_moderators_ids.uniq,
-            extra: {
-              template: "moderate_moa_response_event",
-              participation_moderated: true, # this should go away, ask @ludivinecp
+              template: "new_participation_question_event",
               participatory_process_title: participatory_process_title
             }
           )
@@ -138,10 +106,10 @@ module Decidim
             resource: @participation,
             recipient_ids: [@participation.author.id],
             extra: {
+              template: "participation_moderated_#{set_state}_event",
               participatory_process_title: participatory_process_title,
               accepted: @form.moderation.sqr_status == "refused" ? false : true,
               justification: @form.moderation.justification,
-              template: "participation_moderated_#{set_state}_event",
               state: set_state,
               participation_moderated: true
             }

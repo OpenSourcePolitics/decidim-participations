@@ -10,8 +10,11 @@ module Decidim
         # form - A form object with the params.
         # participation - The participation to write the answer for.
         def initialize(form, participation)
+        # current_participatory_process - The current participatory process
+        def initialize(form, participation, current_participatory_process)
           @form = form
           @participation = participation
+          @current_participatory_process = current_participatory_process
         end
 
         # Executes the command. Broadcasts these events:
@@ -25,12 +28,38 @@ module Decidim
 
           answer_participation
           update_moderation
+          send_notification_moderate_moa_response if @participation.waiting_for_validation?
+
           broadcast(:ok)
         end
 
         private
 
+
+        def send_notification_moderate_moa_response
+          cpdp_moderators_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id).where("role IN (?)", ["cpdp", "moderator"]).map(&:decidim_user_id)
+
+          Decidim::EventsManager.publish(
+            event: "decidim.events.moderate_moa_response",
+            event_class: Decidim::Participations::ModerateMoaResponseEvent,
+            resource: @participation,
+            recipient_ids: cpdp_moderators_ids.uniq,
+            extra: {
+              template: "moderate_moa_response_event",
+              participatory_process_title: participatory_process_title
+            }
+          )
+        end
+
         attr_reader :form, :participation
+
+        def participatory_process_title
+          if @current_participatory_process.title.is_a?(Hash)
+             @current_participatory_process.title[I18n.locale.to_s]
+          else
+            @current_participatory_process.title
+          end
+        end
 
         def answer_participation
           participation.update_attributes!(
