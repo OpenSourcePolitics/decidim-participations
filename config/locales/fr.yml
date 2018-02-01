@@ -24,6 +24,12 @@ fr:
             moa: Maîtrise d'ouvrage
             moderator: Moderateur
     events:
+      participation_answered_moderator_published:
+        notification: Votre réponse à la <a href="%{action_url}">%{question_title}</a> a été publiée
+        email_subject:  Publication de votre réponse
+        email_greetings: Bonjour,
+        email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été validée par la CPDP :"
+        action_url_name: Cliquez ici pour la consulter
       participation_answered_author:
         notification: Une réponse à <a href="%{action_url}">votre question</a> dans %{processus_participatif_title} a été publiée
         email_subject: Une réponse à votre question dans %{processus_participatif_title} a été publiée
