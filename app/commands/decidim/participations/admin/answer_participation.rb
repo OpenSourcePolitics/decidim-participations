@@ -9,7 +9,6 @@ module Decidim
         #
         # form - A form object with the params.
         # participation - The participation to write the answer for.
-        def initialize(form, participation)
         # current_participatory_process - The current participatory process
         def initialize(form, participation, current_participatory_process)
           @form = form
@@ -29,12 +28,32 @@ module Decidim
           answer_participation
           update_moderation
           send_notification_moderate_moa_response if @participation.waiting_for_validation?
+          if @participation.question? 
+            if @participation.authorized? 
+              send_notification_participation_published_answer_author 
+            end
+          end  
 
           broadcast(:ok)
         end
 
         private
 
+
+        def send_notification_participation_published_answer_author
+          recipient_ids = [participation.author.id]
+
+          Decidim::EventsManager.publish(
+            event: ParticipationAnsweredAuthorEvent::EVENT_NAME,
+            event_class: ParticipationAnsweredAuthorEvent,
+            resource: @participation,
+            recipient_ids: recipient_ids.uniq,
+            extra: {
+              template: "participation_answered_author_event",
+              participatory_process_title: participatory_process_title
+            }
+          )
+        end
 
         def send_notification_moderate_moa_response
           cpdp_moderators_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id).where("role IN (?)", ["cpdp", "moderator"]).map(&:decidim_user_id)
