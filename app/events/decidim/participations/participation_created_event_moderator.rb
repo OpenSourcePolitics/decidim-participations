@@ -12,7 +12,7 @@ module Decidim
         I18n.t(
           "decidim.events.participation_created.moderator.notification_title",
           processus_participatif_title: extra[:participatory_process_title],
-          processus_participatif_url: action_moderation_url
+          processus_participatif_url: action_url
         ).html_safe
       end
 
