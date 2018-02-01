@@ -121,7 +121,7 @@ module Decidim
         {
           participation_type: "all",
           search_text: "",
-          origin: "all",
+          origin: "",
           activity: "",
           category_id: "",
           state: "all",

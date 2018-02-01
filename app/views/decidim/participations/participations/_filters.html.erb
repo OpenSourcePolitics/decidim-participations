@@ -13,7 +13,7 @@
   </div>
 
    <% if feature_settings.official_participations_enabled %>
-    <%= form.collection_radio_buttons :participation_type, [["all", t('.all')], ["questions", t('.questions')], ["contributions", t('.contributions')], ["opinions", t('.opinions')]], :first, :last, legend_title: t('.participation_type') %>
+    <%= form.collection_radio_buttons :participation_type, [["all", t('.all')], ["question", t('.questions')], ["contribution", t('.contributions')], ["opinion", t('.opinions')]], :first, :last, legend_title: t('.participation_type') %>
   <% end %>
 
   <% if feature_settings.official_participations_enabled %>
@@ -36,15 +36,27 @@
 <% end %>
 
 <script type="text/javascript">
-$("input[name='filter[participation_type]']").change(function(){
-  if ($("#filter_participation_type_questions").is(':checked')){
+function disableFilters(){
+  $("#filter_state_all").prop("disabled", true);
+  $("#filter_state_all").attr('checked', true);
+  $("#filter_state_accepted").prop("disabled", true);
+  $("#filter_state_waiting_for_answer").prop("disabled", true);
+}
+function enableFilters(){
     $("#filter_state_all").prop("disabled", false);
     $("#filter_state_accepted").prop("disabled", false);
     $("#filter_state_waiting_for_answer").prop("disabled", false);
-  } else {
-    $("#filter_state_all").prop("disabled", true);
-    $("#filter_state_accepted").prop("disabled", true);
-    $("#filter_state_waiting_for_answer").prop("disabled", true);
-  }
-})
+}
+  $('document').ready(function(){
+    if (!$("#filter_participation_type_question").is(':checked')){
+      disableFilters();
+      }
+    $("input[name='filter[participation_type]']").change(function(){
+      if ($("#filter_participation_type_question").is(':checked')){
+        enableFilters();
+      }else {
+        disableFilters();
+      }
+    })
+  })
 </script>
