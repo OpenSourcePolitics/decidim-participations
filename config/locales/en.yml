@@ -25,6 +25,30 @@ en:
             moa: Maîtrise d'ouvrage
             moderator: Moderator
     events:
+      participation_answered_moderator_incomplete:
+        notification: Votre réponse à la %{question_title} n'a pas été validée. <a href="%{action_url}">Cliquez ici pour l’éditer</a>
+        email_subject:  Votre réponse n’a pas été validée
+        email_greetings: Bonjour,
+        email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été jugée insuffisante par la CPDP pour le motif suivant :"
+        action_url_name: Vous pouvez éditer votre réponse en suivant ce lien
+      participation_answered_moderator_published:
+        notification: Votre réponse à la <a href="%{action_url}">%{question_title}</a> a été publiée
+        email_subject:  Publication de votre réponse
+        email_greetings: Bonjour,
+        email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été validée par la CPDP :"
+        action_url_name: Cliquez ici pour la consulter
+      participation_answered_author:
+        notification: Une réponse à <a href="%{action_url}">votre question</a> dans %{processus_participatif_title} a été publiée
+        email_subject: Une réponse à votre question dans %{processus_participatif_title} a été publiée
+        email_greetings: Bonjour %{author_name},
+        email_intro: "Vous avez reçu une réponse pour votre question publiée dans %{processus_participatif_title} :"
+        action_url_name: Cliquez ici pour la consulter
+      moderate_moa_response:
+        notification: Une nouvelle réponse de la maîtrise d’ouvrage a été publiée. <a href="%{action_url}">Cliquez ici pour la consulter</a>
+        email_subject: Nouvelle réponse de la maîtrise d’ouvrage
+        email_greetings: Bonjour,
+        email_intro: La maîtrise d’ouvrage a soumis une réponse à la %{question_title} publiée dans %{processus_participatif_title}.
+        action_url_name: Vous pouvez la consulter en suivant ce lien
       new_participation_question_event:
         notification: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
         email_subject: Une nouvelle question dans %{processus_participatif_title} attend votre réponse
@@ -32,31 +56,38 @@ en:
         email_intro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
         action_url_name: Vous pouvez y répondre en suivant ce lien
       participation_moderated:
-        notification: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
-        email_subject: Une nouvelle question dans %{processus_participatif_title} attend votre réponse
-        email_greetings: Bonjour,
-        email_intro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
-        email_outro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
-        action_url_name: Vous pouvez y répondre en suivant ce lien
+        authorized:
+          notification: Votre participation a été publiée dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a>
+          email_subject:  Publication de votre participation dans %{processus_participatif_title}
+          email_greetings: Bonjour %{author_name},
+          email_intro: Votre participation dans %{processus_participatif_title} a été publiée.
+          action_url_name: Cliquez ici pour la consulter
+        refused:
+          notification:  "Votre participation dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a> a été refusée pour le motif suivant : "
+          email_subject:  Refus de votre participation dans %{processus_participatif_title}
+          email_greetings: Bonjour %{author_name},
+          email_intro: "Votre participation dans %{processus_participatif_title} a été refusée après modération de la CPDP, pour le motif suivant : "
+          participation_intro: "Votre participation :"
+          action_url_name: Votre participation
+        modified:
+          notification: Votre participation a été publiée dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a>
+          email_subject:  Publication de votre participation dans %{processus_participatif_title}
+          email_greetings: Bonjour %{author_name},
+          email_intro: "Votre participation dans %{processus_participatif_title} a été publiée après modération de la CPDP, pour le(s) motif(s) suivant(s) : "
+          action_url_name: Cliquez ici pour la consulter
       participation_created:
         moderator:
           notification_title: Une nouvelle participation a été soumise dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a>
           email_subject: Nouvelle participation
           email_greetings: Bonjour
-          email_intro:  "%{author_name} a publié une nouvelle question dans %{processus_participatif_title}"
-          email_outro: Traiter la participation
-          action_url_name: Vous pouvez y répondre en suivant ce lien
+          email_intro:  "%{author_name} a publié une nouvelle participation dans %{processus_participatif_title}"
+          action_url_name: Traiter la participation
         author:
           notification_title: Votre participation dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a> a bien été soumise
           email_greetings: Bonjour %{author_name},
           email_subject: Votre participation a bien été soumise
           email_intro: Votre participation dans %{processus_participatif_title}
           email_outro: a bien été soumise et est en attente de modération.
-        moderation:
-          notification_title: Une nouvelle participation a été soumise dans %{processus_participatif_title}. <a href="%{url}">Cliquez ici pour la traiter</a>
-          email_subject: Nouvelle participation dans %{processus_participatif_title}
-          email_intro: "%{author_name} a publié une nouvelle participation dans %{processus_participatif_title}"
-          action_url_name: Traiter la participation
     participatory_processes:
       statistics:
         participations_count: Participations
