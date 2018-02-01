@@ -32,6 +32,8 @@ module Decidim
             if @participation.authorized? 
               send_notification_participation_published_answer_author
               send_notification_participation_published_answer_moa 
+            elsif @participation.incomplete?
+              send_notification_participation_incomplete_answer_moa
             end
           end  
 
@@ -40,6 +42,20 @@ module Decidim
 
         private
 
+        def send_notification_participation_incomplete_answer_moa
+          moa_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id).where("role IN (?)", ["moa"]).map(&:decidim_user_id)
+
+          Decidim::EventsManager.publish(
+            event: ParticipationAnsweredModeratorIncompleteEvent::EVENT_NAME,
+            event_class: ParticipationAnsweredModeratorIncompleteEvent,
+            resource: @participation,
+            recipient_ids: moa_ids.uniq,
+            extra: {
+              template: "participation_answered_moderator_incomplete_event",
+              participatory_process_title: participatory_process_title
+            }
+          )
+        end
 
         def send_notification_participation_published_answer_moa
           moa_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id).where("role IN (?)", ["moa"]).map(&:decidim_user_id)

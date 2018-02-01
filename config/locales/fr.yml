@@ -24,6 +24,12 @@ fr:
             moa: Maîtrise d'ouvrage
             moderator: Moderateur
     events:
+      participation_answered_moderator_incomplete:
+        notification: Votre réponse à la %{question_title} n'a pas été validée. <a href="%{action_url}">Cliquez ici pour l’éditer</a>
+        email_subject:  Votre réponse n’a pas été validée
+        email_greetings: Bonjour,
+        email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été jugée insuffisante par la CPDP pour le motif suivant :"
+        action_url_name: Vous pouvez éditer votre réponse en suivant ce lien
       participation_answered_moderator_published:
         notification: Votre réponse à la <a href="%{action_url}">%{question_title}</a> a été publiée
         email_subject:  Publication de votre réponse
