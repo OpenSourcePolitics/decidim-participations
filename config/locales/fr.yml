@@ -76,7 +76,7 @@ fr:
           action_url_name: Cliquez ici pour la consulter
       participation_created:
         moderator:
-          notification_title: Une nouvelle participation a été soumise dans <a href="%{processus_participatif_url}">%{processus_participatif_title}"></a>
+          notification_title: Une nouvelle participation a été soumise dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a>
           email_subject: Nouvelle participation
           email_greetings: Bonjour
           email_intro:  "%{author_name} a publié une nouvelle participation dans %{processus_participatif_title}"
