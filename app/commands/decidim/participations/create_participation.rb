@@ -46,12 +46,16 @@ module Decidim
 
       def send_notification
         return if participation.author.blank?
-
         Decidim::EventsManager.publish(
-          event: "decidim.events.participations.participation_created",
-          event_class: Decidim::Participations::ParticipationCreatedEvent,
+          event: "decidim.events.participations.created_event_author",
+          event_class: Decidim::Participations::ParticipationCreatedEventAuthor,
           resource: participation,
-          recipient_ids: participation.author.id
+          recipient_ids: [participation.author.id],
+          extra: {
+            template: "participation_created_event_author",
+            participatory_process_title: participatory_space_title,
+            process_slug: @participation.feature.participatory_space.slug
+          }
         )
       end
 
@@ -75,13 +79,13 @@ module Decidim
 
       def send_notification_to_moderators
         Decidim::EventsManager.publish(
-          event: "decidim.events.participations.participation_created",
-          event_class: Decidim::Participations::ParticipationCreatedEvent,
+          event: "decidim.events.participations.created_event_moderator",
+          event_class: Decidim::Participations::ParticipationCreatedEventModerator,
           resource: @participation,
           recipient_ids: (@participation.users_to_notify_on_participation_created - [@participation.author]).pluck(:id),
           extra: {
-            moderation_event: true,
-            new_content: true,
+            template: "participation_created_event_moderator",
+            participatory_process_title: participatory_space_title,
             process_slug: @participation.feature.participatory_space.slug
           }
         )
@@ -145,6 +149,10 @@ module Decidim
 
       def user_group_participations
         Participation.where(user_group: @user_group, feature: form.current_feature)
+      end
+
+      def participatory_space_title
+        title = @participation.feature.participatory_space.title.is_a?(Hash) ? @participation.feature.participatory_space.title[I18n.locale.to_s] : @participation.feature.participatory_space.title
       end
     end
   end

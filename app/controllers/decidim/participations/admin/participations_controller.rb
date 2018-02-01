@@ -57,7 +57,7 @@ module Decidim
           authorize! :update, Participation
           @form = form(Admin::ParticipationForm).from_params(params)
 
-          Admin::UpdateParticipation.call(@form, current_user, participation) do
+          Admin::UpdateParticipation.call(@form, current_user, current_participatory_process, participation) do
             on(:ok) do
               flash[:notice] = I18n.t("participations.update.success", scope: "decidim.participations.admin")
               redirect_to participations_path

@@ -120,18 +120,21 @@ Decidim.register_feature(:participations) do |feature|
                       else
                         [nil, nil]
                       end
-
+      body = Faker::Lorem.paragraphs(2).join("\n")
       participation = Decidim::Participations::Participation.create!(
         feature: feature,
         category: participatory_space.categories.sample,
         scope: Faker::Boolean.boolean(0.5) ? global : scopes.sample,
-        title: Faker::Lorem.sentence(2),
-        body: Faker::Lorem.paragraphs(2).join("\n"),
+        title: "Question n°#{n}",
+        original_body: body,
+        body: body,
         author: author,
         user_group: user_group,
         state: state,
         answer: answer,
-        answered_at: Time.current
+        answered_at: Time.current,
+        
+        participation_type: %w(question opinion contribution)[Faker::Number.between(0, 2)]
       )
 
       (n % 3).times do |m|

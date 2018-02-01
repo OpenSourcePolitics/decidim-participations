@@ -6,10 +6,12 @@ module Decidim
         #
         # form         - A form object with the params.
         # current_user - The current user.
+        # current_participatory_process - The current participatory process
         # participation - the participation to update.
-        def initialize(form, current_user, participation)
+        def initialize(form, current_user, current_participatory_process, participation)
           @form = form
           @current_user = current_user
+          @current_participatory_process = current_participatory_process
           @participation = participation
         end
 
@@ -24,10 +26,13 @@ module Decidim
 
           transaction do
             update_participation
+            send_notification_moderation if @participation.unmoderate?
             update_moderation
+            should_notify = recipient_role_will_change?
             update_title
             update_publishing
             set_deadline
+            send_notification_new_question if should_notify
           end
 
           broadcast(:ok, participation)
@@ -74,6 +79,55 @@ module Decidim
           end
         end
 
+        def recipient_role_will_change?
+          (form.recipient_role != participation.recipient_role) && form.participation_type == "question" && (form.moderation.sqr_status != "refused" )
+        end
+
+
+        def send_notification_new_question
+          recipient_ids = Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: @current_participatory_process.id, role: participation.recipient_role).map(&:decidim_user_id)
+
+          Decidim::EventsManager.publish(
+            event: "decidim.events.participations.new_question",
+            event_class: Decidim::Participations::NewParticipationQuestionEvent,
+            resource: @participation,
+            recipient_ids: recipient_ids.uniq,
+            extra: {
+              template: "new_participation_question_event",
+              participatory_process_title: participatory_process_title
+            }
+          )
+        end
+
+        def send_notification_moderation
+          Decidim::EventsManager.publish(
+            event: "decidim.events.participations.participation_moderated",
+            event_class: Decidim::Participations::ParticipationModeratedEvent,
+            resource: @participation,
+            recipient_ids: [@participation.author.id],
+            extra: {
+              template: "participation_moderated_#{set_state}_event",
+              participatory_process_title: participatory_process_title,
+              accepted: @form.moderation.sqr_status == "refused" ? false : true,
+              justification: @form.moderation.justification,
+              state: set_state,
+              participation_moderated: true
+            }
+          )
+        end
+
+        def set_state # for translations context
+         if @form.moderation.sqr_status == "refused"
+           "refused"
+         else
+            if @form.moderation.justification.present?
+              "modified"
+            else
+              "authorized"
+            end
+          end
+        end
+
         def organization
           @organization ||= current_user.organization
         end
@@ -84,6 +138,14 @@ module Decidim
 
         def user_group_participations
           Participation.where(user_group: user_group, feature: form.current_feature).where.not(id: participation.id)
+        end
+
+        def participatory_process_title
+            if @current_participatory_process.title.is_a?(Hash)
+               @current_participatory_process.title[I18n.locale.to_s]
+            else
+              @current_participatory_process.title
+            end
         end
 
         def update_publishing
