@@ -24,7 +24,7 @@ fr:
             moa: Maîtrise d'ouvrage
             moderator: Moderateur
     events:
-      participation_ansered_author:
+      participation_answered_author:
         notification: Une réponse à <a href="%{action_url}">votre question</a> dans %{processus_participatif_title} a été publiée
         email_subject: Une réponse à votre question dans %{processus_participatif_title} a été publiée
         email_greetings: Bonjour %{author_name},

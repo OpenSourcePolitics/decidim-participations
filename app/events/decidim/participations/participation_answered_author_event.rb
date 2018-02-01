@@ -6,7 +6,7 @@ module Decidim
         include Decidim::Events::EmailEvent
         include Decidim::Events::NotificationEvent
    
-        EVENT_NAME = "decidim.events.participation_ansered_author"
+        EVENT_NAME = "decidim.events.participation_answered_author"
         
         def notification_title
             I18n.t(
