@@ -52,7 +52,9 @@ module Decidim
             recipient_ids: moa_ids.uniq,
             extra: {
               template: "participation_answered_moderator_incomplete_event",
-              participatory_process_title: participatory_process_title
+              participatory_process_title: participatory_process_title,
+              justification: @form.moderation.justification
+
             }
           )
         end
