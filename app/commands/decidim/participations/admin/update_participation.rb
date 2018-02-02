@@ -25,10 +25,10 @@ module Decidim
           return broadcast(:invalid) if form.invalid?
 
           transaction do
+            should_notify = recipient_role_will_change?
             update_participation
             send_notification_moderation if @participation.unmoderate?
             update_moderation
-            should_notify = recipient_role_will_change?
             update_title
             update_publishing
             set_deadline
