@@ -21,11 +21,15 @@ module Decidim
             can_manage_process?(process)
           end
 
+          cannot :read, Moderation  do |moderation|
+            can_manage_process?(moderation.participatory_space)
+          end
+
           can [:update, :read], Participation do |participation|
             can_manage_process?(participation.feature.participatory_space)
           end
 
-          can [:read, :manage], Feature do |feature|
+          can :read, Feature do |feature|
             feature.manifest_name == "participations"
           end
         end
