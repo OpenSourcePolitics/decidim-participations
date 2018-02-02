@@ -63,7 +63,7 @@ en:
           email_intro: Votre participation dans %{processus_participatif_title} a été publiée.
           action_url_name: Cliquez ici pour la consulter
         refused:
-          notification_title:  "Votre participation dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a> a été refusée pour le motif suivant : "
+          notification_title:  "Votre participation dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a> a été refusée pour le motif suivant : %{justification}"
           email_subject:  Refus de votre participation dans %{processus_participatif_title}
           email_greetings: Bonjour %{author_name},
           email_intro: "Votre participation dans %{processus_participatif_title} a été refusée après modération de la CPDP, pour le motif suivant : "

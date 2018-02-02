@@ -12,7 +12,8 @@ module Decidim
         I18n.t(
           "decidim.events.participation_moderated.#{extra[:state]}.notification_title",
           processus_participatif_title: extra[:participatory_process_title],
-          processus_participatif_url: processus_participatif_url
+          processus_participatif_url: processus_participatif_url,
+          justification: justification
         ).html_safe
       end
 
@@ -31,7 +32,7 @@ module Decidim
 
       def email_intro
         I18n.t("decidim.events.participation_moderated.#{extra[:state]}.email_intro",
-          processus_participatif_title: extra[:participatory_process_title]          
+          processus_participatif_title: extra[:participatory_process_title]
         )
       end
 
