@@ -10,7 +10,7 @@ module Decidim
         
         def notification_title
             I18n.t(
-              "#{EVENT_NAME}.notification",
+              "#{EVENT_NAME}.notification_title",
               question_title: resource_title,
               action_url: action_url
             ).html_safe

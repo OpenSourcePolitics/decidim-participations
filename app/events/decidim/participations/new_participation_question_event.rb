@@ -34,7 +34,7 @@ module Decidim
   
         def notification_title
           I18n.t(
-            "decidim.events.new_participation_question_event.notification",
+            "decidim.events.new_participation_question_event.notification_title",
             processus_participatif_title: extra[:participatory_process_title],
             action_url: action_url
           ).html_safe
