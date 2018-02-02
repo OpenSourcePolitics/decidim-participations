@@ -29,7 +29,7 @@ module Decidim
             can_manage_process?(participation.feature.participatory_space)
           end
 
-          can :read, Feature do |feature|
+          can [:manage, :read], Feature do |feature|
             feature.manifest_name == "participations"
           end
         end
