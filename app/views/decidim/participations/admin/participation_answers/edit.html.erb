@@ -22,6 +22,7 @@
       <div class="row column" id="justification_field">
         <%= f.fields_for :moderation do |fm| %>
           <%=fm.text_field :justification %>
+          <%=fm.hidden_field :on_the_answer_page, :value => "yes" %>
         <% end %>
       </div>
       <% end %>

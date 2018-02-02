@@ -11,7 +11,11 @@ module Decidim
         attribute :sqr_status, String
         attribute :id, Integer
 
-        validates :sqr_status, presence: true, if: ->(form) { form.sqr_status } # sqr_status is needed when participation is moderated but not when its answer is moderated.
+
+        # sqr_status is needed when participation is moderated but not when its answer is moderated.
+        attr_accessor :on_the_answer_page
+
+        validates :sqr_status, presence: true, unless: ->(form) { form.on_the_answer_page == "yes" }
       end
     end
   end
