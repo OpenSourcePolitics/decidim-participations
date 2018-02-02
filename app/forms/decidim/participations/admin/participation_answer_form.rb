@@ -12,7 +12,11 @@ module Decidim
         attribute :state, String
         attribute :moderation, ModerationForm
 
-        # validates :state, presence: true, inclusion: { in: %w(accepted rejected evaluating) }
+        validates :state, presence: true, unless: :current_user_is_moa?
+
+        def current_user_is_moa?
+          ParticipatoryProcessUserRole.where(user: current_user).first.role == "moa"
+        end
       end
     end
   end
