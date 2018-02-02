@@ -12,7 +12,7 @@ module Decidim
         attribute :id, Integer
 
 
-        # sqr_status is needed when participation is moderated but not when its answer is moderated.
+        # sqr_status is needed only on the edit view, not the answer view.
         attr_accessor :on_the_answer_page
 
         validates :sqr_status, presence: true, unless: ->(form) { form.on_the_answer_page == "yes" }
