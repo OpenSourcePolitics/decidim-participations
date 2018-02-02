@@ -8,7 +8,7 @@ module Decidim
    
         def notification_title
           I18n.t(
-            "decidim.events.moderate_moa_response.notification",
+            "decidim.events.moderate_moa_response.notification_title",
             action_url: action_url
           ).html_safe
         end

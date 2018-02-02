@@ -25,31 +25,31 @@ fr:
             moderator: Moderateur
     events:
       participation_answered_moderator_incomplete:
-        notification: Votre réponse à la %{question_title} n'a pas été validée. <a href="%{action_url}">Cliquez ici pour l’éditer</a>
+        notification_title: Votre réponse à la %{question_title} n'a pas été validée. <a href="%{action_url}">Cliquez ici pour l’éditer</a>
         email_subject:  Votre réponse n’a pas été validée
         email_greetings: Bonjour,
         email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été jugée insuffisante par la CPDP pour le motif suivant :"
         action_url_name: Vous pouvez éditer votre réponse en suivant ce lien
       participation_answered_moderator_published:
-        notification: Votre réponse à la <a href="%{action_url}">%{question_title}</a> a été publiée
+        notification_title: Votre réponse à la <a href="%{action_url}">%{question_title}</a> a été publiée
         email_subject:  Publication de votre réponse
         email_greetings: Bonjour,
         email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été validée par la CPDP :"
         action_url_name: Cliquez ici pour la consulter
       participation_answered_author:
-        notification: Une réponse à <a href="%{action_url}">votre question</a> dans %{processus_participatif_title} a été publiée
+        notification_title: Une réponse à <a href="%{action_url}">votre question</a> dans %{processus_participatif_title} a été publiée
         email_subject: Une réponse à votre question dans %{processus_participatif_title} a été publiée
         email_greetings: Bonjour %{author_name},
         email_intro: "Vous avez reçu une réponse pour votre question publiée dans %{processus_participatif_title} :"
         action_url_name: Cliquez ici pour la consulter
       moderate_moa_response:
-        notification: Une nouvelle réponse de la maîtrise d’ouvrage a été publiée. <a href="%{action_url}">Cliquez ici pour la consulter</a>
+        notification_title: Une nouvelle réponse de la maîtrise d’ouvrage a été publiée. <a href="%{action_url}">Cliquez ici pour la consulter</a>
         email_subject: Nouvelle réponse de la maîtrise d’ouvrage
         email_greetings: Bonjour,
         email_intro: La maîtrise d’ouvrage a soumis une réponse à la %{question_title} publiée dans %{processus_participatif_title}.
         action_url_name: Vous pouvez la consulter en suivant ce lien
       new_participation_question_event:
-        notification: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
+        notification_title: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
         email_subject: Une nouvelle question dans %{processus_participatif_title} attend votre réponse
         email_greetings: Bonjour,
         email_intro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
