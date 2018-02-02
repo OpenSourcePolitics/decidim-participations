@@ -6,14 +6,21 @@ module Decidim
       include Decidim::Events::EmailEvent
       include Decidim::Events::NotificationEvent
 
-      # Notification for Author
-
       def notification_title
-        I18n.t(
-          "decidim.events.participation_moderated.#{extra[:state]}.notification_title",
-          processus_participatif_title: extra[:participatory_process_title],
-          processus_participatif_url: processus_participatif_url
-        ).html_safe
+        if extra[:state] == "refused"
+          I18n.t(
+            "decidim.events.participation_moderated.#{extra[:state]}.notification_title",
+            processus_participatif_title: extra[:participatory_process_title],
+            processus_participatif_url: processus_participatif_url,
+            justification: justification
+          ).html_safe
+        else 
+          I18n.t(
+            "decidim.events.participation_moderated.#{extra[:state]}.notification_title",
+            processus_participatif_title: extra[:participatory_process_title],
+            processus_participatif_url: processus_participatif_url
+          ).html_safe
+        end
       end
 
       def email_subject
