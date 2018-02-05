@@ -17,7 +17,8 @@ module Decidim
         @participations = search
                       .results
                       .not_hidden
-                      .authorized
+                      .exclude("unmoderate")
+                      .exclude("refused")
                       .includes(:author)
                       .includes(:category)
                       .includes(:scope)
@@ -118,8 +119,9 @@ module Decidim
 
       def default_filter_params
         {
+          participation_type: "all",
           search_text: "",
-          origin: "all",
+          origin: "",
           activity: "",
           category_id: "",
           state: "all",

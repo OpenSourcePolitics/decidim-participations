@@ -94,8 +94,9 @@ FactoryBot.define do
   end
 
   factory :participation, class: "Decidim::Participations::Participation" do
-    title { Faker::Lorem.sentence }
+    title { |n| "Question n°#{n}" }
     body { Faker::Lorem.sentences(3).join("\n") }
+    participation_type {%w(question opinion contribution)[Faker::Number.between(0, 2)] }
     feature { create(:participation_feature) }
     author do
       create(:user, organization: feature.organization) if feature

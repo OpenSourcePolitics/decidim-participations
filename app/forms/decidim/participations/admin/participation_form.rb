@@ -8,20 +8,16 @@ module Decidim
         mimic :participation
 
         attribute :body, String
-        attribute :address, String
-        attribute :latitude, Float
-        attribute :longitude, Float
+        attribute :original_body, String
         attribute :participation_type, String
+        attribute :recipient_role, String
         attribute :category_id, Integer
-        attribute :scope_id, Integer
-        attribute :attachment, AttachmentForm
+        attribute :moderation, ModerationForm
 
-        validates :address, geocoding: true, if: -> { current_feature.settings.geocoding_enabled? }
-        validates :participation_type, presence: true
+        validates :participation_type, :moderation, presence: true
+        validates :recipient_role, presence: true, if: ->(form) { form.participation_type == "question" && form.moderation.sqr_status != "refused" }
+
         validates :category, presence: true, if: ->(form) { form.category_id.present? }
-        validates :scope, presence: true, if: ->(form) { form.scope_id.present? }
-        validate { errors.add(:scope_id, :invalid) if current_participatory_space&.scope && !current_participatory_space&.scope&.ancestor_of?(scope) }
-
         delegate :categories, to: :current_feature
 
         def map_model(model)

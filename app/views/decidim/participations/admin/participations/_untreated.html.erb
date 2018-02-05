@@ -7,7 +7,7 @@
             <%= sort_link(query, :created_at, t("models.participation.date", scope: "decidim.participations"), default_order: :desc ) %>
           </th>
           <th>
-            <%= sort_link(query, :type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
+            <%= sort_link(query, :participation_type, t("models.participation.fields.type", scope: "decidim.participations") ) %>
           </th>
           <th>
             <%= t("models.participation.fields.body", scope: "decidim.participations")%>
@@ -27,7 +27,7 @@
               <%= l(participation.created_at, format: :short) %><br />
             </td>
             <td>
-              TODO
+              <%= t(".#{participation.type}") %><br />
             </td>
             <td>
               <%= participation.body.truncate(50) %><br />
@@ -38,9 +38,8 @@
               <% end %>
             </td>
             <td class="table-list__actions">
-                <!-- TODO path des boutons -->
-                <%= icon_link_to "clipboard", "#", t("actions.duplicate", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
-                <%= icon_link_to "pencil", "#", t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
+                <%= icon_link_to "clipboard", participation_copy_participations_path(participation_id: participation.id), t("actions.duplicate", scope: "decidim.participations.admin"), class: "action-icon--preview", method: :post if can? :duplicate, Decidim::Participations::Participation %>
+                <%= icon_link_to "pencil", edit_participation_path(participation), t("actions.edit", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank if can? :manage, Decidim::Participations::Participation %>
                 <%= icon_link_to "envelope-closed", current_or_new_conversation_path_with(participation.author), t("actions.contact", scope: "decidim.participations.admin"), class: "action-icon--preview", target: :blank %>
             </td>
           </tr>

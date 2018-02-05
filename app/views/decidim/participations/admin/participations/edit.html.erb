@@ -1,0 +1,161 @@
+<div class="card">
+  <div class="card-divider">
+    <h2 class="card-title"><%= @form.body.truncate(50) %></h2>
+  </div>
+  <br/>
+  <div class="card-section">
+    <%=  decidim_form_for(@form, html: { class: "form edit_participation" }, method: "put") do |f| %>
+      <div class="card">
+        <div class="card-divider">
+          <h2 class="card-title"><%= t(".qualification") %></h2>
+        </div>
+        <br/>
+        <div class="card-section">
+          <div class="row column">
+            <%= f.fields_for :moderation do |fm| %>
+              <%= fm.radio_button :sqr_status, "authorized", label: t(".accepted"), require: true, checked: @participation.publishable? || @participation.published?%>
+              <%= fm.radio_button :sqr_status, "refused", label: t(".refused"), require: true, checked: @participation.refused? %>
+            <% end %>
+          </div>
+
+          <div class="show_while_others_hide">
+            <div class="row column">
+              <%= f.fields_for :moderation do |fm| %>
+                <%=fm.text_area :justification, rows: 5, id: "refusedJustificationField" %>
+              <% end %>
+            </div>
+          </div>
+
+          <div id="hidable_content_contener_2">
+            <% if @form.categories&.any? %>
+              <div class="row column">
+                <%= f.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+              </div>
+            <% end %>
+            <div class="row column">
+              <%= f.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), label: t(".fields.type") %>
+            </div>
+          </div>
+
+          <div class="row column" id="recipient_role_container">
+            <label for="recipient_role"><%= t('.recipient_role') %> <abbr>*</abbr><br />
+
+             <%= f.collection_radio_buttons :recipient_role, participation_roles, :first, :last, prompt: true %>
+            </label>
+          </div>
+
+        </div>
+      </div>
+      <div class="card" id="hidable_content_contener">
+        <div class="card-divider">
+          <h2 class="card-title"><%= t(".content") %></h2>
+        </div>
+        <br/>
+        <div class="card-section">
+          <div class="row column">
+            <h6 class="heading6 bold"><%= t(".original") %></h6>
+            <%= @form.original_body%>
+          </div>
+          <br/>
+
+          <div class="row column">
+            <%=f.text_area :body, rows: 10, label: false %>
+          </div>
+
+          <div class="row column" id="justificationBlock">
+            <%= f.fields_for :moderation do |fm| %>
+              <%=fm.text_field :justification, id: "bodyJustificationField" %>
+            <% end %>
+          </div>
+
+        </div>
+      </div>
+      <div class="button--double form-general-submit publish_and_notify" style="display: none">
+        <%= f.submit t(".publish_and_notify") %>
+      </div>
+
+      <div class="button--double form-general-submit publish">
+        <%= f.submit t(".publish") %>
+      </div>
+
+
+      <div class="button--double form-general-submit show_while_others_hide">
+        <%= f.submit t(".notify") %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<%= hidden_field_tag :js_original_body, @participation.original_body%>
+<%= hidden_field_tag :js_form_body%>
+
+<script type="text/javascript">
+  $('document').ready(function(){
+     var isNotQuestion = <%= (@form.participation_type != "question") %>;
+
+    // refused justification
+    $('.show_while_others_hide').hide();
+    $('input[name="participation[moderation][sqr_status]"]').change(
+      function() {
+      var isAQuestion = $("#participation_participation_type").val() == "question";
+        var a = $('input[name="participation[moderation][sqr_status]"]:checked').val();
+        if (a == "authorized") {
+            $('#hidable_content_contener').show(500);
+            $('#hidable_content_contener_2').show(500);
+            $('.show_while_others_hide').hide();
+            $('#participation_moderation_justification').removeAttr("required");
+            $(".publish_and_notify").css("display", "none")
+            $(".publish").css("display", "flex")
+            if (isAQuestion){
+              $('#recipient_role_container').show(500);
+            }
+
+          } else {
+            $('#hidable_content_contener').hide(500);
+            $('#hidable_content_contener_2').hide(500);
+            $('.show_while_others_hide').show(500);
+            $('#participation_moderation_justification').attr("required", "true");
+            $(".publish_and_notify").css("display", "none")
+            $(".publish").css("display", "none")
+            $('#recipient_role_container').hide();
+          }
+      })
+
+    // Recipient field
+    if(isNotQuestion) {
+      $('#recipient_role_container').hide();
+    }
+    $('#participation_participation_type').change(function() {
+      var type = $('#participation_participation_type').val();
+      if (type == "question") {
+        $('#recipient_role_container').show(500);
+      } else {
+        $('#recipient_role_container').hide();
+      }
+    })
+
+    $('#refusedJustificationField').change(function() {
+        var justification = $('#refusedJustificationField').val()
+        $('#bodyJustificationField').val(justification)
+    });
+    // body changes justification
+    $('#justificationBlock').hide();
+    var bodyField = $("#participation_body")
+    bodyField.change(function(){
+      var originalBody = $("#js_original_body")
+      var formBody = $("#js_form_body")
+      formBody.val(bodyField.val())
+      if( $("#js_form_body").val() != originalBody.val()){
+        $('#justificationBlock').show(500);
+        $('#bodyJustificationField').attr("required", "true");
+        $(".publish_and_notify").css("display", "flex")
+        $(".publish").css("display", "none")
+      } else if (formBody.val() == originalBody.val()) {
+        $('#justificationBlock').hide();
+        $('#bodyJustificationField').removeAttr("required");
+        $(".publish_and_notify").css("display", "none")
+        $(".publish").css("display", "flex")
+      }
+    })
+  });
+
+</script>

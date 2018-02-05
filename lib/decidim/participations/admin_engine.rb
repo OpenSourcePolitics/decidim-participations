@@ -9,9 +9,13 @@ module Decidim
       paths["db/migrate"] = nil
 
       routes do
-        resources :participations, only: [:index, :new, :create] do
+        resources :participations do
+          resources :copy_participations, only: [:create]
           resources :participation_answers, only: [:edit, :update]
+
         end
+
+        resources :moderation, only: [:update]
 
         root to: "participations#index"
       end
@@ -21,10 +25,30 @@ module Decidim
           config.admin_abilities += [
             "Decidim::Participations::Abilities::AdminAbility",
             "Decidim::Participations::Abilities::ParticipatoryProcessAdminAbility",
-            "Decidim::Participations::Abilities::ParticipatoryProcessModeratorAbility"
+            "Decidim::Participations::Abilities::ParticipatoryProcessModeratorAbility",
+            "Decidim::Participations::Abilities::ParticipatoryProcessMoaAbility",
+            "Decidim::Participations::Abilities::ParticipatoryProcessCpdpAbility"
           ]
         end
       end
+
+      initializer "decidim.inject_abilities_to_user" do |_app|
+        Decidim.configure do |config|
+          config.abilities << "Decidim::Abilities::ParticipatoryProcessCpdpAbility"
+          config.abilities << "Decidim::Abilities::ParticipatoryProcessMoaAbility"
+        end
+      end
+
+      initializer "decidim_participatory_processes.inject_abilities_to_user" do |_app|
+        Decidim.configure do |config|
+          config.admin_abilities += [
+            "Decidim::ParticipatoryProcesses::Abilities::Admin::ParticipatoryProcessCpdpAbility",
+            "Decidim::ParticipatoryProcesses::Abilities::Admin::ParticipatoryProcessMoaAbility"
+          ]
+        end
+      end
+
+
 
       def load_seed
         nil

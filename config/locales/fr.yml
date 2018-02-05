@@ -22,15 +22,71 @@ fr:
           roles:
             cpdp: CPDP
             moa: Maîtrise d'ouvrage
+            moderator: Moderateur
     events:
+      participation_answered_moderator_incomplete:
+        notification_title: Votre réponse à la %{question_title} n'a pas été validée. <a href="%{action_url}">Cliquez ici pour l’éditer</a>
+        email_subject:  Votre réponse n’a pas été validée
+        email_greetings: Bonjour,
+        email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été jugée insuffisante par la CPDP pour le motif suivant :"
+        action_url_name: Vous pouvez éditer votre réponse en suivant ce lien
+      participation_answered_moderator_published:
+        notification_title: Votre réponse à la <a href="%{action_url}">%{question_title}</a> a été publiée
+        email_subject:  Publication de votre réponse
+        email_greetings: Bonjour,
+        email_intro: "Votre réponse à la %{question_title} dans %{processus_participatif_title} a été validée par la CPDP :"
+        action_url_name: Cliquez ici pour la consulter
+      participation_answered_author:
+        notification_title: Une réponse à <a href="%{action_url}">votre question</a> dans %{processus_participatif_title} a été publiée
+        email_subject: Une réponse à votre question dans %{processus_participatif_title} a été publiée
+        email_greetings: Bonjour %{author_name},
+        email_intro: "Vous avez reçu une réponse pour votre question publiée dans %{processus_participatif_title} :"
+        action_url_name: Cliquez ici pour la consulter
+      moderate_moa_response:
+        notification_title: Une nouvelle réponse de la maîtrise d’ouvrage a été publiée. <a href="%{action_url}">Cliquez ici pour la consulter</a>
+        email_subject: Nouvelle réponse de la maîtrise d’ouvrage
+        email_greetings: Bonjour,
+        email_intro: La maîtrise d’ouvrage a soumis une réponse à la %{question_title} publiée dans %{processus_participatif_title}.
+        action_url_name: Vous pouvez la consulter en suivant ce lien
+      new_participation_question_event:
+        notification_title: Une nouvelle question dans %{processus_participatif_title} attend votre réponse. <a href="%{action_url}">Cliquez ici pour soumettre une réponse</a>
+        email_subject: Une nouvelle question dans %{processus_participatif_title} attend votre réponse
+        email_greetings: Bonjour,
+        email_intro: La %{question_title} publiée dans %{processus_participatif_title} attend une réponse de votre part.
+        action_url_name: Vous pouvez y répondre en suivant ce lien
+      participation_moderated:
+        authorized:
+          notification_title: Votre participation a été publiée dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a>
+          email_subject:  Publication de votre participation dans %{processus_participatif_title}
+          email_greetings: Bonjour %{author_name},
+          email_intro: Votre participation dans %{processus_participatif_title} a été publiée.
+          action_url_name: Cliquez ici pour la consulter
+        refused:
+          notification_title:  "Votre participation dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a> a été refusée pour le motif suivant : %{justification}"
+          email_subject:  Refus de votre participation dans %{processus_participatif_title}
+          email_greetings: Bonjour %{author_name},
+          email_intro: "Votre participation dans %{processus_participatif_title} a été refusée après modération de la CPDP, pour le motif suivant : "
+          participation_intro: "Votre participation :"
+          action_url_name: Votre participation
+        modified:
+          notification_title: Votre participation a été publiée dans <a href='%{processus_participatif_url}'>%{processus_participatif_title}</a>
+          email_subject:  Publication de votre participation dans %{processus_participatif_title}
+          email_greetings: Bonjour %{author_name},
+          email_intro: "Votre participation dans %{processus_participatif_title} a été publiée après modération de la CPDP, pour le(s) motif(s) suivant(s) : "
+          action_url_name: Cliquez ici pour la consulter
       participation_created:
-        notification_title: Nouvelle participation de %{author_name} dans <a href="%{resource_path}">%{resource_title}</a>
-        url: "Url de la participation : %{resource_url}"
-        email_subject: 'Nouvelle participation de %{author_name}'
-        moderation:
-          email_intro: "%{author_name} a publié une nouvelle participation dans"
-          moderation_url: "Vous pouvez modérer le contenu en suivant ce lien : %{moderation_url}"
-          email_subject: 'Nouvelle participation de %{author_name} en attente de modération'
+        moderator:
+          notification_title: Une nouvelle participation a été soumise dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a>
+          email_subject: Nouvelle participation
+          email_greetings: Bonjour
+          email_intro:  "%{author_name} a publié une nouvelle participation dans %{processus_participatif_title}"
+          action_url_name: Traiter la participation
+        author:
+          notification_title: Votre participation dans <a href="%{processus_participatif_url}">%{processus_participatif_title}</a> a bien été soumise
+          email_greetings: Bonjour %{author_name},
+          email_subject: Votre participation a bien été soumise
+          email_intro: Votre participation dans %{processus_participatif_title}
+          email_outro: a bien été soumise et est en attente de modération.
     participatory_processes:
       statistics:
         participations_count: Participations
@@ -82,18 +138,63 @@ fr:
             name: Participation
         participation_answers:
           edit:
+            content: Contenu
             accepted: Retenue
+            publish: Publier
             answer_participation: Répondre
             evaluating: En cours d'évaluation
             rejected: Refusée
             title: Réponse à la participation %{title}
+            title_content: Contenu de la participation
+            incomplete: Incomplète
         participations:
+          title:
+            contribution: Contribution
+            opinion: Avis
+            question: Question
+          treated:
+            contribution: Contribution
+            opinion: Avis
+            question: Question
+          untreated:
+            contribution: Contribution
+            opinion: Avis
+            question: Question
+          questions:
+            waiting_for_answer: Attente d'une réponse
+            waiting_for_validation: Attente d'une validation
+            incomplete: Demande de modification
+          edit:
+            title: Title
+            publish: Publier
+            notify: Notifier l'auteur
+            publish_and_notify: Publier et notifier l'auteur
+            qualification: Qualification
+            select_a_category: Sélectionner une catégorie
+            select_a_type: Sélectionner un type
+            question: Question
+            opinion: Avis
+            contribution: Contribution
+            content: Content
+            original: Original
+            accepted: Retenue
+            refused: Refusée
+            recipient_role: Destinataire
+            fields:
+              type: Type
+          copy:
+            prefix: Copie de
+            invalid: Il y a eu un problème concernant la copie de cette participation
+            success: La participation a été copiée avec succès
           answer:
             invalid: Il y a eu un problème concernant la réponse à cette participation
-            success: La réponse à la participation a publiée avec succès
+            success: La réponse à été mise à jour avec succès
           create:
-            invalid: Il y a eu un problème lors de la création de cette participation
+            invalid: Il y a eu un problème lors de la création de cette proposition
             success: Participation créée avec succès.
+          update:
+            invalid: Il y a eu un problème lors de la mise à jour de cette participation
+            success: Participation mise à jour avec succès.
           form:
             attachment_legend: "(Facultatif) Ajouter une pièce jointe"
             select_a_category: Sélectionner une catégorie
@@ -106,11 +207,14 @@ fr:
             unmoderate: A traiter
             questions: Questions
             moderated: Traitées
+            published: Publiée
+            answer_published: Réponse publiée
+            refused: Réfusée
           new:
             create: Créer
             title: Créer une participation
       answers:
-        accepted: Retenue
+        accepted: Réponse publiée
         evaluating: En cours d'évaluation
         not_answered: Resté sans réponse
         rejected: Refusée
@@ -154,28 +258,35 @@ fr:
             other: "%{count} participations"
         edit:
           back: Retour
+          select_a_type: Veuillez sélectionner un type
           select_a_category: Veuillez sélectionner une catégorie
           send: Envoyer
           title: Modifier la participation
-          type: Type
           question: Question
           opinion: Avis
           contribution: Contribution
+          fields:
+            type: Type
         filters:
-          accepted: Retenue
+          published_answer: Réponse publiée
           activity: Activité
           all: Toutes
           category: Catégorie
           category_prompt: Sélectionner une catégorie
-          citizens: Citoyens >> Participations citoyennes
+          citizens: Participations citoyennes
           evaluating: En cours d'évaluation
-          official: Elu-e-s >> Participations officielles
+          official: Participations officielles
           origin: Auteurs
           rejected: Refusée
           related_to: Liée à
           search: Rechercher
-          state: État
+          questions_filter: Filtrer les questions par
           voted: Votées
+          questions: Questions
+          contributions: Contributions
+          opinions: Avis
+          participation_type: Filtrer par type
+          waiting_for_answer: En attente de réponse
         filters_small_view:
           close_modal: Fermer la fenêtre de dialogue
           filter: Filtrer
@@ -194,6 +305,7 @@ fr:
           participation_edit_before_minutes:
             one: Vous serez en mesure de modifier cette participation pendant un minute après la création de la participation. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la participation.
             other: Vous serez en mesure de modifier cette participation au cours des premières %{count} minutes après la création de la participation. Une fois cette fenêtre de temps passée, vous ne pourrez plus modifier la participation.
+          select_a_type: Veuillez sélectionner un type
           select_a_category: Veuillez sélectionner une catégorie
           send: Publier
           title: Nouvelle participation
@@ -201,19 +313,24 @@ fr:
           question: Question
           opinion: Avis
           contribution: Contribution
+          fields:
+            type: Type
         orders:
           label: 'Classement des participations par:'
           most_voted: Les plus votées
           random: Aléatoire
           recent: Les plus récents
         participation:
+          creation_date_lite: '%{date}'
           creation_date: 'Création: %{date}'
           view_participation: Voir la participation
+          view_question: Voir la question
+          view_opinion: Voir l'opinion
+          view_contribution: Voir la contribution
         show:
           edit_participation: Modifier la participation
-          participation_accepted_reason: 'Cette participation a été retenue parce que :'
-          participation_in_evaluation_reason: Cette participation est en cours d'évaluation
-          participation_rejected_reason: 'Cette participation a été refusée parce que:'
+          answer_from_moa: Réponse officielle de la maîtrise d'oeuvre
+          answer_from_cpdp: Réponse officielle de la CPDP
           report: Signaler
         vote_button:
           already_voted: Déjà voté

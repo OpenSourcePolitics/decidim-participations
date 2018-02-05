@@ -11,6 +11,27 @@ module Decidim
       include Decidim::MapHelper
       include Decidim::Participations::MapHelper
 
+      def answer_deadline(participation)
+        delay = participation.answer_deadline.mjd - DateTime.now.mjd
+        if delay <= 15 && delay >= 10
+          content_tag(:strong, class: "text-success") do
+            "#{delay}j"
+          end
+        elsif  delay <= 9 && delay >= 5
+          content_tag(:strong, class: "text-info") do
+            "#{delay}j"
+          end
+        elsif  delay <= 4 && delay >= 1
+          content_tag(:strong, class: "text-warning") do
+            "#{delay}j"
+          end
+        else
+          content_tag(:strong, class: "text-alert") do
+            "#{delay}j"
+          end
+        end
+      end
+
       # Public: The state of a participation in a way a human can understand.
       #
       # state - The String state of the participation.
@@ -35,6 +56,50 @@ module Decidim
           "text-info"
         else
           "text-warning"
+        end
+      end
+
+      def published_status(participation)
+        if participation.published? && participation.question?
+          "Réponse publiée"
+        elsif participation.published?
+          "Publiée"
+        elsif participation.refused?
+          "Refusée"
+        end
+      end
+
+      def state(participation)
+        state = participation.state
+        case state
+        when "waiting_for_answer"
+          content_tag(:strong, class: "text-warning") do
+            t(".#{state}")
+          end
+        when "waiting_for_validation"
+          content_tag(:strong, class: "text-info") do
+            t(".#{state}")
+          end
+        when "incomplete"
+          content_tag(:strong, class: "text-alert") do
+            t(".#{state}")
+          end
+        end
+      end
+
+      def published_status(participation)
+        if participation.answered?
+          content_tag(:strong, class: 'text-success') do
+            t("answer_published" , scope: "decidim.participations.admin.participations.index")
+          end
+        elsif participation.published?
+          content_tag(:strong, class: 'text-success') do
+            t("published" , scope: "decidim.participations.admin.participations.index")
+          end
+        else
+          content_tag(:strong, class: 'text-alert') do
+            t("refused" , scope: "decidim.participations.admin.participations.index")
+          end
         end
       end
 
@@ -67,6 +132,14 @@ module Decidim
 
       def current_user_participations
         Participation.where(feature: current_feature, author: current_user)
+      end
+
+      def participation_roles
+
+        [
+          ["moa", t('decidim.admin.models.participatory_process_user_role.roles.moa')],
+          ["cpdp", t('decidim.admin.models.participatory_process_user_role.roles.cpdp')]
+        ]
       end
     end
   end

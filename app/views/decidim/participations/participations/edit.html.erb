@@ -15,13 +15,20 @@
 
       <div class="card__content">
         <%= decidim_form_for(@form) do |form| %>
-          <div class="field">
-            <%= form.text_field :title %>
-          </div>
 
           <div class="field">
             <%= form.text_area :body, rows: 10 %>
           </div>
+
+          <div class="row column">
+            <%= form.select :participation_type, options_for_select([[t(".question"), "question"], [t(".opinion"), "opinion"], [t(".contribution"), "contribution"]], @participation.type), prompt: t(".select_a_type"), label: t(".fields.type") %>
+          </div>
+
+          <% if @form.categories&.any? %>
+            <div class="field">
+              <%= form.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
+            </div>
+          <% end %>
 
           <% if feature_settings.geocoding_enabled? %>
             <div class="field">
@@ -29,12 +36,6 @@
             </div>
             <div class="field" id="address_input">
               <%= form.text_field :address %>
-            </div>
-          <% end %>
-
-          <% if @form.categories&.any? %>
-            <div class="field">
-              <%= form.categories_select :category_id, @form.categories, prompt: t(".select_a_category") %>
             </div>
           <% end %>
 

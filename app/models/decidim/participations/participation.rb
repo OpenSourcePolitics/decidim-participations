@@ -17,6 +17,8 @@ module Decidim
 
       feature_manifest_name "participations"
 
+      accepts_nested_attributes_for :moderation
+
       has_many :votes, foreign_key: "decidim_participation_id", class_name: "ParticipationVote", dependent: :destroy, counter_cache: "participation_votes_count"
 
       validates :body, presence: true
@@ -24,19 +26,109 @@ module Decidim
       geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
 
       # upstream moderation => MOA dashboard
-      scope :unmoderate, ->(current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where(upstream_moderation: "unmoderate")) }
-      scope :moderated, -> (current_feature){ current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where('upstream_moderation = ? OR upstream_moderation = ?', 'authorized', 'refused')) }
-      scope :questions_with_unpublished_answer, -> (current_feature) { current_feature_participations(current_feature).joins(:moderation).merge(Moderation.where.not(['upstream_moderation = ? OR upstream_moderation = ? OR upstream_moderation = ?', 'unmoderate', 'authorized', 'refused'])) }
+      scope :untreated, ->(current_feature) {
+        current_feature_participations(current_feature)
+        .joins(:moderation)
+        .merge(Moderation.where(sqr_status: "unmoderate")) }
 
-      # useless for this feature
+
+      scope :filtered_questions, -> (current_feature) { current_feature_participations(current_feature)
+        .joins(:moderation)
+        .merge(Moderation.where.not(['sqr_status = ? OR sqr_status = ? OR sqr_status = ?', 'unmoderate', 'authorized', 'refused'])) }
+
+      scope :filtered_questions_per_role,  lambda { |current_feature, role, sqr_status|
+        current_feature_participations(current_feature)
+          .where(participation_type: "question", recipient_role: role)
+          .joins(:moderation)
+          .merge(Moderation.where(['sqr_status = ?', sqr_status]))
+      }
+
+      scope :treated, -> (current_feature){
+        current_feature_participations(current_feature)
+        .joins(:moderation)
+        .merge(Moderation.where('sqr_status = ? OR sqr_status = ?', 'authorized', 'refused')) }
+
+      # participations index
+
+      scope :exclude, lambda { |status |left_outer_joins(:moderation).where(Decidim::Moderation.arel_table[:sqr_status].not_eq(status))}
+
       scope :accepted, -> { where(state: "accepted") }
       scope :rejected, -> { where(state: "rejected") }
       scope :evaluating, -> { where(state: "evaluating") }
       after_create :create_participation_moderation
 
+      # filter index
+      scope :filter_per_moderation_status,  lambda { |state|
+        joins(:moderation).merge(Moderation.where(['sqr_status = ?', state]))
+      }
+
+      # filter dashboard
+
+      ransacker :status do
+        query = <<-SQL
+              (SELECT decidim_moderations.sqr_status
+                 FROM decidim_moderations
+                WHERE decidim_moderations.decidim_reportable_id = decidim_participations_participations.id
+                  AND decidim_moderations.decidim_reportable_type = 'Decidim::Participations::Participation'
+                GROUP BY decidim_moderations.sqr_status
+              )
+            SQL
+        Arel.sql(query)
+      end
+
       def self.current_feature_participations(current_feature)
         where(feature: current_feature)
       end
+
+      def question?
+        type == "question"
+      end
+
+      def opinion?
+        type == "opinion"
+      end
+
+      def contribution?
+        type == "contribution"
+      end
+
+      def published?
+        published_on.present?
+      end
+
+      def not_publish?
+        published_on.nil?
+      end
+
+      def publishable?
+        moderation.sqr_status == "authorized" || moderation.sqr_status == "waiting_for_answer"
+      end
+
+      def authorized?
+        moderation.sqr_status == "authorized"
+      end
+
+      def unmoderate?
+        moderation.sqr_status == "unmoderate"
+      end
+
+      def type
+        participation_type
+      end
+
+      def refused?
+        moderation.sqr_status == "refused"
+      end
+
+      def generate_title # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
+        status = self.class.where(participation_type: type).map(&:moderation).map(&:sqr_status)
+        status.delete("refused")
+        status.delete("unmoderate")
+        number = status.count
+        type = I18n.t("decidim.participations.admin.participations.title.#{self.type}")
+        "#{type}" + " n°" + "#{number}"
+      end
+
 
       def self.find_participations(participations)
         where(id: participations.map(&:id))
@@ -47,6 +139,20 @@ module Decidim
           connection.execute("SELECT setseed(#{connection.quote(seed)})")
           order("RANDOM()").load
         end
+      end
+
+      # Public: Check if the participation is waiting for MOA moderation
+      #
+      # Returns Boolean.
+      def waiting_for_validation?
+        state == "waiting_for_validation"
+      end
+      
+      # Public: Check if the participation is incomplete
+      #
+      # Returns Boolean.
+      def incomplete?
+        state == "incomplete"
       end
 
       # Public: Check if the user has voted the participation.
@@ -86,9 +192,17 @@ module Decidim
 
       # Public: Overrides the `commentable?` Commentable concern method.
       def commentable?
-        feature.settings.comments_enabled?
+        if published_answer?
+          return feature.settings.comments_enabled?
+        elsif opinion? || contribution?
+          return feature.settings.comments_enabled?
+        end
+        return false
       end
 
+      def published_answer?
+        question? && answered? && published? && state == "accepted"
+      end
       # Public: Overrides the `accepts_new_comments?` Commentable concern method.
       def accepts_new_comments?
         commentable? && !feature.current_settings.comments_blocked
@@ -182,11 +296,7 @@ module Decidim
 
       def create_participation_moderation
         participatory_space = self.feature.participatory_space
-        self.create_moderation!(participatory_space: participatory_space)
-      end
-
-      def upstream_moderation_activated?
-        feature.settings.upstream_moderation_enabled
+        self.create_moderation!(participatory_space: participatory_space, upstream_moderation: nil)
       end
     end
   end
