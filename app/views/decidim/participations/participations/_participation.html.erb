@@ -6,7 +6,7 @@
           <h5 class="card__title"><%= participation.title %></h5>
         <% end %>
         <div class="card__author author-data author-data--small">
-          <%= render partial: "decidim/shared/author_reference", locals: { author: present(participation).author } %><%= t(".creation_date_lite", date: l(participation.created_at, format: :day_of_year)) %>
+          <%= render partial: "decidim/shared/author_reference", locals: { author: present(participation).author } %><%= t(".creation_date_lite", date: l(participation.created_at, format: :decidim_short)) %>
         </div>
         <%= feature_reference(participation, class: "tech-info--text-left") %>
       </div>
