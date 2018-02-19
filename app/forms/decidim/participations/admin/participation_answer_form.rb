@@ -17,7 +17,8 @@ module Decidim
         attr_accessor :the_recipient_role
 
         def current_user_is_moa?
-          ParticipatoryProcessUserRole.where(user: current_user).first.role == "moa"
+          process_role = ParticipatoryProcessUserRole.where(user: current_user).first
+          process_role.present? && process_role.role == "moa"
         end
 
          def current_user_is_cpdp?

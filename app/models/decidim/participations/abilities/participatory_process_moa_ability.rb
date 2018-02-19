@@ -5,11 +5,7 @@ module Decidim
     module Abilities
       # Defines the abilities related to participations for a logged in process moa user.
       # Intended to be used with `cancancan`.
-      class ParticipatoryProcessMoaAbility < Decidim::Abilities::ParticipatoryProcessRoleAbility
-
-        def role
-          :moa
-        end
+      class ParticipatoryProcessMoaAbility < Decidim::Abilities::ParticipatoryProcessMoaAbility
 
         def define_participatory_process_abilities
           super

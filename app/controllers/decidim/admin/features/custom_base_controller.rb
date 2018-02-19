@@ -8,6 +8,7 @@ module Decidim
       class CustomBaseController < Admin::ApplicationController
         skip_authorize_resource
         include Settings
+        include Decidim::Admin::ParticipatorySpaceAdminContext
 
         helper Decidim::ResourceHelper
         helper Decidim::Admin::ExportsHelper
@@ -16,9 +17,6 @@ module Decidim
                       :current_participatory_space,
                       :parent_path
 
-        before_action do
-          extend current_participatory_space.admin_extension_module
-        end
 
         before_action :manage_authorization, except: [:index, :show]
         before_action :read_authorization, on: [:index, :show]
@@ -35,7 +33,7 @@ module Decidim
           @parent_path ||= EngineRouter.admin_proxy(current_participatory_space).features_path
         end
 
-        protected 
+        protected
 
         def manage_authorization
           authorize! :manage, current_feature

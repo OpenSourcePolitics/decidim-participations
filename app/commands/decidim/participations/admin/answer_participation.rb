@@ -28,14 +28,14 @@ module Decidim
           answer_participation
           update_moderation
           send_notification_moderate_moa_response if @participation.waiting_for_validation?
-          if @participation.question? 
-            if @participation.authorized? 
+          if @participation.question?
+            if @participation.authorized?
               send_notification_participation_published_answer_author
-              send_notification_participation_published_answer_moa 
+              send_notification_participation_published_answer_moa
             elsif @participation.incomplete?
               send_notification_participation_incomplete_answer_moa
             end
-          end  
+          end
 
           broadcast(:ok)
         end
@@ -53,8 +53,8 @@ module Decidim
             extra: {
               template: "participation_answered_moderator_incomplete_event",
               participatory_process_title: participatory_process_title,
-              justification: @form.moderation.justification
-
+              justification: @form.moderation.justification,
+              edit_time_limit: 0
             }
           )
         end
@@ -69,7 +69,8 @@ module Decidim
             recipient_ids: moa_ids.uniq,
             extra: {
               template: "participation_answered_moderator_published_event",
-              participatory_process_title: participatory_process_title
+              participatory_process_title: participatory_process_title,
+              edit_time_limit: 0
             }
           )
         end
@@ -84,7 +85,8 @@ module Decidim
             recipient_ids: recipient_ids.uniq,
             extra: {
               template: "participation_answered_author_event",
-              participatory_process_title: participatory_process_title
+              participatory_process_title: participatory_process_title,
+              edit_time_limit: 0
             }
           )
         end
@@ -99,7 +101,8 @@ module Decidim
             recipient_ids: cpdp_moderators_ids.uniq,
             extra: {
               template: "moderate_moa_response_event",
-              participatory_process_title: participatory_process_title
+              participatory_process_title: participatory_process_title,
+              edit_time_limit: 0
             }
           )
         end
