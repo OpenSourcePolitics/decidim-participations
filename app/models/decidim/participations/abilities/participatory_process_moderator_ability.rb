@@ -11,13 +11,11 @@ module Decidim
 
           # Dispaly functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
-          can :read, Feature do |feature|
+          can [:manage, :read, :update, :preview], Feature do |feature|
             feature.manifest_name == "participations"
           end
 
-          can [:read, :duplicate], Participation
-
-          can [:unreport, :hide], Participation do |participation|
+          can [:manage, :read, :duplicate], Participation do |participation|
             can_manage_process?(participation.feature.participatory_space)
           end
         end
