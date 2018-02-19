@@ -14,9 +14,20 @@ module Decidim
 
         validates :state, presence: true, unless: :current_user_is_moa?
 
+        attr_accessor :the_recipient_role
+
         def current_user_is_moa?
           ParticipatoryProcessUserRole.where(user: current_user).first.role == "moa"
         end
+
+         def current_user_is_cpdp?
+          ParticipatoryProcessUserRole.where(user: current_user).first.role == "cpdp"
+        end
+
+        def cpdp_answering_cpdp?
+          ParticipatoryProcessUserRole.where(user: current_user).first.role == "cpdp" and form.the_recipient_role == "cpdp"
+        end
+        
       end
     end
   end

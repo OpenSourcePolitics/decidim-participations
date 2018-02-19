@@ -8,6 +8,14 @@ module Decidim
         helper_method :participation
 
         def edit
+          # Avoid useless options when cpdp answers to its own questions
+          process_role = ParticipatoryProcessUserRole.where(user: current_user).first
+          if process_role.present? && process_role.role == "cpdp"
+            @cpdp_to_cpdp = participation.recipient_role == process_role.role
+          else
+            @cpdp_to_cpdp = ""
+          end
+          
           authorize! :update, participation
           @form = form(Admin::ParticipationAnswerForm).from_model(participation)
         end
