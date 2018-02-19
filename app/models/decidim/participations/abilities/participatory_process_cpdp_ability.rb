@@ -5,11 +5,7 @@ module Decidim
     module Abilities
       # Defines the abilities related to participations for a logged in process cpdp user.
       # Intended to be used with `cancancan`.
-      class ParticipatoryProcessCpdpAbility < Decidim::Abilities::ParticipatoryProcessRoleAbility
-
-        def role
-          :cpdp
-        end
+      class ParticipatoryProcessCpdpAbility < Decidim::Abilities::ParticipatoryProcessCpdpAbility
 
         def define_participatory_process_abilities
           super
@@ -23,8 +19,8 @@ module Decidim
             feature.manifest_name == "participations"
           end
 
-          can [:unreport, :hide], Participation do |participation|
-            can_manage_process?(participation.feature.participatory_space)
+          can [:unreport, :hide], Reportable do |reportable|
+            can_manage_process?(reportable.feature.participatory_space)
           end
         end
       end
