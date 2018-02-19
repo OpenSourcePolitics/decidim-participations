@@ -141,6 +141,10 @@ module Decidim
           ["cpdp", t('decidim.admin.models.participatory_process_user_role.roles.cpdp')]
         ]
       end
+
+      def participation_role(participation)
+        t("decidim.admin.models.participatory_process_user_role.roles.#{participation.recipient_role}")
+      end
     end
   end
 end
