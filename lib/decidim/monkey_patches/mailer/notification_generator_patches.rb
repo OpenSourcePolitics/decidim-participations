@@ -2,8 +2,7 @@
 
 module NotificationGeneratorPatch
   def generate_notification_for(recipient_id)
-    binding.pry
-    NotificationGeneratorForRecipientJob.perform_in(extra[:edit_time_limit],
+    NotificationGeneratorForRecipientJob.perform_in(extra[:edit_time_limit].minutes,
       event,
       event_class.name,
       resource,
