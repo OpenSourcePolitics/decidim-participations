@@ -29,7 +29,11 @@
                 <% elsif can? :preview, process %>
                   <%= link_to translated_attribute(process.title), decidim_participatory_processes.participatory_process_path(process) %><br />
                 <% elsif can? :read, process %>
-                  <%= link_to translated_attribute(process.title), (manage_feature_path(process.features.first)) %><br />
+                  <%
+                    i = process.features.index { |i| i["manifest_name"] == "participations" }
+                    participations_feature = process.features[i]
+                  %>
+                  <%= link_to translated_attribute(process.title), (manage_feature_path(participations_feature)) %><br />
                 <% else %>
                   <%= translated_attribute(process.title) %>
                 <% end %>
