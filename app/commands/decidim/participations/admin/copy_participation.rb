@@ -12,7 +12,7 @@ module Decidim
           def initialize(participation)
             @participation = participation
           end
-  
+
           # Executes the command. Broadcasts these events:
           #
           # - :ok when everything is valid.
@@ -21,16 +21,16 @@ module Decidim
           # Returns nothing.
           def call
             return broadcast(:invalid) if @participation.invalid?
-  
+
             Participation.transaction do
               copy_participation
             end
-  
+
             broadcast(:ok, @copied_process)
           end
-  
+
           private
-  
+
           def copy_participation
             @copied_process = Participation.create!(
                 body: [I18n.t("participations.copy.prefix", scope: "decidim.participations.admin"), @participation.original_body.to_s].join(" "),
@@ -43,12 +43,11 @@ module Decidim
                 feature: @participation.feature,
                 address: @participation.address,
                 latitude: @participation.latitude,
-                longitude: @participation.longitude      
+                longitude: @participation.longitude
             )
           end
-            
+
         end
       end
     end
 end
-  
