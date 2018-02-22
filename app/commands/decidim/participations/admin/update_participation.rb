@@ -27,6 +27,7 @@ module Decidim
           transaction do
             should_notify = recipient_role_will_change?
             update_participation
+            update_answer_status
             send_notification_moderation if @participation.unmoderate?
             update_moderation
             update_title
@@ -64,6 +65,20 @@ module Decidim
             "waiting_for_answer"
           else
             form.moderation.sqr_status
+          end
+        end
+
+        def update_title
+          if @participation.moderation.sqr_status != "authorized" && @participation.moderation.sqr_status != "waiting_for_answer"
+            @participation.update_attributes(title: nil)
+          elsif @participation.saved_change_to_participation_type? || @participation.moderation.saved_change_to_sqr_status? # case : participation is published || A user changed the type of a published participation || A user changed the sqr status of a participation
+            @participation.update_attributes(title: @participation.generate_title(current_feature))
+          end
+        end
+
+        def update_answer_status # if user changed a published opinion or contribution to a question
+          if @participation.saved_change_to_participation_type? && @participation.question?
+            @participation.update_attributes(state: "waiting_for_answer")
           end
         end
 
@@ -156,14 +171,6 @@ module Decidim
             update_state
           elsif !@participation.publishable?
             @participation.update_attributes(published_on: nil)
-          end
-        end
-
-        def update_title
-          if !@participation.publishable? || @participation.refused?
-            @participation.update_attributes(title: nil)
-          else # case : participation is published || A user changed the type of a published participation
-            @participation.update_attributes(title: @participation.generate_title)
           end
         end
 

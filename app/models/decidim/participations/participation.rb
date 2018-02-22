@@ -14,6 +14,8 @@ module Decidim
       include Decidim::HasAttachments
       include Decidim::Followable
       include Decidim::Comments::Commentable
+      # Provides a way to track changes in your object
+      include ActiveModel::Dirty
 
       feature_manifest_name "participations"
 
@@ -120,15 +122,21 @@ module Decidim
         moderation.sqr_status == "refused"
       end
 
-      def generate_title # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
-        status = self.class.where(participation_type: type).map(&:moderation).map(&:sqr_status)
+      def generate_title(current_feature) # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
+        status = self.class.where(participation_type: participation_type, feature: current_feature).map(&:moderation).map(&:sqr_status)
         status.delete("refused")
         status.delete("unmoderate")
-        number = status.count
-        type = I18n.t("decidim.participations.admin.participations.title.#{self.type}")
-        "#{type}" + " n°" + "#{number}"
-      end
 
+        status_count = status.count
+        type = I18n.t("decidim.participations.admin.participations.title.#{self.type}")
+        title = "#{type}" + " n°" + "#{status_count}"
+        titles = self.class.where(participation_type: participation_type, feature: current_feature).map(&:title)
+        while titles.include?(title)
+          title = "#{type}" + " n°" + "#{status_count}"
+          status_count += 1
+        end
+        title
+      end
 
       def self.find_participations(participations)
         where(id: participations.map(&:id))
@@ -147,7 +155,7 @@ module Decidim
       def waiting_for_validation?
         state == "waiting_for_validation"
       end
-      
+
       # Public: Check if the participation is incomplete
       #
       # Returns Boolean.
