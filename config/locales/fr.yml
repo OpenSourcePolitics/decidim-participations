@@ -329,7 +329,7 @@ fr:
           view_contribution: Voir la contribution
         show:
           edit_participation: Modifier la participation
-          answer_from_moa: Réponse officielle de la maîtrise d'oeuvre
+          answer_from_moa: Réponse officielle de la maîtrise d'ouvrage
           answer_from_cpdp: Réponse officielle de la CPDP
           report: Signaler
         vote_button:
