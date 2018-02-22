@@ -25,6 +25,7 @@ Decidim.register_feature(:participations) do |feature|
     settings.attribute :comments_enabled, type: :boolean, default: true
     settings.attribute :comments_upstream_moderation_enabled, type: :boolean, default: false
     settings.attribute :geocoding_enabled, type: :boolean, default: false
+    settings.attribute :attachments_allowed, type: :boolean, default: false
     settings.attribute :announcement, type: :text, translated: true, editor: true
     settings.attribute :new_participation_help_text, type: :text, translated: true, editor: true
   end
@@ -133,7 +134,7 @@ Decidim.register_feature(:participations) do |feature|
         state: state,
         answer: answer,
         answered_at: Time.current,
-        
+
         participation_type: %w(question opinion contribution)[Faker::Number.between(0, 2)]
       )
 
