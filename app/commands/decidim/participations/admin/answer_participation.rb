@@ -23,7 +23,7 @@ module Decidim
         #
         # Returns nothing.
         def call
-          return broadcast(:invalid) if form.invalid?
+          return broadcast(:invalid) if form.invalid? || @participation.state == "accepted"
 
           answer_participation
           update_moderation
