@@ -8,14 +8,7 @@ module Decidim
         helper_method :participation
 
         def edit
-          # Avoid useless options when cpdp answers to its own questions
-          process_role = ParticipatoryProcessUserRole.where(user: current_user).first
-          if process_role.present? && process_role.role == "cpdp"
-            @cpdp_to_cpdp = participation.recipient_role == process_role.role
-          else
-            @cpdp_to_cpdp = ""
-          end
-          
+          @cpdp_to_cpdp = cpdp_to_cpdp?
           authorize! :update, participation
           @form = form(Admin::ParticipationAnswerForm).from_model(participation)
         end
@@ -38,6 +31,11 @@ module Decidim
         end
 
         private
+
+        def cpdp_to_cpdp? # Check if recipient role and current user is a cpdp. Then hide "accepted" and "incomplete" options
+          process_role = ParticipatoryProcessUserRole.where(user: current_user).first
+          process_role.present? && process_role.role == "cpdp" && participation.recipient_role == "cpdp"
+        end
 
         def participation
           @participations ||= Participation.where(feature: current_feature).find(params[:id])
