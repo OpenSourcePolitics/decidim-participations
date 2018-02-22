@@ -67,6 +67,14 @@ module Decidim
           end
         end
 
+        def update_title
+          if @participation.moderation.sqr_status != "authorized" && @participation.moderation.sqr_status != "waiting_for_answer"
+            @participation.update_attributes(title: nil)
+          elsif @participation.saved_change_to_participation_type? || @participation.moderation.saved_change_to_sqr_status? # case : participation is published || A user changed the type of a published participation || A user changed the sqr status of a participation
+            @participation.update_attributes(title: @participation.generate_title(current_feature))
+          end
+        end
+
         def participation_limit_reached?
           participation_limit = form.current_feature.settings.participation_limit
 
@@ -156,14 +164,6 @@ module Decidim
             update_state
           elsif !@participation.publishable?
             @participation.update_attributes(published_on: nil)
-          end
-        end
-
-        def update_title
-          if !@participation.publishable? || @participation.refused?
-            @participation.update_attributes(title: nil)
-          else # case : participation is published || A user changed the type of a published participation
-            @participation.update_attributes(title: @participation.generate_title)
           end
         end
 
