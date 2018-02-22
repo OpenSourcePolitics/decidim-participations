@@ -53,8 +53,7 @@ module Decidim
             extra: {
               template: "participation_answered_moderator_incomplete_event",
               participatory_process_title: participatory_process_title,
-              justification: @form.moderation.justification,
-              edit_time_limit: 0
+              justification: @form.moderation.justification
             }
           )
         end
@@ -69,8 +68,7 @@ module Decidim
             recipient_ids: moa_ids.uniq,
             extra: {
               template: "participation_answered_moderator_published_event",
-              participatory_process_title: participatory_process_title,
-              edit_time_limit: 0
+              participatory_process_title: participatory_process_title
             }
           )
         end
@@ -85,8 +83,7 @@ module Decidim
             recipient_ids: recipient_ids.uniq,
             extra: {
               template: "participation_answered_author_event",
-              participatory_process_title: participatory_process_title,
-              edit_time_limit: 0
+              participatory_process_title: participatory_process_title
             }
           )
         end
@@ -101,8 +98,7 @@ module Decidim
             recipient_ids: cpdp_moderators_ids.uniq,
             extra: {
               template: "moderate_moa_response_event",
-              participatory_process_title: participatory_process_title,
-              edit_time_limit: 0
+              participatory_process_title: participatory_process_title
             }
           )
         end

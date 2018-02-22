@@ -109,8 +109,7 @@ module Decidim
             recipient_ids: recipient_ids.uniq,
             extra: {
               template: "new_participation_question_event",
-              participatory_process_title: participatory_process_title,
-              edit_time_limit: 0
+              participatory_process_title: participatory_process_title
             }
           )
         end
@@ -127,8 +126,7 @@ module Decidim
               accepted: @form.moderation.sqr_status == "refused" ? false : true,
               justification: @form.moderation.justification,
               state: set_state,
-              participation_moderated: true,
-              edit_time_limit: 0
+              participation_moderated: true
             }
           )
         end
