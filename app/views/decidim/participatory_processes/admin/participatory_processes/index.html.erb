@@ -28,12 +28,16 @@
                   <%= link_to translated_attribute(process.title), edit_participatory_process_path(process) %><br />
                 <% elsif can? :preview, process %>
                   <%= link_to translated_attribute(process.title), decidim_participatory_processes.participatory_process_path(process) %><br />
-                <% elsif can? :read, process %>
-                  <%
-                    i = process.features.index { |i| i["manifest_name"] == "participations" }
-                    participations_feature = process.features[i]
-                  %>
-                  <%= link_to translated_attribute(process.title), (manage_feature_path(participations_feature)) %><br />
+                <% elsif can? :read, process %> <!--  MOA / CPDP / Moderator-->
+                  <% if process.has_participation_feature? %>
+                    <%= link_to translated_attribute(process.title), (manage_feature_path(process.participations_feature)) %><br />
+                  <% else %>
+                    <% if process.can_be_managed_by?(current_user) %> <!--  Moderator / CPDP -->
+                      <%= link_to translated_attribute(process.title), moderations_path(process) %><br />
+                    <% else %> <!--  MOA -->
+                      <%= translated_attribute(process.title) %>
+                    <% end %>
+                  <% end %>
                 <% else %>
                   <%= translated_attribute(process.title) %>
                 <% end %>
