@@ -231,12 +231,17 @@ module Decidim
         ResourceLocatorPresenter.new(self).url
       end
 
-      def users_to_notify_on_participation_created(current_participatory_space)
-        feature.participatory_space.admins + participations_moderators(current_participatory_space)
+      def users_to_notify_on_participation_created
+        get_users_with_mains_roles
       end
 
-      def participations_moderators(current_participatory_space)
-        Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: current_participatory_space.id, role: "moderator").map(&:user)
+      def users_to_notify_on_comment_created
+        get_users_with_mains_roles
+      end
+
+      def get_users_with_mains_roles # Exclude MOA
+        feature.participatory_space.admins +
+        Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: feature.participatory_space.id).where.not(role: "moa").map(&:user)
       end
 
 
@@ -245,6 +250,7 @@ module Decidim
         return (followers | feature.participatory_space.admins).uniq if official?
         followers
       end
+
 
       # Public: Whether the participation is official or not.
       def official?

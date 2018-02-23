@@ -82,7 +82,7 @@ module Decidim
           event: "decidim.events.participations.created_event_moderator",
           event_class: Decidim::Participations::ParticipationCreatedEventModerator,
           resource: @participation,
-          recipient_ids: (@participation.users_to_notify_on_participation_created(current_participatory_space) - [@participation.author]).pluck(:id),
+          recipient_ids: (@participation.users_to_notify_on_participation_created - [@participation.author]).pluck(:id),
           extra: {
             template: "participation_created_event_moderator",
             participatory_process_title: participatory_space_title,
