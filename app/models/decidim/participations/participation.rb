@@ -232,7 +232,16 @@ module Decidim
       end
 
       def users_to_notify_on_participation_created
-        get_all_users_with_role
+        get_users_with_main_roles
+      end
+
+      def users_to_notify_on_comment_created
+        get_users_with_main_roles
+      end
+
+      def get_users_with_main_roles # Exclude MOA
+        feature.participatory_space.admins +
+        Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: feature.participatory_space.id).where.not(role: "moa").map(&:user)
       end
 
 
@@ -241,6 +250,7 @@ module Decidim
         return (followers | feature.participatory_space.admins).uniq if official?
         followers
       end
+
 
       # Public: Whether the participation is official or not.
       def official?

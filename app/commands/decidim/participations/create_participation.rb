@@ -54,8 +54,7 @@ module Decidim
           extra: {
             template: "participation_created_event_author",
             participatory_process_title: participatory_space_title,
-            process_slug: @participation.feature.participatory_space.slug,
-            edit_time_limit: participation.feature.settings.participation_edit_before_minutes
+            process_slug: @participation.feature.participatory_space.slug
           }
         )
       end
