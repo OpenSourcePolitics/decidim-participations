@@ -231,8 +231,12 @@ module Decidim
         ResourceLocatorPresenter.new(self).url
       end
 
-      def users_to_notify_on_participation_created
-        get_all_users_with_role
+      def users_to_notify_on_participation_created(current_participatory_space)
+        feature.participatory_space.admins + participations_moderators(current_participatory_space)
+      end
+
+      def participations_moderators(current_participatory_space)
+        Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: current_participatory_space.id, role: "moderator").map(&:user)
       end
 
 
