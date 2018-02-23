@@ -232,14 +232,14 @@ module Decidim
       end
 
       def users_to_notify_on_participation_created
-        get_users_with_mains_roles
+        get_users_with_main_roles
       end
 
       def users_to_notify_on_comment_created
-        get_users_with_mains_roles
+        get_users_with_main_roles
       end
 
-      def get_users_with_mains_roles # Exclude MOA
+      def get_users_with_main_roles # Exclude MOA
         feature.participatory_space.admins +
         Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: feature.participatory_space.id).where.not(role: "moa").map(&:user)
       end
