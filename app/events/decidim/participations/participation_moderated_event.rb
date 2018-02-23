@@ -59,7 +59,7 @@ module Decidim
       end
 
       def action_url
-        processus_participatif_url
+        resource_url
       end
 
       private
@@ -71,7 +71,6 @@ module Decidim
       def processus_participatif_url
         resource_locator.send("collection_route", "url", {host:participation.organization.host})
       end
-
     end
   end
 end
