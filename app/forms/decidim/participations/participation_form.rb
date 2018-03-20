@@ -19,7 +19,7 @@ module Decidim
       attribute :attachment, AttachmentForm
 
       validates :body, presence: true, etiquette: true
-      validates :body, length: { maximum: 500 }, etiquette: true
+      validates :body, length: { maximum: 2000 }, etiquette: true
       validates :address, geocoding: true, if: ->(form) { Decidim.geocoder.present? && form.has_address? }
       validates :address, presence: true, if: ->(form) { form.has_address? }
       validates :participation_type, presence: true
