@@ -209,14 +209,14 @@ fr:
             moderated: Traitées
             published: Publiée
             answer_published: Réponse publiée
-            refused: Réfusée
+            refused: Refusée
           new:
             create: Créer
             title: Créer une participation
       answers:
         accepted: Réponse publiée
         evaluating: En cours d'évaluation
-        not_answered: Resté sans réponse
+        not_answered: En attente de réponse
         rejected: Refusée
       create:
         error: Il y a eu des erreurs lors de la sauvegarde de la participation.
