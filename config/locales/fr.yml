@@ -216,7 +216,7 @@ fr:
       answers:
         accepted: Réponse publiée
         evaluating: En cours d'évaluation
-        not_answered: Resté sans réponse
+        not_answered: En attente de réponse
         rejected: Refusée
       create:
         error: Il y a eu des erreurs lors de la sauvegarde de la participation.
