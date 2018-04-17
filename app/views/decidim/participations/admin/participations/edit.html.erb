@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-divider">
-    <h2 class="card-title"><%= @form.body.truncate(50) %></h2>
+    <h2 class="card-title"><%= strip_tags(@form.body.truncate(50)) %></h2>
   </div>
   <br/>
   <div class="card-section">
@@ -59,7 +59,7 @@
           <br/>
 
           <div class="row column">
-            <%=f.text_area :body, rows: 10, label: false %>
+            <%=f.editor :body, rows: 10, label: false %>
           </div>
 
           <div class="row column" id="justificationBlock">

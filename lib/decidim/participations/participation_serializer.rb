@@ -25,7 +25,7 @@ module Decidim
             name: @participation.scope.try(:name)
           },
           title: @participation.title,
-          body: @participation.body,
+          body: strip_body,
           votes: @participation.participation_votes_count,
           comments: @participation.comments.count,
           created_at: @participation.created_at,
@@ -38,6 +38,10 @@ module Decidim
       private
 
       attr_reader :participation
+
+      def strip_body
+        ActionView::Base.full_sanitizer.sanitize(@participation.body)
+      end
 
       def feature
         participation.feature

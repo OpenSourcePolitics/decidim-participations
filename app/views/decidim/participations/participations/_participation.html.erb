@@ -11,7 +11,7 @@
         <%= feature_reference(participation, class: "tech-info--text-left") %>
       </div>
       <%= render partial: "participation_badge", locals: { participation: participation } %>
-      <p><%= truncate(participation.body, length: 100) %></p>
+      <p><%= truncate(strip_tags(participation.body), length: 100) %></p>
       <%= render partial: "decidim/shared/tags", locals: { resource: participation, tags_class_extra: "tags--participation" } %>
     </div>
     <div class="card__footer">

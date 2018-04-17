@@ -10,7 +10,7 @@ module Decidim
       def participations_data_for_map(geocoded_participations)
         geocoded_participations.map do |participation|
           participation.slice(:latitude, :longitude, :address).merge(title: participation.title,
-                                                                body: truncate(participation.body, length: 100),
+                                                                body: truncate(strip_tags(participation.body), length: 100),
                                                                 icon: icon("participations", width: 40, height: 70, remove_icon_class: true),
                                                                 link: participation_path(participation))
         end
