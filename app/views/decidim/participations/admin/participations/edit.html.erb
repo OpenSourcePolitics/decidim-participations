@@ -139,17 +139,18 @@
     });
     // body changes justification
     $('#justificationBlock').hide();
-    var bodyField = $("#participation_body")
-    bodyField.change(function(){
-      var originalBody = $("#js_original_body")
-      var formBody = $("#js_form_body")
-      formBody.val(bodyField.val())
-      if( $("#js_form_body").val() != originalBody.val()){
+    var bodyField = $("#participation_body") // body field
+    var originalBody = $("#js_original_body") // hidden field with original body copy
+    var formBody = $("#js_form_body") // hidden field with current body value
+    $(".editor").focusout(function(){
+      var currentFormBody = formBody.val(bodyField.val())
+      var cleanFormBody = currentFormBody.val().replace(/<\/?.+?>/ig, '').replace(/^\s+|\s+$/g, ""); // remove spaces before and after the text
+      if(cleanFormBody != originalBody.val()){
         $('#justificationBlock').show(500);
         $('#bodyJustificationField').attr("required", "true");
         $(".publish_and_notify").css("display", "flex")
         $(".publish").css("display", "none")
-      } else if (formBody.val() == originalBody.val()) {
+      } else if (cleanFormBody == originalBody.val()) {
         $('#justificationBlock').hide();
         $('#bodyJustificationField').removeAttr("required");
         $(".publish_and_notify").css("display", "none")
