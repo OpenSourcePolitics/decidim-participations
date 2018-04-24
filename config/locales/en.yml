@@ -167,6 +167,7 @@ en:
             waiting_for_validation: Waiting for validation
             incomplete: Revision required
           edit:
+            do_not_upload: Pour une meilleure fluidité de la plateforme ne pas télécharger d'images dans ce champ
             title: Title
             publish: Publish
             notify: Notify the author

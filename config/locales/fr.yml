@@ -165,6 +165,7 @@ fr:
             waiting_for_validation: Attente d'une validation
             incomplete: Demande de modification
           edit:
+            do_not_upload: Pour une meilleure fluidité de la plateforme ne pas télécharger d'images dans ce champ
             title: Title
             publish: Publier
             notify: Notifier l'auteur
