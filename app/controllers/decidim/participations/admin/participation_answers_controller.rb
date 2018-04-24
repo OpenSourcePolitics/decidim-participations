@@ -6,6 +6,7 @@ module Decidim
       # This controller allows admins to answer participations in a participatory process.
       class ParticipationAnswersController < Admin::ApplicationController
         helper_method :participation
+        helper Decidim::SanitizeHelper
 
         def edit
           @cpdp_to_cpdp = cpdp_to_cpdp?

@@ -7,7 +7,7 @@
     <div class="card-section">
       <div class="row column">
         <h2><%= t ".title_content" %></h2>
-        <p><%= simple_format participation.body %></p>
+        <p><%= decidim_sanitize participation.body %></p>
       </div>
 
       <div class="row column">
