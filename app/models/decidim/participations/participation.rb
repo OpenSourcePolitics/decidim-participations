@@ -11,7 +11,7 @@ module Decidim
       include Decidim::HasReference
       include Decidim::HasCategory
       include Decidim::Reportable
-      include Decidim::Participations::CommentableParticipation
+      # include Decidim::Participations::CommentableParticipation
       include Decidim::Searchable
       include Decidim::Traceable
       include Decidim::Loggable
