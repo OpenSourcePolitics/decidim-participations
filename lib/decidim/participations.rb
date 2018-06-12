@@ -10,5 +10,6 @@ module Decidim
   # allows users to create participations in a participatory process.
   module Participations
     autoload :ParticipationSerializer, "decidim/participations/participation_serializer"
+    autoload :CommentableProposal, "decidim/proposals/commentable_participation"
   end
 end
