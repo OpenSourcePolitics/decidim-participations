@@ -7,13 +7,15 @@ module Decidim
       include Decidim::Resourceable
       include Decidim::Authorable
       include Decidim::HasComponent
-      include Decidim::HasScope
+      include Decidim::ScopableComponent
       include Decidim::HasReference
       include Decidim::HasCategory
       include Decidim::Reportable
-      include Decidim::HasAttachments
-      include Decidim::Followable
-      include Decidim::Comments::Commentable
+      include Decidim::Participations::CommentableParticipation
+      include Decidim::Searchable
+      include Decidim::Traceable
+      include Decidim::Loggable
+      include Decidim::Fingerprintable
       # Provides a way to track changes in your object
       include ActiveModel::Dirty
 
