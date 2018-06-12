@@ -5,18 +5,18 @@ require "spec_helper"
 module Decidim
   module Participations
     describe ParticipationSearch do
-      let(:feature) { create(:feature, manifest_name: "participations") }
-      let(:scope1) { create :scope, organization: feature.organization }
-      let(:scope2) { create :scope, organization: feature.organization }
-      let(:subscope1) { create :scope, organization: feature.organization, parent: scope1 }
-      let(:participatory_process) { feature.participatory_space }
-      let(:user) { create(:user, organization: feature.organization) }
-      let!(:participation) { create(:participation, feature: feature, scope: scope1) }
+      let(:component) { create(:component, manifest_name: "participations") }
+      let(:scope1) { create :scope, organization: component.organization }
+      let(:scope2) { create :scope, organization: component.organization }
+      let(:subscope1) { create :scope, organization: component.organization, parent: scope1 }
+      let(:participatory_process) { component.participatory_space }
+      let(:user) { create(:user, organization: component.organization) }
+      let!(:participation) { create(:participation, component: component, scope: scope1) }
 
       describe "results" do
         subject do
           described_class.new(
-            feature: feature,
+            component: component,
             activity: activity,
             search_text: search_text,
             state: state,
@@ -34,7 +34,7 @@ module Decidim
         let(:state) { nil }
         let(:scope_id) { nil }
 
-        it "only includes participations from the given feature" do
+        it "only includes participations from the given component" do
           other_participation = create(:participation)
 
           expect(subject).to include(participation)
@@ -45,9 +45,9 @@ module Decidim
           let(:search_text) { "dog" }
 
           it "returns the participations containing the search in the title or the body" do
-            create_list(:participation, 3, feature: feature)
-            create(:participation, title: "A dog", feature: feature)
-            create(:participation, body: "There is a dog in the office", feature: feature)
+            create_list(:participation, 3, component: component)
+            create(:participation, title: "A dog", component: component)
+            create(:participation, body: "There is a dog in the office", component: component)
 
             expect(subject.size).to eq(2)
           end
@@ -57,7 +57,7 @@ module Decidim
           let(:activity) { ["voted"] }
 
           it "returns the participations voted by the user" do
-            create_list(:participation, 3, feature: feature)
+            create_list(:participation, 3, component: component)
             create(:participation_vote, participation: Participation.first, author: user)
 
             expect(subject.size).to eq(1)
@@ -69,8 +69,8 @@ module Decidim
             let(:origin) { "official" }
 
             it "returns only official participations" do
-              official_participations = create_list(:participation, 3, :official, feature: feature)
-              create_list(:participation, 3, feature: feature)
+              official_participations = create_list(:participation, 3, :official, component: component)
+              create_list(:participation, 3, component: component)
 
               expect(subject.size).to eq(3)
               expect(subject).to match_array(official_participations)
@@ -81,8 +81,8 @@ module Decidim
             let(:origin) { "citizens" }
 
             it "returns only citizen participations" do
-              create_list(:participation, 3, :official, feature: feature)
-              citizen_participations = create_list(:participation, 2, feature: feature)
+              create_list(:participation, 3, :official, component: component)
+              citizen_participations = create_list(:participation, 2, component: component)
               citizen_participations << participation
 
               expect(subject.size).to eq(3)
@@ -96,8 +96,8 @@ module Decidim
             let(:state) { "accepted" }
 
             it "returns only accepted participations" do
-              accepted_participations = create_list(:participation, 3, :accepted, feature: feature)
-              create_list(:participation, 3, feature: feature)
+              accepted_participations = create_list(:participation, 3, :accepted, component: component)
+              create_list(:participation, 3, component: component)
 
               expect(subject.size).to eq(3)
               expect(subject).to match_array(accepted_participations)
@@ -108,8 +108,8 @@ module Decidim
             let(:state) { "rejected" }
 
             it "returns only rejected participations" do
-              create_list(:participation, 3, feature: feature)
-              rejected_participations = create_list(:participation, 3, :rejected, feature: feature)
+              create_list(:participation, 3, component: component)
+              rejected_participations = create_list(:participation, 3, :rejected, component: component)
 
               expect(subject.size).to eq(3)
               expect(subject).to match_array(rejected_participations)
@@ -118,8 +118,8 @@ module Decidim
         end
 
         describe "scope_id filter" do
-          let!(:participation2) { create(:participation, feature: feature, scope: scope2) }
-          let!(:participation3) { create(:participation, feature: feature, scope: subscope1) }
+          let!(:participation2) { create(:participation, component: component, scope: scope2) }
+          let!(:participation3) { create(:participation, component: component, scope: subscope1) }
 
           context "when a parent scope id is being sent" do
             let(:scope_id) { scope1.id }
@@ -146,7 +146,7 @@ module Decidim
           end
 
           context "when `global` is being sent" do
-            let!(:resource_without_scope) { create(:participation, feature: feature, scope: nil) }
+            let!(:resource_without_scope) { create(:participation, component: component, scope: nil) }
             let(:scope_id) { ["global"] }
 
             it "returns participations without a scope" do
@@ -155,7 +155,7 @@ module Decidim
           end
 
           context "when `global` and some ids is being sent" do
-            let!(:resource_without_scope) { create(:participation, feature: feature, scope: nil) }
+            let!(:resource_without_scope) { create(:participation, component: component, scope: nil) }
             let(:scope_id) { ["global", scope2.id, scope1.id] }
 
             it "returns participations without a scope and with selected scopes" do
@@ -167,13 +167,13 @@ module Decidim
         describe "related_to filter" do
           context "when filtering by related to meetings" do
             let(:related_to) { "Decidim::Meetings::Meeting".underscore }
-            let(:meetings_feature) { create(:feature, manifest_name: "meetings", participatory_space: participatory_process) }
-            let(:meeting) { create :meeting, feature: meetings_feature }
+            let(:meetings_component) { create(:component, manifest_name: "meetings", participatory_space: participatory_process) }
+            let(:meeting) { create :meeting, component: meetings_component }
 
             it "returns only participations related to meetings" do
-              related_participation = create(:participation, :accepted, feature: feature)
-              related_participation2 = create(:participation, :accepted, feature: feature)
-              create_list(:participation, 3, feature: feature)
+              related_participation = create(:participation, :accepted, component: component)
+              related_participation2 = create(:participation, :accepted, component: component)
+              create_list(:participation, 3, component: component)
               meeting.link_resources([related_participation], "participations_from_meeting")
               related_participation2.link_resources([meeting], "participations_from_meeting")
 
@@ -183,13 +183,13 @@ module Decidim
 
           context "when filtering by related to resources" do
             let(:related_to) { "Decidim::DummyResources::DummyResource".underscore }
-            let(:dummy_feature) { create(:feature, manifest_name: "dummy", participatory_space: participatory_process) }
-            let(:dummy_resource) { create :dummy_resource, feature: dummy_feature }
+            let(:dummy_component) { create(:component, manifest_name: "dummy", participatory_space: participatory_process) }
+            let(:dummy_resource) { create :dummy_resource, component: dummy_component }
 
             it "returns only participations related to results" do
-              related_participation = create(:participation, :accepted, feature: feature)
-              related_participation2 = create(:participation, :accepted, feature: feature)
-              create_list(:participation, 3, feature: feature)
+              related_participation = create(:participation, :accepted, component: component)
+              related_participation2 = create(:participation, :accepted, component: component)
+              create_list(:participation, 3, component: component)
               dummy_resource.link_resources([related_participation], "included_participations")
               related_participation2.link_resources([dummy_resource], "included_participations")
 

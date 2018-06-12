@@ -10,7 +10,7 @@ module Decidim
           super
 
           can [:manage, :unreport, :hide], Participation do |participation|
-            can_manage_process?(participation.feature.participatory_space)
+            can_manage_process?(participation.component.participatory_space)
           end
 
           cannot :create, Participation unless can_create_participation?
@@ -23,23 +23,23 @@ module Decidim
           @context.fetch(:current_settings, nil)
         end
 
-        def feature_settings
-          @context.fetch(:feature_settings, nil)
+        def component_settings
+          @context.fetch(:component_settings, nil)
         end
 
-        def current_feature
-          @context.fetch(:current_feature, nil)
+        def current_component
+          @context.fetch(:current_component, nil)
         end
 
         def can_create_participation?
           current_settings.try(:creation_enabled?) &&
-            feature_settings.try(:official_participations_enabled) &&
-            can_manage_process?(current_feature.try(:participatory_space))
+            component_settings.try(:official_participations_enabled) &&
+            can_manage_process?(current_component.try(:participatory_space))
         end
 
         def can_update_participation?
           current_settings.try(:participation_answering_enabled) &&
-            feature_settings.try(:participation_answering_enabled)
+            component_settings.try(:participation_answering_enabled)
         end
       end
     end

@@ -2,13 +2,13 @@
 
 require "spec_helper"
 
-describe "Edit participations", type: :feature do
-  include_context "with a feature"
+describe "Edit participations", type: :component do
+  include_context "with a component"
   let(:manifest_name) { "participations" }
 
   let!(:user) { create :user, :confirmed, organization: participatory_process.organization }
   let!(:another_user) { create :user, :confirmed, organization: participatory_process.organization }
-  let!(:participation) { create :participation, author: user, feature: feature }
+  let!(:participation) { create :participation, author: user, component: component }
 
   before do
     switch_to_host user.organization.host
@@ -23,7 +23,7 @@ describe "Edit participations", type: :feature do
     end
 
     it "can be updated" do
-      visit_feature
+      visit_component
 
       click_link participation.title
       click_link "Edit participation"
@@ -39,10 +39,10 @@ describe "Edit participations", type: :feature do
     end
 
     context "when updating with wrong data" do
-      let(:feature) { create(:participation_feature, :with_creation_enabled, :with_attachments_allowed, participatory_space: participatory_process) }
+      let(:component) { create(:participation_component, :with_creation_enabled, :with_attachments_allowed, participatory_space: participatory_process) }
 
       it "returns an error message" do
-        visit_feature
+        visit_component
 
         click_link participation.title
         click_link "Edit participation"
@@ -63,7 +63,7 @@ describe "Edit participations", type: :feature do
     end
 
     it "renders an error" do
-      visit_feature
+      visit_component
 
       click_link participation.title
       expect(page).to have_no_content("Edit participation")
@@ -74,14 +74,14 @@ describe "Edit participations", type: :feature do
   end
 
   describe "editing my participation outside the time limit" do
-    let!(:participation) { create :participation, author: user, feature: feature, created_at: 1.hour.ago }
+    let!(:participation) { create :participation, author: user, component: component, created_at: 1.hour.ago }
 
     before do
       login_as another_user, scope: :user
     end
 
     it "renders an error" do
-      visit_feature
+      visit_component
 
       click_link participation.title
       expect(page).to have_no_content("Edit participation")

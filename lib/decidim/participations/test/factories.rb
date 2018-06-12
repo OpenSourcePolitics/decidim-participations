@@ -4,8 +4,8 @@ require "decidim/core/test/factories"
 require "decidim/participatory_processes/test/factories"
 
 FactoryBot.define do
-  factory :participation_feature, parent: :feature do
-    name { Decidim::Features::Namer.new(participatory_space.organization.available_locales, :participations).i18n_name }
+  factory :participation_component, parent: :component do
+    name { Decidim::Components::Namer.new(participatory_space.organization.available_locales, :participations).i18n_name }
     manifest_name :participations
     participatory_space { create(:participatory_process, :with_steps, organization: organization) }
 
@@ -97,9 +97,9 @@ FactoryBot.define do
     title { |n| "Question n°#{n}" }
     body { Faker::Lorem.sentences(3).join("\n") }
     participation_type {%w(question opinion contribution)[Faker::Number.between(0, 2)] }
-    feature { create(:participation_feature) }
+    component { create(:participation_component) }
     author do
-      create(:user, organization: feature.organization) if feature
+      create(:user, organization: component.organization) if component
     end
 
     trait :official do

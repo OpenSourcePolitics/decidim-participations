@@ -3,7 +3,7 @@
 require "decidim/participations/admin"
 require "decidim/participations/engine"
 require "decidim/participations/admin_engine"
-require "decidim/participations/feature"
+require "decidim/participations/component"
 
 module Decidim
   # This namespace holds the logic of the `Participations` component. This component

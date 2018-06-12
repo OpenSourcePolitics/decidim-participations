@@ -1,7 +1,7 @@
 module Decidim
     module Participations
       module Admin
-        class CopyParticipationsController <  Decidim::Admin::Features::CustomBaseController
+        class CopyParticipationsController <  Decidim::Admin::Components::CustomBaseController
           helper_method :participation
 
 
@@ -24,12 +24,12 @@ module Decidim
           private
 
           def participation
-            @participation ||= Participation.current_feature_participations(current_feature).find(params[:participation_id])
+            @participation ||= Participation.current_component_participations(current_component).find(params[:participation_id])
           end
 
           protected
           # Here we use show to copy the participations as all actions
-          #apart from index and show require to manage the current_feature
+          #apart from index and show require to manage the current_component
           def manage_authorization
             authorize! :duplicate, participation
           end

@@ -2,8 +2,8 @@
 
 require "spec_helper"
 
-describe "Participations", type: :feature do
-  include_context "with a feature"
+describe "Participations", type: :component do
+  include_context "with a component"
   let(:manifest_name) { "participations" }
 
   let!(:category) { create :category, participatory_space: participatory_process }
@@ -36,8 +36,8 @@ describe "Participations", type: :feature do
       end
 
       context "with creation enabled" do
-        let!(:feature) do
-          create(:participation_feature,
+        let!(:component) do
+          create(:participation_component,
                  :with_creation_enabled,
                  manifest: manifest,
                  participatory_space: participatory_process)
@@ -45,7 +45,7 @@ describe "Participations", type: :feature do
 
         context "when process is not related to any scope" do
           it "can be related to a scope" do
-            visit_feature
+            visit_component
             click_link "New participation"
 
             within "form.new_participation" do
@@ -58,7 +58,7 @@ describe "Participations", type: :feature do
           let(:participatory_process) { scoped_participatory_process }
 
           it "cannot be related to a scope" do
-            visit_feature
+            visit_component
             click_link "New participation"
 
             within "form.new_participation" do
@@ -68,7 +68,7 @@ describe "Participations", type: :feature do
         end
 
         it "creates a new participation", :slow do
-          visit_feature
+          visit_component
 
           click_link "New participation"
 
@@ -90,8 +90,8 @@ describe "Participations", type: :feature do
         end
 
         context "when geocoding is enabled", :serves_map do
-          let!(:feature) do
-            create(:participation_feature,
+          let!(:component) do
+            create(:participation_component,
                    :with_creation_enabled,
                    :with_geocoding_enabled,
                    manifest: manifest,
@@ -99,7 +99,7 @@ describe "Participations", type: :feature do
           end
 
           it "creates a new participation", :slow do
-            visit_feature
+            visit_component
 
             click_link "New participation"
 
@@ -134,7 +134,7 @@ describe "Participations", type: :feature do
           end
 
           it "creates a new participation as a user group", :slow do
-            visit_feature
+            visit_component
             click_link "New participation"
 
             within ".new_participation" do
@@ -156,8 +156,8 @@ describe "Participations", type: :feature do
           end
 
           context "when geocoding is enabled", :serves_map do
-            let!(:feature) do
-              create(:participation_feature,
+            let!(:component) do
+              create(:participation_component,
                      :with_creation_enabled,
                      :with_geocoding_enabled,
                      manifest: manifest,
@@ -165,7 +165,7 @@ describe "Participations", type: :feature do
             end
 
             it "creates a new participation as a user group", :slow do
-              visit_feature
+              visit_component
               click_link "New participation"
 
               within ".new_participation" do
@@ -201,19 +201,19 @@ describe "Participations", type: :feature do
               }
             }
 
-            feature.update_attributes!(permissions: permissions)
+            component.update_attributes!(permissions: permissions)
           end
 
           it "shows a modal dialog" do
-            visit_feature
+            visit_component
             click_link "New participation"
             expect(page).to have_content("Authorization required")
           end
         end
 
         context "when attachments are allowed", processing_uploads_for: Decidim::AttachmentUploader do
-          let!(:feature) do
-            create(:participation_feature,
+          let!(:component) do
+            create(:participation_component,
                    :with_creation_enabled,
                    :with_attachments_allowed,
                    manifest: manifest,
@@ -221,7 +221,7 @@ describe "Participations", type: :feature do
           end
 
           it "creates a new participation with attachments" do
-            visit_feature
+            visit_component
 
             click_link "New participation"
 
@@ -244,14 +244,14 @@ describe "Participations", type: :feature do
 
       context "when creation is not enabled" do
         it "does not show the creation button" do
-          visit_feature
+          visit_component
           expect(page).to have_no_link("New participation")
         end
       end
 
       context "when the participation limit is 1" do
-        let!(:feature) do
-          create(:participation_feature,
+        let!(:component) do
+          create(:participation_component,
                  :with_creation_enabled,
                  :with_participation_limit,
                  manifest: manifest,
@@ -259,7 +259,7 @@ describe "Participations", type: :feature do
         end
 
         it "allows the creation of a single new participation" do
-          visit_feature
+          visit_component
 
           click_link "New participation"
           within ".new_participation" do
@@ -270,7 +270,7 @@ describe "Participations", type: :feature do
 
           expect(page).to have_content("successfully")
 
-          visit_feature
+          visit_component
 
           click_link "New participation"
           within ".new_participation" do
@@ -287,18 +287,18 @@ describe "Participations", type: :feature do
   end
 
   context "when viewing a single participation" do
-    let!(:feature) do
-      create(:participation_feature,
+    let!(:component) do
+      create(:participation_component,
              manifest: manifest,
              participatory_space: participatory_process)
     end
 
-    let!(:participations) { create_list(:participation, 3, feature: feature) }
+    let!(:participations) { create_list(:participation, 3, component: component) }
 
     it "allows viewing a single participation" do
       participation = participations.first
 
-      visit_feature
+      visit_component
 
       click_link participation.title
 
@@ -309,43 +309,43 @@ describe "Participations", type: :feature do
     end
 
     context "when process is not related to any scope" do
-      let!(:participation) { create(:participation, feature: feature, scope: scope) }
+      let!(:participation) { create(:participation, component: component, scope: scope) }
 
       it "can be filtered by scope" do
-        visit_feature
+        visit_component
         click_link participation.title
         expect(page).to have_content(translated(scope.name))
       end
     end
 
     context "when process is related to a child scope" do
-      let!(:participation) { create(:participation, feature: feature, scope: scope) }
+      let!(:participation) { create(:participation, component: component, scope: scope) }
       let(:participatory_process) { scoped_participatory_process }
 
       it "does not show the scope name" do
-        visit_feature
+        visit_component
         click_link participation.title
         expect(page).to have_no_content(translated(scope.name))
       end
     end
 
     context "when it is an official participation" do
-      let!(:official_participation) { create(:participation, feature: feature, author: nil) }
+      let!(:official_participation) { create(:participation, component: component, author: nil) }
 
       it "shows the author as official" do
-        visit_feature
+        visit_component
         click_link official_participation.title
         expect(page).to have_content("Official participation")
       end
     end
 
     context "when a participation has comments" do
-      let(:participation) { create(:participation, feature: feature) }
-      let(:author) { create(:user, :confirmed, organization: feature.organization) }
+      let(:participation) { create(:participation, component: component) }
+      let(:author) { create(:user, :confirmed, organization: component.organization) }
       let!(:comments) { create_list(:comment, 3, commentable: participation) }
 
       it "shows the comments" do
-        visit_feature
+        visit_component
         click_link participation.title
 
         comments.each do |comment|
@@ -355,18 +355,18 @@ describe "Participations", type: :feature do
     end
 
     context "when a participation has been linked in a meeting" do
-      let(:participation) { create(:participation, feature: feature) }
-      let(:meeting_feature) do
-        create(:feature, manifest_name: :meetings, participatory_space: participation.feature.participatory_space)
+      let(:participation) { create(:participation, component: component) }
+      let(:meeting_component) do
+        create(:component, manifest_name: :meetings, participatory_space: participation.component.participatory_space)
       end
-      let(:meeting) { create(:meeting, feature: meeting_feature) }
+      let(:meeting) { create(:meeting, component: meeting_component) }
 
       before do
         meeting.link_resources([participation], "participations_from_meeting")
       end
 
       it "shows related meetings" do
-        visit_feature
+        visit_component
         click_link participation.title
 
         expect(page).to have_i18n_content(meeting.title)
@@ -374,18 +374,18 @@ describe "Participations", type: :feature do
     end
 
     context "when a participation has been linked in a result" do
-      let(:participation) { create(:participation, feature: feature) }
-      let(:dummy_feature) do
-        create(:feature, manifest_name: :dummy, participatory_space: participation.feature.participatory_space)
+      let(:participation) { create(:participation, component: component) }
+      let(:dummy_component) do
+        create(:component, manifest_name: :dummy, participatory_space: participation.component.participatory_space)
       end
-      let(:dummy_resource) { create(:dummy_resource, feature: dummy_feature) }
+      let(:dummy_resource) { create(:dummy_resource, component: dummy_component) }
 
       before do
         dummy_resource.link_resources([participation], "included_participations")
       end
 
       it "shows related resources" do
-        visit_feature
+        visit_component
         click_link participation.title
 
         expect(page).to have_i18n_content(dummy_resource.title)
@@ -393,10 +393,10 @@ describe "Participations", type: :feature do
     end
 
     context "when a participation is in evaluation" do
-      let!(:participation) { create(:participation, :evaluating, :with_answer, feature: feature) }
+      let!(:participation) { create(:participation, :evaluating, :with_answer, component: component) }
 
       it "shows a badge and an answer" do
-        visit_feature
+        visit_component
         click_link participation.title
 
         expect(page).to have_content("Evaluating")
@@ -409,10 +409,10 @@ describe "Participations", type: :feature do
     end
 
     context "when a participation has been rejected" do
-      let!(:participation) { create(:participation, :rejected, :with_answer, feature: feature) }
+      let!(:participation) { create(:participation, :rejected, :with_answer, component: component) }
 
       it "shows the rejection reason" do
-        visit_feature
+        visit_component
         click_link participation.title
 
         expect(page).to have_content("Rejected")
@@ -425,10 +425,10 @@ describe "Participations", type: :feature do
     end
 
     context "when a participation has been accepted" do
-      let!(:participation) { create(:participation, :accepted, :with_answer, feature: feature) }
+      let!(:participation) { create(:participation, :accepted, :with_answer, component: component) }
 
       it "shows the acceptance reason" do
-        visit_feature
+        visit_component
         click_link participation.title
 
         expect(page).to have_content("Accepted")
@@ -448,7 +448,7 @@ describe "Participations", type: :feature do
       end
 
       it "the user is displayed as a deleted user" do
-        visit_feature
+        visit_component
 
         click_link participation.title
 
@@ -458,23 +458,23 @@ describe "Participations", type: :feature do
   end
 
   context "when a participation has been linked in a project" do
-    let(:feature) do
-      create(:participation_feature,
+    let(:component) do
+      create(:participation_component,
              manifest: manifest,
              participatory_space: participatory_process)
     end
-    let(:participation) { create(:participation, feature: feature) }
-    let(:budget_feature) do
-      create(:feature, manifest_name: :budgets, participatory_space: participation.feature.participatory_space)
+    let(:participation) { create(:participation, component: component) }
+    let(:budget_component) do
+      create(:component, manifest_name: :budgets, participatory_space: participation.component.participatory_space)
     end
-    let(:project) { create(:project, feature: budget_feature) }
+    let(:project) { create(:project, component: budget_component) }
 
     before do
       project.link_resources([participation], "included_participations")
     end
 
     it "shows related projects" do
-      visit_feature
+      visit_component
       click_link participation.title
 
       expect(page).to have_i18n_content(project.title)
@@ -483,11 +483,11 @@ describe "Participations", type: :feature do
 
   context "when listing participations in a participatory process" do
     shared_examples_for "a random participation ordering" do
-      let!(:lucky_participation) { create(:participation, feature: feature) }
-      let!(:unlucky_participation) { create(:participation, feature: feature) }
+      let!(:lucky_participation) { create(:participation, component: component) }
+      let!(:unlucky_participation) { create(:participation, component: component) }
 
       it "lists the participations ordered randomly by default" do
-        visit_feature
+        visit_component
 
         expect(page).to have_selector("a", text: "Random")
         expect(page).to have_selector(".card--participation", count: 2)
@@ -497,13 +497,13 @@ describe "Participations", type: :feature do
     end
 
     it "lists all the participations" do
-      create(:participation_feature,
+      create(:participation_component,
              manifest: manifest,
              participatory_space: participatory_process)
 
-      create_list(:participation, 3, feature: feature)
+      create_list(:participation, 3, component: component)
 
-      visit_feature
+      visit_component
       expect(page).to have_css(".card--participation", count: 3)
     end
 
@@ -512,22 +512,22 @@ describe "Participations", type: :feature do
     end
 
     context "when voting phase is over" do
-      let!(:feature) do
-        create(:participation_feature,
+      let!(:component) do
+        create(:participation_component,
                :with_votes_blocked,
                manifest: manifest,
                participatory_space: participatory_process)
       end
 
       let!(:most_voted_participation) do
-        participation = create(:participation, feature: feature)
+        participation = create(:participation, component: component)
         create_list(:participation_vote, 3, participation: participation)
         participation
       end
 
-      let!(:less_voted_participation) { create(:participation, feature: feature) }
+      let!(:less_voted_participation) { create(:participation, component: component) }
 
-      before { visit_feature }
+      before { visit_component }
 
       it "lists the participations ordered by votes by default" do
         expect(page).to have_selector("a", text: "Most voted")
@@ -542,8 +542,8 @@ describe "Participations", type: :feature do
     end
 
     context "when voting is disabled" do
-      let!(:feature) do
-        create(:participation_feature,
+      let!(:component) do
+        create(:participation_component,
                :with_votes_disabled,
                manifest: manifest,
                participatory_space: participatory_process)
@@ -554,9 +554,9 @@ describe "Participations", type: :feature do
       end
 
       it "shows only links to full participations" do
-        create_list(:participation, 2, feature: feature)
+        create_list(:participation, 2, component: component)
 
-        visit_feature
+        visit_component
 
         expect(page).to have_no_button("Voting disabled", disabled: true)
         expect(page).to have_no_button("Vote")
@@ -566,11 +566,11 @@ describe "Participations", type: :feature do
 
     context "when there are a lot of participations" do
       before do
-        create_list(:participation, Decidim::Paginable::OPTIONS.first + 5, feature: feature)
+        create_list(:participation, Decidim::Paginable::OPTIONS.first + 5, component: component)
       end
 
       it "paginates them" do
-        visit_feature
+        visit_component
 
         expect(page).to have_css(".card--participation", count: Decidim::Paginable::OPTIONS.first)
 
@@ -585,11 +585,11 @@ describe "Participations", type: :feature do
     context "when filtering" do
       context "when official_participations setting is enabled" do
         before do
-          feature.update_attributes!(settings: { official_participations_enabled: true })
+          component.update_attributes!(settings: { official_participations_enabled: true })
         end
 
         it "can be filtered by origin" do
-          visit_feature
+          visit_component
 
           within "form.new_filter" do
             expect(page).to have_content(/Origin/i)
@@ -598,9 +598,9 @@ describe "Participations", type: :feature do
 
         context "with 'official' origin" do
           it "lists the filtered participations" do
-            create_list(:participation, 2, :official, feature: feature, scope: scope)
-            create(:participation, feature: feature, scope: scope)
-            visit_feature
+            create_list(:participation, 2, :official, component: component, scope: scope)
+            create(:participation, component: component, scope: scope)
+            visit_component
 
             within ".filters" do
               choose "Official"
@@ -613,9 +613,9 @@ describe "Participations", type: :feature do
 
         context "with 'citizens' origin" do
           it "lists the filtered participations" do
-            create_list(:participation, 2, feature: feature, scope: scope)
-            create(:participation, :official, feature: feature, scope: scope)
-            visit_feature
+            create_list(:participation, 2, component: component, scope: scope)
+            create(:participation, :official, component: component, scope: scope)
+            visit_component
 
             within ".filters" do
               choose "Citizens"
@@ -629,11 +629,11 @@ describe "Participations", type: :feature do
 
       context "when official_participations setting is not enabled" do
         before do
-          feature.update_attributes!(settings: { official_participations_enabled: false })
+          component.update_attributes!(settings: { official_participations_enabled: false })
         end
 
         it "cannot be filtered by origin" do
-          visit_feature
+          visit_component
 
           within "form.new_filter" do
             expect(page).to have_no_content(/Origin/i)
@@ -646,10 +646,10 @@ describe "Participations", type: :feature do
         let!(:scope2) { create :scope, organization: participatory_process.organization }
 
         before do
-          create_list(:participation, 2, feature: feature, scope: scope)
-          create(:participation, feature: feature, scope: scope2)
-          create(:participation, feature: feature, scope: nil)
-          visit_feature
+          create_list(:participation, 2, component: component, scope: scope)
+          create(:participation, component: component, scope: scope2)
+          create(:participation, component: component, scope: nil)
+          visit_component
         end
 
         it "can be filtered by scope" do
@@ -723,7 +723,7 @@ describe "Participations", type: :feature do
         let(:participatory_process) { scoped_participatory_process }
 
         it "cannot be filtered by scope" do
-          visit_feature
+          visit_component
 
           within "form.new_filter" do
             expect(page).to have_no_content(/Scopes/i)
@@ -731,16 +731,16 @@ describe "Participations", type: :feature do
         end
       end
 
-      context "when participation_answering feature setting is enabled" do
+      context "when participation_answering component setting is enabled" do
         before do
-          feature.update_attributes!(settings: { participation_answering_enabled: true })
+          component.update_attributes!(settings: { participation_answering_enabled: true })
         end
 
         context "when participation_answering step setting is enabled" do
           before do
-            feature.update_attributes!(
+            component.update_attributes!(
               step_settings: {
-                feature.participatory_space.active_step.id => {
+                component.participatory_space.active_step.id => {
                   participation_answering_enabled: true
                 }
               }
@@ -748,7 +748,7 @@ describe "Participations", type: :feature do
           end
 
           it "can be filtered by state" do
-            visit_feature
+            visit_component
 
             within "form.new_filter" do
               expect(page).to have_content(/State/i)
@@ -756,8 +756,8 @@ describe "Participations", type: :feature do
           end
 
           it "lists accepted participations" do
-            create(:participation, :accepted, feature: feature, scope: scope)
-            visit_feature
+            create(:participation, :accepted, component: component, scope: scope)
+            visit_component
 
             within ".filters" do
               choose "Accepted"
@@ -772,8 +772,8 @@ describe "Participations", type: :feature do
           end
 
           it "lists the filtered participations" do
-            create(:participation, :rejected, feature: feature, scope: scope)
-            visit_feature
+            create(:participation, :rejected, component: component, scope: scope)
+            visit_component
 
             within ".filters" do
               choose "Rejected"
@@ -790,9 +790,9 @@ describe "Participations", type: :feature do
 
         context "when participation_answering step setting is disabled" do
           before do
-            feature.update_attributes!(
+            component.update_attributes!(
               step_settings: {
-                feature.participatory_space.active_step.id => {
+                component.participatory_space.active_step.id => {
                   participation_answering_enabled: false
                 }
               }
@@ -800,7 +800,7 @@ describe "Participations", type: :feature do
           end
 
           it "cannot be filtered by state" do
-            visit_feature
+            visit_component
 
             within "form.new_filter" do
               expect(page).to have_no_content(/State/i)
@@ -809,13 +809,13 @@ describe "Participations", type: :feature do
         end
       end
 
-      context "when participation_answering feature setting is not enabled" do
+      context "when participation_answering component setting is not enabled" do
         before do
-          feature.update_attributes!(settings: { participation_answering_enabled: false })
+          component.update_attributes!(settings: { participation_answering_enabled: false })
         end
 
         it "cannot be filtered by state" do
-          visit_feature
+          visit_component
 
           within "form.new_filter" do
             expect(page).to have_no_content(/State/i)
@@ -829,10 +829,10 @@ describe "Participations", type: :feature do
         end
 
         it "can be filtered by category" do
-          create_list(:participation, 3, feature: feature)
-          create(:participation, feature: feature, category: category)
+          create_list(:participation, 3, component: component)
+          create(:participation, component: component, category: category)
 
-          visit_feature
+          visit_component
 
           within "form.new_filter" do
             select category.name[I18n.locale.to_s], from: :filter_category_id
@@ -844,19 +844,19 @@ describe "Participations", type: :feature do
     end
 
     context "when ordering by 'most_voted'" do
-      let!(:feature) do
-        create(:participation_feature,
+      let!(:component) do
+        create(:participation_component,
                :with_votes_enabled,
                manifest: manifest,
                participatory_space: participatory_process)
       end
 
       it "lists the participations ordered by votes" do
-        most_voted_participation = create(:participation, feature: feature)
+        most_voted_participation = create(:participation, component: component)
         create_list(:participation_vote, 3, participation: most_voted_participation)
-        less_voted_participation = create(:participation, feature: feature)
+        less_voted_participation = create(:participation, component: component)
 
-        visit_feature
+        visit_component
 
         within ".order-by" do
           expect(page).to have_selector("ul[data-dropdown-menu$=dropdown-menu]", text: "Random")
@@ -871,10 +871,10 @@ describe "Participations", type: :feature do
 
     context "when ordering by 'recent'" do
       it "lists the participations ordered by created at" do
-        older_participation = create(:participation, feature: feature, created_at: 1.month.ago)
-        recent_participation = create(:participation, feature: feature)
+        older_participation = create(:participation, component: component, created_at: 1.month.ago)
+        recent_participation = create(:participation, component: component)
 
-        visit_feature
+        visit_component
 
         within ".order-by" do
           expect(page).to have_selector("ul[data-dropdown-menu$=dropdown-menu]", text: "Random")
@@ -888,7 +888,7 @@ describe "Participations", type: :feature do
     end
 
     context "when paginating" do
-      let!(:collection) { create_list :participation, collection_size, feature: feature }
+      let!(:collection) { create_list :participation, collection_size, component: component }
       let!(:resource_selector) { ".card--participation" }
 
       it_behaves_like "a paginated resource"

@@ -23,7 +23,7 @@ describe Decidim::Participations::Abilities::AdminAbility do
     let(:context) do
       {
         current_settings: double(creation_enabled?: false),
-        feature_settings: double(official_participations_enabled: true)
+        component_settings: double(official_participations_enabled: true)
       }
     end
 
@@ -34,7 +34,7 @@ describe Decidim::Participations::Abilities::AdminAbility do
     let(:context) do
       {
         current_settings: double(creation_enabled?: true),
-        feature_settings: double(official_participations_enabled: false)
+        component_settings: double(official_participations_enabled: false)
       }
     end
 
@@ -51,10 +51,10 @@ describe Decidim::Participations::Abilities::AdminAbility do
     it { is_expected.not_to be_able_to(:update, Decidim::Participations::Participation) }
   end
 
-  context "when participation_answering is disabled in feature level" do
+  context "when participation_answering is disabled in component level" do
     let(:context) do
       {
-        feature_settings: double(participation_answering_enabled: false)
+        component_settings: double(participation_answering_enabled: false)
       }
     end
 

@@ -72,7 +72,7 @@ module Decidim
           if @participation.moderation.sqr_status != "authorized" && @participation.moderation.sqr_status != "waiting_for_answer"
             @participation.update_attributes(title: nil)
           elsif @participation.saved_change_to_participation_type? || @participation.moderation.saved_change_to_sqr_status? # case : participation is published || A user changed the type of a published participation || A user changed the sqr status of a participation
-            @participation.update_attributes(title: @participation.generate_title(current_feature))
+            @participation.update_attributes(title: @participation.generate_title(current_component))
           end
         end
 
@@ -83,7 +83,7 @@ module Decidim
         end
 
         def participation_limit_reached?
-          participation_limit = form.current_feature.settings.participation_limit
+          participation_limit = form.current_component.settings.participation_limit
 
           return false if participation_limit.zero?
 
@@ -148,11 +148,11 @@ module Decidim
         end
 
         def current_user_participations
-          Participation.where(author: current_user, feature: form.current_feature).where.not(id: participation.id)
+          Participation.where(author: current_user, component: form.current_component).where.not(id: participation.id)
         end
 
         def user_group_participations
-          Participation.where(user_group: user_group, feature: form.current_feature).where.not(id: participation.id)
+          Participation.where(user_group: user_group, component: form.current_component).where.not(id: participation.id)
         end
 
         def participatory_process_title

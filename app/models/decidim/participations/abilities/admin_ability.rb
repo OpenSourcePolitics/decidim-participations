@@ -22,18 +22,18 @@ module Decidim
           @context.fetch(:current_settings, nil)
         end
 
-        def feature_settings
-          @context.fetch(:feature_settings, nil)
+        def component_settings
+          @context.fetch(:component_settings, nil)
         end
 
         def can_create_participation?
           current_settings.try(:creation_enabled?) &&
-            feature_settings.try(:official_participations_enabled)
+            component_settings.try(:official_participations_enabled)
         end
 
         def can_update_participation?
           current_settings.try(:participation_answering_enabled) &&
-            feature_settings.try(:participation_answering_enabled)
+            component_settings.try(:participation_answering_enabled)
         end
       end
     end

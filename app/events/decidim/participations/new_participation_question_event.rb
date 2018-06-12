@@ -4,7 +4,7 @@ module Decidim
         include Decidim::Events::EmailEvent
         include Decidim::Events::NotificationEvent
         include Rails.application.routes.url_helpers
-        
+
         def email_subject
           I18n.t(
             "decidim.events.new_participation_question_event.email_subject",
@@ -15,7 +15,7 @@ module Decidim
         def email_greeting
           I18n.t("decidim.events.new_participation_question_event.email_greetings")
         end
-  
+
         def email_intro
           I18n.t(
             "decidim.events.new_participation_question_event.email_intro",
@@ -23,7 +23,7 @@ module Decidim
             processus_participatif_title: extra[:participatory_process_title]
           )
         end
-  
+
         def action_url
           admin_router_proxy.send("edit_participation_participation_answer_url", {id:resource.id, participation_id:resource.id})
         end
@@ -31,7 +31,7 @@ module Decidim
         def action_url_name
           I18n.t("decidim.events.new_participation_question_event.action_url_name")
         end
-  
+
         def notification_title
           I18n.t(
             "decidim.events.new_participation_question_event.notification_title",
@@ -43,11 +43,11 @@ module Decidim
         private
 
         def admin_router_proxy
-          admin_router_arg = resource.respond_to?(:feature) ? resource.feature : resource
+          admin_router_arg = resource.respond_to?(:component) ? resource.component : resource
           @admin_router_proxy ||= EngineRouter.admin_proxy(admin_router_arg)
         end
-      
+
       end
     end
   end
-  
+

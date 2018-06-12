@@ -125,13 +125,13 @@ module Decidim
       end
 
       def participation_limit
-        return if feature_settings.participation_limit.zero?
+        return if component_settings.participation_limit.zero?
 
-        feature_settings.participation_limit
+        component_settings.participation_limit
       end
 
       def current_user_participations
-        Participation.where(feature: current_feature, author: current_user)
+        Participation.where(component: current_component, author: current_user)
       end
 
       def participation_roles

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 shared_examples "create a participation" do |with_author|
-  let(:feature) { create(:participation_feature) }
-  let(:organization) { feature.organization }
+  let(:component) { create(:participation_component) }
+  let(:organization) { component.organization }
   let(:form) do
     form_klass.from_params(
       form_params
     ).with_context(
       current_organization: organization,
-      current_feature: feature
+      current_component: component
     )
   end
 
@@ -86,8 +86,8 @@ shared_examples "create a participation" do |with_author|
           end
 
           context "with a participation limit" do
-            let(:feature) do
-              create(:participation_feature, settings: { "participation_limit" => 2 })
+            let(:component) do
+              create(:participation_component, settings: { "participation_limit" => 2 })
             end
 
             it "checks the author doesn't exceed the amount of participations" do
@@ -108,12 +108,12 @@ shared_examples "create a participation" do |with_author|
           end
 
           context "with a participation limit" do
-            let(:feature) do
-              create(:participation_feature, settings: { "participation_limit" => 2 })
+            let(:component) do
+              create(:participation_component, settings: { "participation_limit" => 2 })
             end
 
             before do
-              create_list(:participation, 2, feature: feature, author: author)
+              create_list(:participation, 2, component: component, author: author)
             end
 
             it "checks the user group doesn't exceed the amount of participations independently of the author" do
@@ -126,7 +126,7 @@ shared_examples "create a participation" do |with_author|
       end
 
       context "when geocoding is enabled" do
-        let(:feature) { create(:participation_feature, :with_geocoding_enabled) }
+        let(:component) { create(:participation_component, :with_geocoding_enabled) }
 
         context "when the has address checkbox is checked" do
           let(:has_address) { true }
@@ -153,7 +153,7 @@ shared_examples "create a participation" do |with_author|
       end
 
       context "when attachments are allowed", processing_uploads_for: Decidim::AttachmentUploader do
-        let(:feature) { create(:participation_feature, :with_attachments_allowed) }
+        let(:component) { create(:participation_component, :with_attachments_allowed) }
         let(:attachment_params) do
           {
             title: "My attachment",

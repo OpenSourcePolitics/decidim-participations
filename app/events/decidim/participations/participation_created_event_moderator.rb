@@ -50,7 +50,7 @@ module Decidim
       end
 
       def admin_router_proxy
-        admin_router_arg = resource.respond_to?(:feature) ? resource.feature : resource
+        admin_router_arg = resource.respond_to?(:component) ? resource.component : resource
         @admin_router_proxy ||= EngineRouter.admin_proxy(admin_router_arg)
       end
     end

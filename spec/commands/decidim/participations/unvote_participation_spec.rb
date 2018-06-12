@@ -7,7 +7,7 @@ module Decidim
     describe UnvoteParticipation do
       describe "call" do
         let(:participation) { create(:participation) }
-        let(:current_user) { create(:user, organization: participation.feature.organization) }
+        let(:current_user) { create(:user, organization: participation.component.organization) }
         let!(:participation_vote) { create(:participation_vote, author: current_user, participation: participation) }
         let(:command) { described_class.new(participation, current_user) }
 

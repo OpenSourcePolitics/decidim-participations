@@ -54,7 +54,7 @@ module Decidim
           extra: {
             template: "participation_created_event_author",
             participatory_process_title: participatory_space_title,
-            process_slug: @participation.feature.participatory_space.slug
+            process_slug: @participation.component.participatory_space.slug
           }
         )
       end
@@ -70,7 +70,7 @@ module Decidim
           scope: form.scope,
           author: @current_user,
           decidim_user_group_id: form.user_group_id,
-          feature: form.feature,
+          component: form.component,
           address: form.address,
           latitude: form.latitude,
           longitude: form.longitude
@@ -86,7 +86,7 @@ module Decidim
           extra: {
             template: "participation_created_event_moderator",
             participatory_process_title: participatory_space_title,
-            process_slug: @participation.feature.participatory_space.slug
+            process_slug: @participation.component.participatory_space.slug
           }
         )
       end
@@ -116,7 +116,7 @@ module Decidim
       end
 
       def attachments_allowed?
-        form.current_feature.settings.attachments_allowed?
+        form.current_component.settings.attachments_allowed?
       end
 
       def process_attachments?
@@ -124,7 +124,7 @@ module Decidim
       end
 
       def participation_limit_reached?
-        participation_limit = form.current_feature.settings.participation_limit
+        participation_limit = form.current_component.settings.participation_limit
 
         return false if participation_limit.zero?
 
@@ -144,15 +144,15 @@ module Decidim
       end
 
       def current_user_participations
-        Participation.where(author: @current_user, feature: form.current_feature)
+        Participation.where(author: @current_user, component: form.current_component)
       end
 
       def user_group_participations
-        Participation.where(user_group: @user_group, feature: form.current_feature)
+        Participation.where(user_group: @user_group, component: form.current_component)
       end
 
       def participatory_space_title
-        title = @participation.feature.participatory_space.title.is_a?(Hash) ? @participation.feature.participatory_space.title[I18n.locale.to_s] : @participation.feature.participatory_space.title
+        title = @participation.component.participatory_space.title.is_a?(Hash) ? @participation.component.participatory_space.title[I18n.locale.to_s] : @participation.component.participatory_space.title
       end
     end
   end

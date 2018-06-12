@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-describe "Participation embeds", type: :feature do
-  include_context "with a feature"
+describe "Participation embeds", type: :component do
+  include_context "with a component"
   let(:manifest_name) { "participations" }
 
-  let!(:participation) { create(:participation, feature: feature) }
+  let!(:participation) { create(:participation, component: component) }
 
   context "when visiting the embed page for a participation" do
     before do

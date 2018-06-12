@@ -7,7 +7,7 @@ module Decidim
     describe VoteParticipation do
       describe "call" do
         let(:participation) { create(:participation) }
-        let(:current_user) { create(:user, organization: participation.feature.organization) }
+        let(:current_user) { create(:user, organization: participation.component.organization) }
         let(:command) { described_class.new(participation, current_user) }
 
         context "with normal conditions" do

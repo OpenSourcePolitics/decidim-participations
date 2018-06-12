@@ -39,7 +39,7 @@ module Decidim
       def show
         @participation = Participation
                     .not_hidden
-                    .where(feature: current_feature)
+                    .where(component: current_component)
                     .find(params[:id])
         @report_form = form(Decidim::ReportForm).from_params(reason: "spam")
       end
@@ -71,14 +71,14 @@ module Decidim
       end
 
       def edit
-        @participation = Participation.not_hidden.where(feature: current_feature).find(params[:id])
+        @participation = Participation.not_hidden.where(component: current_component).find(params[:id])
         authorize! :edit, @participation
 
         @form = form(ParticipationForm).from_model(@participation)
       end
 
       def update
-        @participation = Participation.not_hidden.where(feature: current_feature).find(params[:id])
+        @participation = Participation.not_hidden.where(component: current_component).find(params[:id])
         authorize! :edit, @participation
 
         @form = form(ParticipationForm).from_params(params)

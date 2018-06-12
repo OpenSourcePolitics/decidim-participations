@@ -41,7 +41,7 @@ module Decidim
       private
 
       def participation
-        @participation ||= Participation.where(feature: current_feature).find(params[:participation_id])
+        @participation ||= Participation.where(component: current_component).find(params[:participation_id])
       end
     end
   end

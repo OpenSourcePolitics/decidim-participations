@@ -14,14 +14,14 @@ module Decidim
           described_class.new(form, author)
         end
 
-        let(:feature) { create(:participation_feature) }
-        let(:organization) { feature.organization }
+        let(:component) { create(:participation_component) }
+        let(:organization) { component.organization }
         let(:form) do
           form_klass.from_params(
             form_params
           ).with_context(
             current_organization: organization,
-            current_feature: feature
+            current_component: component
           )
         end
         let(:form_params) do

@@ -40,7 +40,7 @@ module Decidim
                 scope: @participation.scope,
                 author: @participation.author,
                 decidim_user_group_id: @participation.decidim_user_group_id,
-                feature: @participation.feature,
+                component: @participation.component,
                 address: @participation.address,
                 latitude: @participation.latitude,
                 longitude: @participation.longitude

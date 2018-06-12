@@ -83,7 +83,7 @@ module Decidim
         def query
           @query ||=
             if @param_unmoderate
-              Participation.untreated(current_feature).ransack(params[:q])
+              Participation.untreated(current_component).ransack(params[:q])
             elsif @param_questions
               filtered_questions
             elsif @param_moderated
@@ -93,17 +93,17 @@ module Decidim
 
         def filtered_questions
           if can? :manage, Decidim::Participations::Participation
-            Participation.filtered_questions(current_feature).ransack(params[:q])
+            Participation.filtered_questions(current_component).ransack(params[:q])
           else
-            Participation.filtered_questions_per_role(current_feature, current_user_role, "waiting_for_answer").ransack(params[:q])
+            Participation.filtered_questions_per_role(current_component, current_user_role, "waiting_for_answer").ransack(params[:q])
           end
         end
 
         def filtered_treated
           if can? :manage, Decidim::Participations::Participation
-            Participation.treated(current_feature).ransack(params[:q])
+            Participation.treated(current_component).ransack(params[:q])
           else
-            Participation.filtered_questions_per_role(current_feature, current_user_role, "authorized").ransack(params[:q])
+            Participation.filtered_questions_per_role(current_component, current_user_role, "authorized").ransack(params[:q])
           end
         end
 
@@ -116,7 +116,7 @@ module Decidim
         end
 
         def participation
-          @participation ||= Participation.current_feature_participations(current_feature).find(params[:id])
+          @participation ||= Participation.current_component_participations(current_component).find(params[:id])
         end
       end
     end
