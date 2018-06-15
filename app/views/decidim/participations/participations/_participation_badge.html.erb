@@ -1,3 +1,3 @@
-<% if participation.answered? %>
+<% if participation.answered? || participation.publishable? %>
   <span class="<%= participation_state_badge_css_class(participation.state) %> label participation-status"><%= humanize_participation_state participation.state %></span>
 <% end %>
