@@ -18,8 +18,8 @@ module Decidim
       attribute :attachment_title, String
       attribute :attachment, AttachmentForm
 
-      validates :body, presence: true, etiquette: true
-      validates :body, length: { maximum: 2000 }, etiquette: true
+      validates :body, presence: true, etiquette: false
+      validates :body, length: { maximum: 2000 }, etiquette: false
       validates :address, geocoding: true, if: ->(form) { Decidim.geocoder.present? && form.has_address? }
       validates :address, presence: true, if: ->(form) { form.has_address? }
       validates :participation_type, presence: true
