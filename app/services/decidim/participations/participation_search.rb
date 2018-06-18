@@ -91,10 +91,11 @@ module Decidim
       # The state are set when user is making search for questions, then it'll be present as long as the page won't be reload. As we don't want chaining filter for contributions and opinions we have to make the request without the state argument.
       def get_query(participation_type, state, query)
         if participation_type == "question"
-          # Include waiting_for_validation in addition to waiting_for_answer
+          # Include waiting_for_validation && incomplete in addition to waiting_for_answer
           if state == "waiting_for_answer"
             query.where(state: state, participation_type: participation_type)
             .or(query.where(state: "waiting_for_validation", participation_type: participation_type))
+            .or(query.where(state: "incomplete", participation_type: participation_type))
           else
             query.where(state: state, participation_type: participation_type)
           end
