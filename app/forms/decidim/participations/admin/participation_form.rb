@@ -18,7 +18,7 @@ module Decidim
         validates :recipient_role, presence: true, if: ->(form) { form.participation_type == "question" && form.moderation.sqr_status != "refused" }
 
         validates :category, presence: true, if: ->(form) { form.category_id.present? }
-        delegate :categories, to: :current_feature
+        delegate :categories, to: :current_component
 
         def map_model(model)
           return unless model.categorization
@@ -26,7 +26,7 @@ module Decidim
           self.category_id = model.categorization.decidim_category_id
         end
 
-        alias feature current_feature
+        alias component current_component
 
         # Finds the Category from the category_id.
         #
@@ -39,7 +39,7 @@ module Decidim
         #
         # Returns a Decidim::Scope
         def scope
-          @scope ||= @scope_id ? current_feature.scopes.find_by(id: @scope_id) : current_participatory_space&.scope
+          @scope ||= @scope_id ? current_component.scopes.find_by(id: @scope_id) : current_participatory_space&.scope
         end
 
         # Scope identifier

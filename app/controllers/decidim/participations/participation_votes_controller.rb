@@ -11,7 +11,7 @@ module Decidim
       before_action :authenticate_user!
 
       def create
-        authorize! :vote, participation
+        enforce_permission_to :vote, participation
         @from_participations_list = params[:from_participations_list] == "true"
 
         VoteParticipation.call(participation, current_user) do
@@ -27,7 +27,7 @@ module Decidim
       end
 
       def destroy
-        authorize! :unvote, participation
+        enforce_permission_to :unvote, participation
         @from_participations_list = params[:from_participations_list] == "true"
 
         UnvoteParticipation.call(participation, current_user) do
@@ -41,7 +41,7 @@ module Decidim
       private
 
       def participation
-        @participation ||= Participation.where(feature: current_feature).find(params[:participation_id])
+        @participation ||= Participation.where(component: current_component).find(params[:participation_id])
       end
     end
   end

@@ -52,7 +52,7 @@ module Decidim
       end
 
       def participation_limit_reached?
-        participation_limit = form.current_feature.settings.participation_limit
+        participation_limit = form.current_component.settings.participation_limit
 
         return false if participation_limit.zero?
 
@@ -72,11 +72,11 @@ module Decidim
       end
 
       def current_user_participations
-        Participation.where(author: current_user, feature: form.current_feature).where.not(id: participation.id)
+        Participation.where(author: current_user, component: form.current_component).where.not(id: participation.id)
       end
 
       def user_group_participations
-        Participation.where(user_group: user_group, feature: form.current_feature).where.not(id: participation.id)
+        Participation.where(user_group: user_group, component: form.current_component).where.not(id: participation.id)
       end
     end
   end

@@ -10,12 +10,12 @@ module Decidim
 
         def edit
           @cpdp_to_cpdp = cpdp_to_cpdp?
-          authorize! :update, participation
+          enforce_permission_to :update, participation
           @form = form(Admin::ParticipationAnswerForm).from_model(participation)
         end
 
         def update
-          authorize! :update, participation
+          enforce_permission_to :update, participation
           @form = form(Admin::ParticipationAnswerForm).from_params(params)
 
           Admin::AnswerParticipation.call(@form, participation, current_participatory_space) do
@@ -39,7 +39,7 @@ module Decidim
         end
 
         def participation
-          @participations ||= Participation.where(feature: current_feature).find(params[:id])
+          @participations ||= Participation.where(component: current_component).find(params[:id])
         end
       end
     end

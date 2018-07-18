@@ -39,13 +39,13 @@ module Decidim
       def show
         @participation = Participation
                     .not_hidden
-                    .where(feature: current_feature)
+                    .where(component: current_component)
                     .find(params[:id])
         @report_form = form(Decidim::ReportForm).from_params(reason: "spam")
       end
 
       def new
-        authorize! :create, Participation
+        enforce_permission_to :create, :participation
 
         @form = form(ParticipationForm).from_params(
           attachment: form(AttachmentForm).from_params({})
@@ -53,7 +53,7 @@ module Decidim
       end
 
       def create
-        authorize! :create, Participation
+        enforce_permission_to :create, :participation
 
         @form = form(ParticipationForm).from_params(params)
 
@@ -71,15 +71,15 @@ module Decidim
       end
 
       def edit
-        @participation = Participation.not_hidden.where(feature: current_feature).find(params[:id])
-        authorize! :edit, @participation
+        @participation = Participation.not_hidden.where(component: current_component).find(params[:id])
+        enforce_permission_to :edit, :participation, participation: @participation
 
         @form = form(ParticipationForm).from_model(@participation)
       end
 
       def update
-        @participation = Participation.not_hidden.where(feature: current_feature).find(params[:id])
-        authorize! :edit, @participation
+        @participation = Participation.not_hidden.where(component: current_component).find(params[:id])
+        enforce_permission_to :edit, :participation, participation: @participation
 
         @form = form(ParticipationForm).from_params(params)
         UpdateParticipation.call(@form, current_user, @participation) do

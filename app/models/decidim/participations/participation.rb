@@ -7,17 +7,17 @@ module Decidim
       include Decidim::Resourceable
       include Decidim::Authorable
       include Decidim::HasFeature
-      include Decidim::HasScope
+      include Decidim::ScopableComponent
       include Decidim::HasReference
       include Decidim::HasCategory
       include Decidim::Reportable
       include Decidim::HasAttachments
       include Decidim::Followable
-      include Decidim::Comments::Commentable
+      include Decidim::Participations::CommentableParticipation
       # Provides a way to track changes in your object
       include ActiveModel::Dirty
 
-      feature_manifest_name "participations"
+      component_manifest_name "participations"
 
       accepts_nested_attributes_for :moderation
 
@@ -25,28 +25,28 @@ module Decidim
 
       validates :body, presence: true
 
-      geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.feature.organization.host } }
+      geocoded_by :address, http_headers: ->(participation) { { "Referer" => participation.component.organization.host } }
 
       # upstream moderation => MOA dashboard
-      scope :untreated, ->(current_feature) {
-        current_feature_participations(current_feature)
+      scope :untreated, ->(current_component) {
+        current_component_participations(current_component)
         .joins(:moderation)
         .merge(Moderation.where(sqr_status: "unmoderate")) }
 
 
-      scope :filtered_questions, -> (current_feature) { current_feature_participations(current_feature)
+      scope :filtered_questions, -> (current_component) { current_component_participations(current_component)
         .joins(:moderation)
         .merge(Moderation.where.not(['sqr_status = ? OR sqr_status = ? OR sqr_status = ?', 'unmoderate', 'authorized', 'refused'])) }
 
-      scope :filtered_questions_per_role,  lambda { |current_feature, role, sqr_status|
-        current_feature_participations(current_feature)
+      scope :filtered_questions_per_role,  lambda { |current_component, role, sqr_status|
+        current_component_participations(current_component)
           .where(participation_type: "question", recipient_role: role)
           .joins(:moderation)
           .merge(Moderation.where(['sqr_status = ?', sqr_status]))
       }
 
-      scope :treated, -> (current_feature){
-        current_feature_participations(current_feature)
+      scope :treated, -> (current_component){
+        current_component_participations(current_component)
         .joins(:moderation)
         .merge(Moderation.where('sqr_status = ? OR sqr_status = ?', 'authorized', 'refused')) }
 
@@ -78,8 +78,8 @@ module Decidim
         Arel.sql(query)
       end
 
-      def self.current_feature_participations(current_feature)
-        where(feature: current_feature)
+      def self.current_component_participations(current_component)
+        where(component: current_component)
       end
 
       def question?
@@ -122,15 +122,15 @@ module Decidim
         moderation.sqr_status == "refused"
       end
 
-      def generate_title(current_feature) # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
-        status = self.class.where(participation_type: participation_type, feature: current_feature).map(&:moderation).map(&:sqr_status)
+      def generate_title(current_component) # count the number of "authorized" and "waiting for answer" status. Then generate the title thanks to this number
+        status = self.class.where(participation_type: participation_type, component: current_component).map(&:moderation).map(&:sqr_status)
         status.delete("refused")
         status.delete("unmoderate")
 
         status_count = status.count
         type = I18n.t("decidim.participations.admin.participations.title.#{self.type}")
         title = "#{type}" + " n°" + "#{status_count}"
-        titles = self.class.where(participation_type: participation_type, feature: current_feature).map(&:title)
+        titles = self.class.where(participation_type: participation_type, component: current_component).map(&:title)
         while titles.include?(title)
           title = "#{type}" + " n°" + "#{status_count}"
           status_count += 1
@@ -198,32 +198,40 @@ module Decidim
         answered? && state == "evaluating"
       end
 
-      # Public: Overrides the `commentable?` Commentable concern method.
-      def commentable?
-        if published_answer?
-          return feature.settings.comments_enabled?
-        elsif opinion? || contribution?
-          return feature.settings.comments_enabled?
-        end
-        return false
-      end
+      # Might not be needed anymore because of CommentableParticipation
+      # # Public: Overrides the `commentable?` Commentable concern method.
+      # def commentable?
+      #   if published_answer?
+      #     return component.settings.comments_enabled?
+      #   elsif opinion? || contribution?
+      #     return component.settings.comments_enabled?
+      #   end
+      #   return false
+      # end
+      # Public: Overrides the `accepts_new_comments?` Commentable concern method.
+      # def accepts_new_comments?
+      #   commentable? && !component.current_settings.comments_blocked
+      # end
+
+      # # Public: Overrides the `comments_have_alignment?` Commentable concern method.
+      # def comments_have_alignment?
+      #   true
+      # end
+
+      # # Public: Overrides the `comments_have_votes?` Commentable concern method.
+      # def comments_have_votes?
+      #   true
+      # end
+
+      # Public: Override Commentable concern method `users_to_notify_on_comment_authorized`
+      # def users_to_notify_on_comment_authorized
+      #   return (followers | component.participatory_space.admins).uniq if official?
+      #   followers
+      # end
+
 
       def published_answer?
         question? && answered? && published? && state == "accepted"
-      end
-      # Public: Overrides the `accepts_new_comments?` Commentable concern method.
-      def accepts_new_comments?
-        commentable? && !feature.current_settings.comments_blocked
-      end
-
-      # Public: Overrides the `comments_have_alignment?` Commentable concern method.
-      def comments_have_alignment?
-        true
-      end
-
-      # Public: Overrides the `comments_have_votes?` Commentable concern method.
-      def comments_have_votes?
-        true
       end
 
       # Public: Overrides the `reported_content_url` Reportable concern method.
@@ -240,15 +248,8 @@ module Decidim
       end
 
       def get_users_with_main_roles # Exclude MOA
-        feature.participatory_space.admins +
-        Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: feature.participatory_space.id).where.not(role: "moa").map(&:user)
-      end
-
-
-      # Public: Override Commentable concern method `users_to_notify_on_comment_authorized`
-      def users_to_notify_on_comment_authorized
-        return (followers | feature.participatory_space.admins).uniq if official?
-        followers
+        component.participatory_space.admins +
+        Decidim::ParticipatoryProcessUserRole.where(decidim_participatory_process_id: component.participatory_space.id).where.not(role: "moa").map(&:user)
       end
 
 
@@ -261,7 +262,7 @@ module Decidim
       #
       # Returns an Integer with the maximum amount of votes, nil otherwise.
       def maximum_votes
-        maximum_votes = feature.settings.maximum_votes_per_participation
+        maximum_votes = component.settings.maximum_votes_per_participation
         return nil if maximum_votes.zero?
 
         maximum_votes
@@ -308,12 +309,12 @@ module Decidim
 
       # Checks whether the participation is inside the time window to be editable or not.
       def within_edit_time_limit?
-        limit = created_at + feature.settings.participation_edit_before_minutes.minutes
+        limit = created_at + component.settings.participation_edit_before_minutes.minutes
         Time.current < limit
       end
 
       def create_participation_moderation
-        participatory_space = self.feature.participatory_space
+        participatory_space = self.component.participatory_space
         self.create_moderation!(participatory_space: participatory_space, upstream_moderation: nil)
       end
     end
