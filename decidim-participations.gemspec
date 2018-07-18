@@ -22,9 +22,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency "decidim-comments", Decidim::Participations.version
   s.add_dependency "decidim-core", Decidim::Participations.version
-  s.add_dependency "kaminari", "~> 1.0.1"
+  s.add_dependency "kaminari", "~> 1.1.1"
   s.add_dependency "ransack"
-  s.add_dependency "social-share-button", "~> 1.0.0"
+  s.add_dependency "social-share-button", "~> 1.1.0"
 
   s.add_development_dependency "decidim-admin", Decidim::Participations.version
   s.add_development_dependency "decidim-assemblies", Decidim::Participations.version
