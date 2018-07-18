@@ -37,7 +37,7 @@
         </div>
       </div>
     <% end %>
-    <%= feature_reference(@participation) %>
+    <%= component_reference(@participation) %>
     <%= render partial: "decidim/shared/share_modal" %>
     <%= embed_modal_for participation_participation_widget_url(@participation, format: :js) %>
   </div>
@@ -45,7 +45,7 @@
     <div class="section">
       <%= render partial: "participation_badge", locals: { participation: @participation } %>
       <%= decidim_sanitize @participation.body %>
-      <% if feature_settings.geocoding_enabled? %>
+      <% if component_settings.geocoding_enabled? %>
         <%= render partial: "decidim/shared/static_map", locals: { icon_name: "participations", geolocalizable: @participation } %>
       <% end %>
       <%= render partial: "decidim/shared/tags", locals: { resource: @participation, tags_class_extra: "tags--participation" } %>

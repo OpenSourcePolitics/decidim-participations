@@ -7,24 +7,24 @@ module Decidim
     describe ParticipationsController, type: :controller do
       routes { Decidim::Participations::Engine.routes }
 
-      let(:user) { create(:user, :confirmed, organization: feature.organization) }
+      let(:user) { create(:user, :confirmed, organization: component.organization) }
 
       let(:params) do
         {
-          feature_id: feature.id,
-          participatory_process_slug: feature.participatory_space.slug
+          component_id: component.id,
+          participatory_process_slug: component.participatory_space.slug
         }
       end
 
       before do
-        request.env["decidim.current_organization"] = feature.organization
-        request.env["decidim.current_feature"] = feature
+        request.env["decidim.current_organization"] = component.organization
+        request.env["decidim.current_component"] = component
         sign_in user
       end
 
       describe "POST create" do
         context "when creation is not enabled" do
-          let(:feature) { create(:participation_feature) }
+          let(:component) { create(:participation_component) }
 
           it "raises an error" do
             expect(CreateParticipation).not_to receive(:call)
@@ -37,7 +37,7 @@ module Decidim
         end
 
         context "when creation is enabled" do
-          let(:feature) { create(:participation_feature, :with_creation_enabled) }
+          let(:component) { create(:participation_component, :with_creation_enabled) }
 
           it "creates a participation" do
             expect(CreateParticipation).to receive(:call)

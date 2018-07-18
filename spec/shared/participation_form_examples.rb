@@ -5,7 +5,7 @@ shared_examples "a participation form" do
 
   let(:organization) { create(:organization, available_locales: [:en]) }
   let(:participatory_space) { create(:participatory_process, :with_steps, organization: organization) }
-  let(:feature) { create(:participation_feature, participatory_space: participatory_space) }
+  let(:component) { create(:participation_component, participatory_space: participatory_space) }
   let(:title) { "Oriol for president!" }
   let(:body) { "Everything would be better" }
   let(:author) { create(:user, organization: organization) }
@@ -33,8 +33,8 @@ shared_examples "a participation form" do
 
   let(:form) do
     described_class.from_params(params).with_context(
-      current_feature: feature,
-      current_organization: feature.organization,
+      current_component: component,
+      current_organization: component.organization,
       current_participatory_space: participatory_space
     )
   end
@@ -80,7 +80,7 @@ shared_examples "a participation form" do
   end
 
   context "when geocoding is enabled" do
-    let(:feature) { create(:participation_feature, :with_geocoding_enabled, participatory_space: participatory_space) }
+    let(:component) { create(:participation_component, :with_geocoding_enabled, participatory_space: participatory_space) }
 
     context "when the has address checkbox is checked" do
       let(:has_address) { true }
@@ -169,7 +169,7 @@ shared_examples "a participation form" do
   end
 
   it "properly maps category id from model" do
-    participation = create(:participation, feature: feature, category: category)
+    participation = create(:participation, component: component, category: category)
 
     expect(described_class.from_model(participation).category_id).to eq(category_id)
   end

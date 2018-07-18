@@ -8,7 +8,7 @@
         <div class="card__author author-data author-data--small">
           <%= render partial: "decidim/shared/author_reference", locals: { author: present(participation).author } %><%= t(".creation_date_lite", date: l(participation.created_at, format: :decidim_short)) %>
         </div>
-        <%= feature_reference(participation, class: "tech-info--text-left") %>
+        <%= component_reference(participation, class: "tech-info--text-left") %>
       </div>
       <%= render partial: "participation_badge", locals: { participation: participation } %>
       <p><%= truncate(strip_tags(participation.body), length: 100) %></p>

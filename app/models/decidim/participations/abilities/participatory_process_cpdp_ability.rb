@@ -12,15 +12,15 @@ module Decidim
           # Display functions and menu
           # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
           can [:manage, :read, :duplicate], Participation do |participation|
-            can_manage_process?(participation.feature.participatory_space)
+            can_manage_process?(participation.component.participatory_space)
           end
 
-          can [:read, :manage], Feature do |feature|
-            feature.manifest_name == "participations"
+          can [:read, :manage], Feature do |component|
+            component.manifest_name == "participations"
           end
 
           can [:unreport, :hide], Reportable do |reportable|
-            can_manage_process?(reportable.feature.participatory_space)
+            can_manage_process?(reportable.component.participatory_space)
           end
         end
       end

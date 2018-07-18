@@ -29,8 +29,8 @@
                 <% elsif can? :preview, process %>
                   <%= link_to translated_attribute(process.title), decidim_participatory_processes.participatory_process_path(process) %><br />
                 <% elsif can? :read, process %> <!--  MOA / CPDP / Moderator-->
-                  <% if process.has_participation_feature? %>
-                    <%= link_to translated_attribute(process.title), (manage_feature_path(process.participations_feature)) %><br />
+                  <% if process.has_participation_component? %>
+                    <%= link_to translated_attribute(process.title), (manage_component_path(process.participations_component)) %><br />
                   <% else %>
                     <% if process.can_be_managed_by?(current_user) %> <!--  Moderator / CPDP -->
                       <%= link_to translated_attribute(process.title), moderations_path(process) %><br />

@@ -22,11 +22,11 @@ module Decidim
           end
 
           can [:update, :read], Participation do |participation|
-            can_manage_process?(participation.feature.participatory_space)
+            can_manage_process?(participation.component.participatory_space)
           end
 
-          can [:manage, :read], Feature do |feature|
-            feature.manifest_name == "participations"
+          can [:manage, :read], Feature do |component|
+            component.manifest_name == "participations"
           end
         end
       end

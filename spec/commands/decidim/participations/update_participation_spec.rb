@@ -7,18 +7,18 @@ module Decidim
     describe UpdateParticipation do
       let(:form_klass) { ParticipationForm }
 
-      let(:feature) { create(:participation_feature) }
-      let(:organization) { feature.organization }
+      let(:component) { create(:participation_component) }
+      let(:organization) { component.organization }
       let(:form) do
         form_klass.from_params(
           form_params
         ).with_context(
           current_organization: organization,
-          current_feature: feature
+          current_component: component
         )
       end
 
-      let!(:participation) { create :participation, feature: feature, author: author }
+      let!(:participation) { create :participation, component: component, author: author }
       let(:author) { create(:user, organization: organization) }
 
       let(:user_group) do
@@ -78,8 +78,8 @@ module Decidim
         end
 
         context "when the author changinng the author to one that has reached the participation limit" do
-          let!(:other_participation) { create :participation, feature: feature, author: author, user_group: user_group }
-          let(:feature) { create(:participation_feature, :with_participation_limit) }
+          let!(:other_participation) { create :participation, component: component, author: author, user_group: user_group }
+          let(:component) { create(:participation_component, :with_participation_limit) }
 
           it "broadcasts invalid" do
             expect { command.call }.to broadcast(:invalid)
@@ -120,7 +120,7 @@ module Decidim
           end
 
           context "when geocoding is enabled" do
-            let(:feature) { create(:participation_feature, :with_geocoding_enabled) }
+            let(:component) { create(:participation_component, :with_geocoding_enabled) }
 
             context "when the has address checkbox is checked" do
               let(:has_address) { true }

@@ -1,0 +1,2117 @@
+Searching 182 files for "component" (case sensitive)
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/current_user_ability.rb:
+   36
+   37          def authorized?(action)
+   38:           return unless component
+   39
+   40:           ActionAuthorizer.new(user, component, action).authorize.ok?
+   41          end
+   42
+   43          def vote_limit_enabled?
+   44:           return unless component_settings
+   45:           component_settings.vote_limit.present? && component_settings.vote_limit.positive?
+   46          end
+   47
+   ..
+   54            return 1 unless vote_limit_enabled?
+   55
+   56:           participations = Participation.where(component: component)
+   57            votes_count = ParticipationVote.where(author: user, participation: participations).size
+   58:           component_settings.vote_limit - votes_count
+   59          end
+   60
+   ..
+   68          end
+   69
+   70:         def component_settings
+   71:           context.fetch(:component_settings, nil)
+   72          end
+   73
+   74:         def component
+   75:           component = context.fetch(:current_component, nil)
+   76:           return nil unless component && component.manifest.name == :participations
+   77
+   78:           component
+   79          end
+   80        end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_admin_ability.rb:
+   11
+   12            can [:manage, :unreport, :hide], Participation do |participation|
+   13:             can_manage_process?(participation.component.participatory_space)
+   14            end
+   15
+   ..
+   24          end
+   25
+   26:         def component_settings
+   27:           @context.fetch(:component_settings, nil)
+   28          end
+   29
+   30:         def current_component
+   31:           @context.fetch(:current_component, nil)
+   32          end
+   33
+   34          def can_create_participation?
+   35            current_settings.try(:creation_enabled?) &&
+   36:             component_settings.try(:official_participations_enabled) &&
+   37:             can_manage_process?(current_component.try(:participatory_space))
+   38          end
+   39
+   40          def can_update_participation?
+   41            current_settings.try(:participation_answering_enabled) &&
+   42:             component_settings.try(:participation_answering_enabled)
+   43          end
+   44        end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_cpdp_ability.rb:
+   13            # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
+   14            can [:manage, :read, :duplicate], Participation do |participation|
+   15:             can_manage_process?(participation.component.participatory_space)
+   16            end
+   17
+   18:           can [:read, :manage], Feature do |component|
+   19:             component.manifest_name == "participations"
+   20            end
+   21
+   22            can [:unreport, :hide], Reportable do |reportable|
+   23:             can_manage_process?(reportable.component.participatory_space)
+   24            end
+   25          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_moa_ability.rb:
+   23
+   24            can [:update, :read], Participation do |participation|
+   25:             can_manage_process?(participation.component.participatory_space)
+   26            end
+   27
+   28:           can [:manage, :read], Feature do |component|
+   29:             component.manifest_name == "participations"
+   30            end
+   31          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_moderator_ability.rb:
+   12            # Dispaly functions and menu
+   13            # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
+   14:           can [:manage, :read, :update, :preview], Feature do |component|
+   15:             component.manifest_name == "participations"
+   16            end
+   17
+   18            can [:manage, :read, :duplicate], Participation do |participation|
+   19:             can_manage_process?(participation.component.participatory_space)
+   20            end
+   21          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/queries/decidim/participations/filtered_participations.rb:
+    3  module Decidim
+    4    module Participations
+    5:     # A class used to find participations filtered by components and a date range
+    6      class FilteredParticipations < Rectify::Query
+    7        # Syntactic sugar to initialize the class and return the queried objects.
+    8        #
+    9:       # components - An array of Decidim::Feature
+   10        # start_at - A date to filter resources created after it
+   11        # end_at - A date to filter resources created before it.
+   12:       def self.for(components, start_at = nil, end_at = nil)
+   13:         new(components, start_at, end_at).query
+   14        end
+   15
+   16        # Initializes the class.
+   17        #
+   18:       # components - An array of Decidim::Feature
+   19        # start_at - A date to filter resources created after it
+   20        # end_at - A date to filter resources created before it.
+   21:       def initialize(components, start_at = nil, end_at = nil)
+   22:         @components = components
+   23          @start_at = start_at
+   24          @end_at = end_at
+   25        end
+   26
+   27:       # Finds the Participations scoped to an array of components and filtered
+   28        # by a range of dates.
+   29        def query
+   30:         participations = Decidim::Participations::Participation.where(component: @components)
+   31          participations = participations.where("created_at >= ?", @start_at) if @start_at.present?
+   32          participations = participations.where("created_at <= ?", @end_at) if @end_at.present?
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/services/decidim/participations/participation_search.rb:
+    7      class ParticipationSearch < ResourceSearch
+    8        # Public: Initializes the service.
+    9:       # component     - A Decidim::Feature to get the participations from.
+   10        # page        - The page number to paginate the results.
+   11        # per_page    - The number of participations to return per page.
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/admin/participations/_form.html.erb:
+    9      </div>
+   10
+   11:     <% if component_settings.geocoding_enabled? %>
+   12        <div class="row column">
+   13          <%= form.text_field :address %>
+   ..
+   30        </div>
+   31      <% end %>
+   32:     <% if component_settings.attachments_allowed? %>
+   33        <div class="row column">
+   34          <fieldset>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/_filters.html.erb:
+   13    </div>
+   14
+   15:    <% if component_settings.official_participations_enabled %>
+   16      <%= form.collection_radio_buttons :participation_type, [["all", t('.all')], ["question", t('.questions')], ["contribution", t('.contributions')], ["opinion", t('.opinions')]], :first, :last, legend_title: t('.participation_type') %>
+   17    <% end %>
+   18
+   19:   <% if component_settings.official_participations_enabled %>
+   20      <%= form.collection_radio_buttons :state, [["all", t('.all')], ["accepted", t('.published_answer')], ["waiting_for_answer", t('.waiting_for_answer')]], :first, :last, legend_title: t('.questions_filter') %>
+   21    <% end %>
+   ..
+   29    <% end %>
+   30
+   31:   <% if current_component.categories.any? %>
+   32:     <%= form.categories_select :category_id, current_component.categories, legend_title: t('.category'), disable_parents: false, label: false, prompt: t('.category_prompt') %>
+   33    <% end %>
+   34
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/_participation.html.erb:
+    9            <%= render partial: "decidim/shared/author_reference", locals: { author: present(participation).author } %><%= t(".creation_date_lite", date: l(participation.created_at, format: :decidim_short)) %>
+   10          </div>
+   11:         <%= component_reference(participation, class: "tech-info--text-left") %>
+   12        </div>
+   13        <%= render partial: "participation_badge", locals: { participation: participation } %>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/_voting_rules.html.erb:
+    7            <ul>
+    8              <% if vote_limit_enabled? %>
+    9:               <li><%= t('.vote_limit.description', limit: component_settings.vote_limit) %></li>
+   10              <% end %>
+   11
+   ..
+   23              <div class="card card--nomargin text-center remaining-votes-counter">
+   24                <div class="card__content">
+   25:                 <span class="definition-data__title"><%= t('.vote_limit.left', limit: component_settings.vote_limit) %></span>
+   26                  <%= render partial: "remaining_votes_count" %>
+   27                  <span class="extra__suport-text"><%= t('.vote_limit.votes') %></span>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/edit.html.erb:
+   10    <div class="columns large-6 medium-centered">
+   11      <div class="card">
+   12:       <% if translated_attribute(component_settings.new_participation_help_text).present? %>
+   13:         <%= render partial: "decidim/shared/announcement", locals: { announcement: component_settings.new_participation_help_text } %>
+   14        <% end %>
+   15
+   ..
+   31            <% end %>
+   32
+   33:           <% if component_settings.geocoding_enabled? %>
+   34              <div class="field">
+   35                <%= form.check_box :has_address %>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/index.html.erb:
+    1: <%= render partial: "decidim/shared/component_announcement" %>
+    2
+    3: <% if component_settings.geocoding_enabled? %>
+    4    <%= dynamic_map_for participations_data_for_map(geocoded_participations) do %>
+    5      <template id="marker-popup">
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/new.html.erb:
+   10    <div class="columns large-6 medium-centered">
+   11      <div class="card">
+   12:       <% if translated_attribute(component_settings.new_participation_help_text).present? %>
+   13:         <%= render partial: "decidim/shared/announcement", locals: { announcement: component_settings.new_participation_help_text } %>
+   14        <% end %>
+   15
+   16        <div class="row column">
+   17          <div class="callout warning">
+   18:           <%= t(".participation_edit_before_minutes", count: component_settings.participation_edit_before_minutes) %>
+   19          </div>
+   20        </div>
+   ..
+   27            </div>
+   28
+   29:           <% if component_settings.geocoding_enabled? %>
+   30              <div class="field">
+   31                <%= form.check_box :has_address %>
+   ..
+   57              </div>
+   58            <% end %>
+   59:           <% if component_settings.attachments_allowed? %>
+   60              <fieldset>
+   61                <legend><%= t('.attachment_legend') %></legend>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/show.html.erb:
+   38        </div>
+   39      <% end %>
+   40:     <%= component_reference(@participation) %>
+   41      <%= render partial: "decidim/shared/share_modal" %>
+   42      <%= embed_modal_for participation_participation_widget_url(@participation, format: :js) %>
+   ..
+   46        <%= render partial: "participation_badge", locals: { participation: @participation } %>
+   47        <%= decidim_sanitize @participation.body %>
+   48:       <% if component_settings.geocoding_enabled? %>
+   49          <%= render partial: "decidim/shared/static_map", locals: { icon_name: "participations", geolocalizable: @participation } %>
+   50        <% end %>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participatory_processes/admin/participatory_processes/index.html.erb:
+   30                    <%= link_to translated_attribute(process.title), decidim_participatory_processes.participatory_process_path(process) %><br />
+   31                  <% elsif can? :read, process %> <!--  MOA / CPDP / Moderator-->
+   32:                   <% if process.has_participation_component? %>
+   33:                     <%= link_to translated_attribute(process.title), (manage_component_path(process.participations_component)) %><br />
+   34                    <% else %>
+   35                      <% if process.can_be_managed_by?(current_user) %> <!--  Moderator / CPDP -->
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/layouts/decidim/admin/participatory_process.html.erb:
+   14        <% if can? :read, Decidim::Feature %>
+   15          <% if can? :manage, Decidim::Feature %>
+   16:           <li <% if is_active_link?(decidim_admin_participatory_processes.components_path(current_participatory_space)) %> class="is-active" <% end %>>
+   17:             <%= aria_selected_link_to t("components", scope: "decidim.admin.menu.participatory_processes_submenu"), decidim_admin_participatory_processes.components_path(current_participatory_space) %>
+   18          <% end %>
+   19            <ul>
+   20:             <% current_participatory_space.components.each do |component| %>
+   21:               <% if can? :read, component %>
+   22:                 <% if component.manifest.admin_engine %>
+   23:                   <li <% if is_active_link?(manage_component_path(component)) || is_active_link?(decidim_admin_participatory_processes.edit_component_path(current_participatory_space, component)) || is_active_link?(decidim_admin_participatory_processes.edit_component_permissions_path(current_participatory_space, component)) %> class="is-active" <% end %>>
+   24:                     <%= link_to manage_component_path(component) do %>
+   25:                       <%= translated_attribute component.name %>
+   26:                       <% if component.primary_stat.present? %>
+   27:                         <span class="component-counter <%= "component-counter--off" if component.primary_stat.zero? %>"><%= component.primary_stat %></span>
+   28                        <% end %>
+   29                      <% end %>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/config/locales/en.yml:
+   92        statistics:
+   93          participations_count: Participations
+   94:     components:
+   95        participations:
+   96          actions:
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/config/locales/fr.yml:
+   91        statistics:
+   92          participations_count: Participations
+   93:     components:
+   94        participations:
+   95          actions:
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/db/migrate/20161212110850_create_decidim_participations.rb:
+    6        t.text :title, null: false
+    7        t.text :body, null: false
+    8:       t.references :decidim_component, index: true, null: false, index: { name: "index_decidim_participations_on_decidim_component_id" }
+    9        t.references :decidim_author, index: true, index: { name: "index_decidim_participations_on_decidim_author_id" }
+   10        t.references :decidim_category, index: true, index: { name: "index_decidim_participations_on_decidim_category_id" }
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/db/migrate/20170307085300_migrate_participation_reports_data_to_reports.rb:
+   10      Decidim::Participations::ParticipationReport.find_each do |participation_report|
+   11        moderation = Decidim::Moderation.find_or_create_by!(reportable: participation_report.participation,
+   12:                                                           participatory_process: participation_report.participation.component.participatory_space,
+   13                                                            sqr_status: 'unmoderate')
+   14        Decidim::Report.create!(moderation: moderation,
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/lib/decidim/monkey_patches/models/participatory_process_patches.rb:
+    1  module ParticipatoryProcessPatch
+    2:   def has_participation_component?
+    3:     components.where(manifest_name: "participations").any?
+    4    end
+    5
+    6:   def participations_component
+    7:     i = components.index { |i| i["manifest_name"] == "participations" }
+    8:     components[i]
+    9    end
+   10
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/lib/decidim/participations/participation_serializer.rb:
+   31            created_at: @participation.created_at,
+   32            url: url,
+   33:           component: { id: component.id },
+   34            meeting_urls: meetings
+   35          }
+   ..
+   44        end
+   45
+   46:       def component
+   47:         participation.component
+   48        end
+   49
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/lib/decidim/participations/test/factories.rb:
+    5
+    6  FactoryBot.define do
+    7:   factory :participation_component, parent: :component do
+    8      name { Decidim::Features::Namer.new(participatory_space.organization.available_locales, :participations).i18n_name }
+    9      manifest_name :participations
+   ..
+   98      body { Faker::Lorem.sentences(3).join("\n") }
+   99      participation_type {%w(question opinion contribution)[Faker::Number.between(0, 2)] }
+  100:     component { create(:participation_component) }
+  101      author do
+  102:       create(:user, organization: component.organization) if component
+  103      end
+  104
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/commands/decidim/participations/create_participation_spec.rb:
+   15          end
+   16
+   17:         let(:component) { create(:participation_component) }
+   18:         let(:organization) { component.organization }
+   19          let(:form) do
+   20            form_klass.from_params(
+   ..
+   22            ).with_context(
+   23              current_organization: organization,
+   24:             current_component: component
+   25            )
+   26          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/commands/decidim/participations/unvote_participation_spec.rb:
+    8        describe "call" do
+    9          let(:participation) { create(:participation) }
+   10:         let(:current_user) { create(:user, organization: participation.component.organization) }
+   11          let!(:participation_vote) { create(:participation_vote, author: current_user, participation: participation) }
+   12          let(:command) { described_class.new(participation, current_user) }
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/commands/decidim/participations/update_participation_spec.rb:
+    8        let(:form_klass) { ParticipationForm }
+    9
+   10:       let(:component) { create(:participation_component) }
+   11:       let(:organization) { component.organization }
+   12        let(:form) do
+   13          form_klass.from_params(
+   ..
+   15          ).with_context(
+   16            current_organization: organization,
+   17:           current_component: component
+   18          )
+   19        end
+   20
+   21:       let!(:participation) { create :participation, component: component, author: author }
+   22        let(:author) { create(:user, organization: organization) }
+   23
+   ..
+   79
+   80          context "when the author changinng the author to one that has reached the participation limit" do
+   81:           let!(:other_participation) { create :participation, component: component, author: author, user_group: user_group }
+   82:           let(:component) { create(:participation_component, :with_participation_limit) }
+   83
+   84            it "broadcasts invalid" do
+   ..
+  121
+  122            context "when geocoding is enabled" do
+  123:             let(:component) { create(:participation_component, :with_geocoding_enabled) }
+  124
+  125              context "when the has address checkbox is checked" do
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/commands/decidim/participations/vote_participation_spec.rb:
+    8        describe "call" do
+    9          let(:participation) { create(:participation) }
+   10:         let(:current_user) { create(:user, organization: participation.component.organization) }
+   11          let(:command) { described_class.new(participation, current_user) }
+   12
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/controllers/decidim/participation_votes_controller_spec.rb:
+    8        routes { Decidim::Participations::Engine.routes }
+    9
+   10:       let(:participation) { create(:participation, component: component) }
+   11:       let(:user) { create(:user, :confirmed, organization: component.organization) }
+   12
+   13        let(:params) do
+   14          {
+   15            participation_id: participation.id,
+   16:           component_id: component.id,
+   17:           participatory_process_slug: component.participatory_space.slug
+   18          }
+   19        end
+   20
+   21        before do
+   22:         request.env["decidim.current_organization"] = component.organization
+   23:         request.env["decidim.current_component"] = component
+   24          sign_in user
+   25        end
+   ..
+   27        describe "POST create" do
+   28          context "with votes enabled" do
+   29:           let(:component) do
+   30:             create(:participation_component, :with_votes_enabled)
+   31            end
+   32
+   ..
+   42
+   43          context "with votes disabled" do
+   44:           let(:component) do
+   45:             create(:participation_component)
+   46            end
+   47
+   ..
+   57
+   58          context "with votes enabled but votes blocked" do
+   59:           let(:component) do
+   60:             create(:participation_component, :with_votes_blocked)
+   61            end
+   62
+   ..
+   78
+   79          context "with vote limit enabled" do
+   80:           let(:component) do
+   81:             create(:participation_component, :with_votes_enabled, :with_vote_limit)
+   82            end
+   83
+   ..
+   92
+   93          context "with vote limit disabled" do
+   94:           let(:component) do
+   95:             create(:participation_component, :with_votes_enabled)
+   96            end
+   97
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/controllers/decidim/participations_controller_spec.rb:
+    8        routes { Decidim::Participations::Engine.routes }
+    9
+   10:       let(:user) { create(:user, :confirmed, organization: component.organization) }
+   11
+   12        let(:params) do
+   13          {
+   14:           component_id: component.id,
+   15:           participatory_process_slug: component.participatory_space.slug
+   16          }
+   17        end
+   18
+   19        before do
+   20:         request.env["decidim.current_organization"] = component.organization
+   21:         request.env["decidim.current_component"] = component
+   22          sign_in user
+   23        end
+   ..
+   25        describe "POST create" do
+   26          context "when creation is not enabled" do
+   27:           let(:component) { create(:participation_component) }
+   28
+   29            it "raises an error" do
+   ..
+   38
+   39          context "when creation is enabled" do
+   40:           let(:component) { create(:participation_component, :with_creation_enabled) }
+   41
+   42            it "creates a participation" do
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/controllers/decidim/admin/participation_answers_controller_spec.rb:
+    9          routes { Decidim::Participations::AdminEngine.routes }
+   10
+   11:         let(:component) { participation.component }
+   12          let(:participation) { create(:participation) }
+   13:         let(:user) { create(:user, :confirmed, :admin, organization: component.organization) }
+   14
+   15          let(:params) do
+   ..
+   17              id: participation.id,
+   18              participation_id: participation.id,
+   19:             component_id: component.id,
+   20:             participatory_process_slug: component.participatory_space.slug,
+   21              state: "rejected"
+   22            }
+   ..
+   24
+   25          before do
+   26:           request.env["decidim.current_organization"] = component.organization
+   27:           request.env["decidim.current_component"] = component
+   28            sign_in user
+   29          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/admin_manages_participations_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Admin manages participations", type: :component do
+    6    let(:manifest_name) { "participations" }
+    7:   let!(:participation) { create :participation, component: current_component }
+    8:   let!(:reportables) { create_list(:participation, 3, component: current_component) }
+    9
+   10:   include_context "when managing a component as an admin"
+   11
+   12    it_behaves_like "manage participations"
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/comments_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Comments", type: :component do
+    6:   let!(:component) { create(:participation_component, organization: organization) }
+    7    let!(:author) { create(:user, :confirmed, organization: organization) }
+    8:   let!(:commentable) { create(:participation, component: component, author: author) }
+    9
+   10    let(:resource_path) { resource_locator(commentable).path }
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/edit_participation_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Edit participations", type: :component do
+    6:   include_context "with a component"
+    7    let(:manifest_name) { "participations" }
+    8
+    9    let!(:user) { create :user, :confirmed, organization: participatory_process.organization }
+   10    let!(:another_user) { create :user, :confirmed, organization: participatory_process.organization }
+   11:   let!(:participation) { create :participation, author: user, component: component }
+   12
+   13    before do
+   ..
+   24
+   25      it "can be updated" do
+   26:       visit_component
+   27
+   28        click_link participation.title
+   ..
+   40
+   41      context "when updating with wrong data" do
+   42:       let(:component) { create(:participation_component, :with_creation_enabled, :with_attachments_allowed, participatory_space: participatory_process) }
+   43
+   44        it "returns an error message" do
+   45:         visit_component
+   46
+   47          click_link participation.title
+   ..
+   64
+   65      it "renders an error" do
+   66:       visit_component
+   67
+   68        click_link participation.title
+   ..
+   75
+   76    describe "editing my participation outside the time limit" do
+   77:     let!(:participation) { create :participation, author: user, component: component, created_at: 1.hour.ago }
+   78
+   79      before do
+   ..
+   82
+   83      it "renders an error" do
+   84:       visit_component
+   85
+   86        click_link participation.title
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/follow_participations_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Follow participations", type: :component do
+    6    let(:manifest_name) { "participations" }
+    7
+    8    let!(:followable) do
+    9:     create(:participation, component: component)
+   10    end
+   11
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/participation_embeds_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Participation embeds", type: :component do
+    6:   include_context "with a component"
+    7    let(:manifest_name) { "participations" }
+    8
+    9:   let!(:participation) { create(:participation, component: component) }
+   10
+   11    context "when visiting the embed page for a participation" do
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/participations_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Participations", type: :component do
+    6:   include_context "with a component"
+    7    let(:manifest_name) { "participations" }
+    8
+    .
+   37
+   38        context "with creation enabled" do
+   39:         let!(:component) do
+   40:           create(:participation_component,
+   41                   :with_creation_enabled,
+   42                   manifest: manifest,
+   ..
+   46          context "when process is not related to any scope" do
+   47            it "can be related to a scope" do
+   48:             visit_component
+   49              click_link "New participation"
+   50
+   ..
+   59
+   60            it "cannot be related to a scope" do
+   61:             visit_component
+   62              click_link "New participation"
+   63
+   ..
+   69
+   70          it "creates a new participation", :slow do
+   71:           visit_component
+   72
+   73            click_link "New participation"
+   ..
+   91
+   92          context "when geocoding is enabled", :serves_map do
+   93:           let!(:component) do
+   94:             create(:participation_component,
+   95                     :with_creation_enabled,
+   96                     :with_geocoding_enabled,
+   ..
+  100
+  101            it "creates a new participation", :slow do
+  102:             visit_component
+  103
+  104              click_link "New participation"
+  ...
+  135
+  136            it "creates a new participation as a user group", :slow do
+  137:             visit_component
+  138              click_link "New participation"
+  139
+  ...
+  157
+  158            context "when geocoding is enabled", :serves_map do
+  159:             let!(:component) do
+  160:               create(:participation_component,
+  161                       :with_creation_enabled,
+  162                       :with_geocoding_enabled,
+  ...
+  166
+  167              it "creates a new participation as a user group", :slow do
+  168:               visit_component
+  169                click_link "New participation"
+  170
+  ...
+  202              }
+  203
+  204:             component.update_attributes!(permissions: permissions)
+  205            end
+  206
+  207            it "shows a modal dialog" do
+  208:             visit_component
+  209              click_link "New participation"
+  210              expect(page).to have_content("Authorization required")
+  ...
+  213
+  214          context "when attachments are allowed", processing_uploads_for: Decidim::AttachmentUploader do
+  215:           let!(:component) do
+  216:             create(:participation_component,
+  217                     :with_creation_enabled,
+  218                     :with_attachments_allowed,
+  ...
+  222
+  223            it "creates a new participation with attachments" do
+  224:             visit_component
+  225
+  226              click_link "New participation"
+  ...
+  245        context "when creation is not enabled" do
+  246          it "does not show the creation button" do
+  247:           visit_component
+  248            expect(page).to have_no_link("New participation")
+  249          end
+  ...
+  251
+  252        context "when the participation limit is 1" do
+  253:         let!(:component) do
+  254:           create(:participation_component,
+  255                   :with_creation_enabled,
+  256                   :with_participation_limit,
+  ...
+  260
+  261          it "allows the creation of a single new participation" do
+  262:           visit_component
+  263
+  264            click_link "New participation"
+  ...
+  271            expect(page).to have_content("successfully")
+  272
+  273:           visit_component
+  274
+  275            click_link "New participation"
+  ...
+  288
+  289    context "when viewing a single participation" do
+  290:     let!(:component) do
+  291:       create(:participation_component,
+  292               manifest: manifest,
+  293               participatory_space: participatory_process)
+  294      end
+  295
+  296:     let!(:participations) { create_list(:participation, 3, component: component) }
+  297
+  298      it "allows viewing a single participation" do
+  299        participation = participations.first
+  300
+  301:       visit_component
+  302
+  303        click_link participation.title
+  ...
+  310
+  311      context "when process is not related to any scope" do
+  312:       let!(:participation) { create(:participation, component: component, scope: scope) }
+  313
+  314        it "can be filtered by scope" do
+  315:         visit_component
+  316          click_link participation.title
+  317          expect(page).to have_content(translated(scope.name))
+  ...
+  320
+  321      context "when process is related to a child scope" do
+  322:       let!(:participation) { create(:participation, component: component, scope: scope) }
+  323        let(:participatory_process) { scoped_participatory_process }
+  324
+  325        it "does not show the scope name" do
+  326:         visit_component
+  327          click_link participation.title
+  328          expect(page).to have_no_content(translated(scope.name))
+  ...
+  331
+  332      context "when it is an official participation" do
+  333:       let!(:official_participation) { create(:participation, component: component, author: nil) }
+  334
+  335        it "shows the author as official" do
+  336:         visit_component
+  337          click_link official_participation.title
+  338          expect(page).to have_content("Official participation")
+  ...
+  341
+  342      context "when a participation has comments" do
+  343:       let(:participation) { create(:participation, component: component) }
+  344:       let(:author) { create(:user, :confirmed, organization: component.organization) }
+  345        let!(:comments) { create_list(:comment, 3, commentable: participation) }
+  346
+  347        it "shows the comments" do
+  348:         visit_component
+  349          click_link participation.title
+  350
+  ...
+  356
+  357      context "when a participation has been linked in a meeting" do
+  358:       let(:participation) { create(:participation, component: component) }
+  359:       let(:meeting_component) do
+  360:         create(:component, manifest_name: :meetings, participatory_space: participation.component.participatory_space)
+  361        end
+  362:       let(:meeting) { create(:meeting, component: meeting_component) }
+  363
+  364        before do
+  ...
+  367
+  368        it "shows related meetings" do
+  369:         visit_component
+  370          click_link participation.title
+  371
+  ...
+  375
+  376      context "when a participation has been linked in a result" do
+  377:       let(:participation) { create(:participation, component: component) }
+  378:       let(:dummy_component) do
+  379:         create(:component, manifest_name: :dummy, participatory_space: participation.component.participatory_space)
+  380        end
+  381:       let(:dummy_resource) { create(:dummy_resource, component: dummy_component) }
+  382
+  383        before do
+  ...
+  386
+  387        it "shows related resources" do
+  388:         visit_component
+  389          click_link participation.title
+  390
+  ...
+  394
+  395      context "when a participation is in evaluation" do
+  396:       let!(:participation) { create(:participation, :evaluating, :with_answer, component: component) }
+  397
+  398        it "shows a badge and an answer" do
+  399:         visit_component
+  400          click_link participation.title
+  401
+  ...
+  410
+  411      context "when a participation has been rejected" do
+  412:       let!(:participation) { create(:participation, :rejected, :with_answer, component: component) }
+  413
+  414        it "shows the rejection reason" do
+  415:         visit_component
+  416          click_link participation.title
+  417
+  ...
+  426
+  427      context "when a participation has been accepted" do
+  428:       let!(:participation) { create(:participation, :accepted, :with_answer, component: component) }
+  429
+  430        it "shows the acceptance reason" do
+  431:         visit_component
+  432          click_link participation.title
+  433
+  ...
+  449
+  450        it "the user is displayed as a deleted user" do
+  451:         visit_component
+  452
+  453          click_link participation.title
+  ...
+  459
+  460    context "when a participation has been linked in a project" do
+  461:     let(:component) do
+  462:       create(:participation_component,
+  463               manifest: manifest,
+  464               participatory_space: participatory_process)
+  465      end
+  466:     let(:participation) { create(:participation, component: component) }
+  467:     let(:budget_component) do
+  468:       create(:component, manifest_name: :budgets, participatory_space: participation.component.participatory_space)
+  469      end
+  470:     let(:project) { create(:project, component: budget_component) }
+  471
+  472      before do
+  ...
+  475
+  476      it "shows related projects" do
+  477:       visit_component
+  478        click_link participation.title
+  479
+  ...
+  484    context "when listing participations in a participatory process" do
+  485      shared_examples_for "a random participation ordering" do
+  486:       let!(:lucky_participation) { create(:participation, component: component) }
+  487:       let!(:unlucky_participation) { create(:participation, component: component) }
+  488
+  489        it "lists the participations ordered randomly by default" do
+  490:         visit_component
+  491
+  492          expect(page).to have_selector("a", text: "Random")
+  ...
+  498
+  499      it "lists all the participations" do
+  500:       create(:participation_component,
+  501               manifest: manifest,
+  502               participatory_space: participatory_process)
+  503
+  504:       create_list(:participation, 3, component: component)
+  505
+  506:       visit_component
+  507        expect(page).to have_css(".card--participation", count: 3)
+  508      end
+  ...
+  513
+  514      context "when voting phase is over" do
+  515:       let!(:component) do
+  516:         create(:participation_component,
+  517                 :with_votes_blocked,
+  518                 manifest: manifest,
+  ...
+  521
+  522        let!(:most_voted_participation) do
+  523:         participation = create(:participation, component: component)
+  524          create_list(:participation_vote, 3, participation: participation)
+  525          participation
+  526        end
+  527
+  528:       let!(:less_voted_participation) { create(:participation, component: component) }
+  529
+  530:       before { visit_component }
+  531
+  532        it "lists the participations ordered by votes by default" do
+  ...
+  543
+  544      context "when voting is disabled" do
+  545:       let!(:component) do
+  546:         create(:participation_component,
+  547                 :with_votes_disabled,
+  548                 manifest: manifest,
+  ...
+  555
+  556        it "shows only links to full participations" do
+  557:         create_list(:participation, 2, component: component)
+  558
+  559:         visit_component
+  560
+  561          expect(page).to have_no_button("Voting disabled", disabled: true)
+  ...
+  567      context "when there are a lot of participations" do
+  568        before do
+  569:         create_list(:participation, Decidim::Paginable::OPTIONS.first + 5, component: component)
+  570        end
+  571
+  572        it "paginates them" do
+  573:         visit_component
+  574
+  575          expect(page).to have_css(".card--participation", count: Decidim::Paginable::OPTIONS.first)
+  ...
+  586        context "when official_participations setting is enabled" do
+  587          before do
+  588:           component.update_attributes!(settings: { official_participations_enabled: true })
+  589          end
+  590
+  591          it "can be filtered by origin" do
+  592:           visit_component
+  593
+  594            within "form.new_filter" do
+  ...
+  599          context "with 'official' origin" do
+  600            it "lists the filtered participations" do
+  601:             create_list(:participation, 2, :official, component: component, scope: scope)
+  602:             create(:participation, component: component, scope: scope)
+  603:             visit_component
+  604
+  605              within ".filters" do
+  ...
+  614          context "with 'citizens' origin" do
+  615            it "lists the filtered participations" do
+  616:             create_list(:participation, 2, component: component, scope: scope)
+  617:             create(:participation, :official, component: component, scope: scope)
+  618:             visit_component
+  619
+  620              within ".filters" do
+  ...
+  630        context "when official_participations setting is not enabled" do
+  631          before do
+  632:           component.update_attributes!(settings: { official_participations_enabled: false })
+  633          end
+  634
+  635          it "cannot be filtered by origin" do
+  636:           visit_component
+  637
+  638            within "form.new_filter" do
+  ...
+  647
+  648          before do
+  649:           create_list(:participation, 2, component: component, scope: scope)
+  650:           create(:participation, component: component, scope: scope2)
+  651:           create(:participation, component: component, scope: nil)
+  652:           visit_component
+  653          end
+  654
+  ...
+  724
+  725          it "cannot be filtered by scope" do
+  726:           visit_component
+  727
+  728            within "form.new_filter" do
+  ...
+  732        end
+  733
+  734:       context "when participation_answering component setting is enabled" do
+  735          before do
+  736:           component.update_attributes!(settings: { participation_answering_enabled: true })
+  737          end
+  738
+  739          context "when participation_answering step setting is enabled" do
+  740            before do
+  741:             component.update_attributes!(
+  742                step_settings: {
+  743:                 component.participatory_space.active_step.id => {
+  744                    participation_answering_enabled: true
+  745                  }
+  ...
+  749
+  750            it "can be filtered by state" do
+  751:             visit_component
+  752
+  753              within "form.new_filter" do
+  ...
+  757
+  758            it "lists accepted participations" do
+  759:             create(:participation, :accepted, component: component, scope: scope)
+  760:             visit_component
+  761
+  762              within ".filters" do
+  ...
+  773
+  774            it "lists the filtered participations" do
+  775:             create(:participation, :rejected, component: component, scope: scope)
+  776:             visit_component
+  777
+  778              within ".filters" do
+  ...
+  791          context "when participation_answering step setting is disabled" do
+  792            before do
+  793:             component.update_attributes!(
+  794                step_settings: {
+  795:                 component.participatory_space.active_step.id => {
+  796                    participation_answering_enabled: false
+  797                  }
+  ...
+  801
+  802            it "cannot be filtered by state" do
+  803:             visit_component
+  804
+  805              within "form.new_filter" do
+  ...
+  810        end
+  811
+  812:       context "when participation_answering component setting is not enabled" do
+  813          before do
+  814:           component.update_attributes!(settings: { participation_answering_enabled: false })
+  815          end
+  816
+  817          it "cannot be filtered by state" do
+  818:           visit_component
+  819
+  820            within "form.new_filter" do
+  ...
+  830
+  831          it "can be filtered by category" do
+  832:           create_list(:participation, 3, component: component)
+  833:           create(:participation, component: component, category: category)
+  834
+  835:           visit_component
+  836
+  837            within "form.new_filter" do
+  ...
+  845
+  846      context "when ordering by 'most_voted'" do
+  847:       let!(:component) do
+  848:         create(:participation_component,
+  849                 :with_votes_enabled,
+  850                 manifest: manifest,
+  ...
+  853
+  854        it "lists the participations ordered by votes" do
+  855:         most_voted_participation = create(:participation, component: component)
+  856          create_list(:participation_vote, 3, participation: most_voted_participation)
+  857:         less_voted_participation = create(:participation, component: component)
+  858
+  859:         visit_component
+  860
+  861          within ".order-by" do
+  ...
+  872      context "when ordering by 'recent'" do
+  873        it "lists the participations ordered by created at" do
+  874:         older_participation = create(:participation, component: component, created_at: 1.month.ago)
+  875:         recent_participation = create(:participation, component: component)
+  876
+  877:         visit_component
+  878
+  879          within ".order-by" do
+  ...
+  889
+  890      context "when paginating" do
+  891:       let!(:collection) { create_list :participation, collection_size, component: component }
+  892        let!(:resource_selector) { ".card--participation" }
+  893
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/process_admin_manages_participations_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Process admin manages participations", type: :component do
+    6    let(:manifest_name) { "participations" }
+    7:   let!(:participation) { create :participation, component: current_component }
+    8:   let!(:reportables) { create_list(:participation, 3, component: current_component) }
+    9
+   10:   include_context "when managing a component as a process admin"
+   11
+   12    it_behaves_like "manage participations"
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/report_participation_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Report Participation", type: :component do
+    6:   include_context "with a component"
+    7
+    8    let(:manifest_name) { "participations" }
+    9:   let!(:participations) { create_list(:participation, 3, component: component) }
+   10    let(:reportable) { participations.first }
+   11    let(:reportable_path) { resource_locator(reportable).path }
+   12    let!(:user) { create :user, :confirmed, organization: organization }
+   13
+   14:   let!(:component) do
+   15:     create(:participation_component,
+   16             manifest: manifest,
+   17             participatory_space: participatory_process)
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/components/vote_participation_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Vote Participation", type: :component do
+    6:   include_context "with a component"
+    7    let(:manifest_name) { "participations" }
+    8
+    9:   let!(:participations) { create_list(:participation, 3, component: component) }
+   10:   let!(:participation) { Decidim::Participations::Participation.where(component: component).first }
+   11    let!(:user) { create :user, :confirmed, organization: organization }
+   12
+   ..
+   19      context "when the user is not logged in" do
+   20        it "doesn't show the vote participation button and counts" do
+   21:         visit_component
+   22          expect_page_not_to_include_votes
+   23
+   ..
+   33
+   34        it "doesn't show the vote participation button and counts" do
+   35:         visit_component
+   36          expect_page_not_to_include_votes
+   37
+   ..
+   43
+   44    context "when votes are blocked" do
+   45:     let!(:component) do
+   46:       create(:participation_component,
+   47               :with_votes_blocked,
+   48               manifest: manifest,
+   ..
+   51
+   52      it "shows the vote count and the vote button is disabled" do
+   53:       visit_component
+   54        expect_page_not_to_include_votes
+   55      end
+   ..
+   57
+   58    context "when votes are enabled" do
+   59:     let!(:component) do
+   60:       create(:participation_component,
+   61               :with_votes_enabled,
+   62               manifest: manifest,
+   ..
+   66      context "when the user is not logged in" do
+   67        it "is given the option to sign in" do
+   68:         visit_component
+   69
+   70          within ".card__support", match: :first do
+   ..
+   83        context "when the participation is not voted yet" do
+   84          before do
+   85:           visit_component
+   86          end
+   87
+   ..
+  101          before do
+  102            create(:participation_vote, participation: participation, author: user)
+  103:           visit_component
+  104          end
+  105
+  ...
+  127        end
+  128
+  129:       context "when the component has a vote limit" do
+  130          let(:vote_limit) { 10 }
+  131
+  132:         let!(:component) do
+  133:           create(:participation_component,
+  134                   :with_votes_enabled,
+  135                   :with_vote_limit,
+  ...
+  141          describe "vote counter" do
+  142            context "when votes are blocked" do
+  143:             let!(:component) do
+  144:               create(:participation_component,
+  145                       :with_votes_blocked,
+  146                       :with_vote_limit,
+  ...
+  151
+  152              it "doesn't show the remaining votes counter" do
+  153:               visit_component
+  154
+  155                expect(page).to have_css(".voting-rules")
+  ...
+  159
+  160            context "when votes are enabled" do
+  161:             let!(:component) do
+  162:               create(:participation_component,
+  163                       :with_votes_enabled,
+  164                       :with_vote_limit,
+  ...
+  169
+  170              it "shows the remaining votes counter" do
+  171:               visit_component
+  172
+  173                expect(page).to have_css(".voting-rules")
+  ...
+  179          context "when the participation is not voted yet" do
+  180            before do
+  181:             visit_component
+  182            end
+  183
+  ...
+  200              }
+  201
+  202:             component.update_attributes!(permissions: permissions)
+  203:             visit_component
+  204            end
+  205
+  ...
+  216            before do
+  217              create(:participation_vote, participation: participation, author: user)
+  218:             visit_component
+  219            end
+  220
+  ...
+  245            before do
+  246              create(:participation_vote, participation: participation, author: user)
+  247:             visit_component
+  248            end
+  249
+  ...
+  253
+  254            context "when votes are blocked" do
+  255:             let!(:component) do
+  256:               create(:participation_component,
+  257                       :with_votes_blocked,
+  258                       manifest: manifest,
+  ...
+  270
+  271      context "when the participation is rejected" do
+  272:       let!(:rejected_participation) { create(:participation, :rejected, component: component) }
+  273
+  274        before do
+  275:         component.update_attributes!(settings: { participation_answering_enabled: true })
+  276        end
+  277
+  278        it "cannot be voted" do
+  279:         visit_component
+  280          expect(page).not_to have_selector("#participation-#{rejected_participation.id}-vote-button")
+  281
+  ...
+  286
+  287      context "when participations have a voting limit" do
+  288:       let!(:component) do
+  289:         create(:participation_component,
+  290                 :with_votes_enabled,
+  291                 :with_maximum_votes_per_participation,
+  ...
+  300        it "doesn't allow users to vote to a participation that's reached the limit" do
+  301          create(:participation_vote, participation: participation)
+  302:         visit_component
+  303
+  304          participation_element = page.find("article", text: participation.reference)
+  ...
+  312
+  313        it "allows users to vote on participations under the limit" do
+  314:         visit_component
+  315
+  316          participation_element = page.find("article", text: participation.reference)
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/helpers/participation_votes_helper_spec.rb:
+    9        let(:limit) { 10 }
+   10        let(:votes_enabled) { true }
+   11:       let(:participation_component) { create(:participation_component, organization: organization) }
+   12        let(:user) { create(:user, organization: organization) }
+   13
+   14        before do
+   15          allow(helper).to receive(:current_user).and_return(user)
+   16:         allow(helper).to receive(:current_component).and_return(participation_component)
+   17          allow(helper).to receive(:current_settings).and_return(double(votes_enabled?: votes_enabled))
+   18:         allow(helper).to receive(:component_settings).and_return(double(vote_limit: limit))
+   19        end
+   20
+   ..
+   56
+   57        describe "#remaining_votes_count_for" do
+   58:         it "returns the remaining votes for a user based on the component votes limit" do
+   59:           participation = create(:participation, component: participation_component)
+   60            create(:participation_vote, author: user, participation: participation)
+   61
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/lib/decidim/participations/component_spec.rb:
+    3  require "spec_helper"
+    4
+    5: describe "Participations component" do # rubocop:disable RSpec/DescribeClass
+    6:   let!(:component) { create(:participation_component) }
+    7
+    8    describe "on destroy" do
+    9:     context "when there are no participations for the component" do
+   10:       it "destroys the component" do
+   11          expect do
+   12:           Decidim::Admin::DestroyFeature.call(component)
+   13          end.to change { Decidim::Feature.count }.by(-1)
+   14
+   15:         expect(component).to be_destroyed
+   16        end
+   17      end
+   18
+   19:     context "when there are participations for the component" do
+   20        before do
+   21:         create(:participation, component: component)
+   22        end
+   23
+   24        it "raises an error" do
+   25          expect do
+   26:           Decidim::Admin::DestroyFeature.call(component)
+   27          end.to broadcast(:invalid)
+   28
+   29:         expect(component).not_to be_destroyed
+   30        end
+   31      end
+   ..
+   36
+   37      let(:raw_stats) do
+   38:       Decidim.component_manifests.map do |component_manifest|
+   39:         component_manifest.stats.filter(name: stats_name).with_context(component).flat_map { |name, data| [component_manifest.name, name, data] }
+   40        end
+   41      end
+   ..
+   46
+   47      let!(:participation) { create :participation }
+   48:     let(:component) { participation.component }
+   49:     let!(:hidden_participation) { create :participation, component: component }
+   50      let!(:moderation) { create :moderation, reportable: hidden_participation, hidden_at: 1.day.ago }
+   51
+   ..
+   56
+   57        it "only counts not hidden participations" do
+   58:         expect(Decidim::Participations::Participation.where(component: component).count).to eq 2
+   59          expect(subject).to eq 1
+   60        end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/models/decidim/participations/participation_spec.rb:
+    8        subject { participation }
+    9
+   10:       let(:participation) { build(:participation, component: component) }
+   11:       let(:organization) { component.participatory_space.organization }
+   12:       let(:component) { build :participation_component }
+   13
+   14        include_examples "authorable"
+   15:       include_examples "has component"
+   16        include_examples "has scope"
+   17        include_examples "has category"
+   ..
+   55          let!(:follows) { create_list(:follow, 3, followable: subject) }
+   56          let(:followers) { follows.map(&:user) }
+   57:         let(:participatory_space) { subject.component.participatory_space }
+   58          let(:organization) { participatory_space.organization }
+   59          let!(:participatory_process_admin) do
+   ..
+   70            let(:participation) { build(:participation, :official) }
+   71
+   72:           it "returns the followers and the component's participatory space admins" do
+   73              expect(subject.users_to_notify_on_comment_authorized).to match_array(followers.concat([participatory_process_admin]))
+   74            end
+   ..
+   85          let(:maximum_votes) { 10 }
+   86
+   87:         context "when the component's settings are set to an integer bigger than 0" do
+   88            before do
+   89:             component[:settings]["global"] = { maximum_votes_per_participation: 10 }
+   90:             component.save!
+   91            end
+   92
+   ..
+   96          end
+   97
+   98:         context "when the component's settings are set to 0" do
+   99            before do
+  100:             component[:settings]["global"] = { maximum_votes_per_participation: 0 }
+  101:             component.save!
+  102            end
+  103
+  ...
+  112
+  113          context "when user is author" do
+  114:           let(:participation) { build :participation, component: component, author: author, created_at: Time.current }
+  115
+  116            it { is_expected.to be_editable_by(author) }
+  ...
+  119          context "when participation is from user group and user is admin" do
+  120            let(:user_group) { create :user_group, users: [author], organization: author.organization }
+  121:           let(:participation) { build :participation, component: component, author: author, created_at: Time.current, user_group: user_group }
+  122
+  123            it { is_expected.to be_editable_by(author) }
+  ...
+  125
+  126          context "when user is not the author" do
+  127:           let(:participation) { build :participation, component: component, created_at: Time.current }
+  128
+  129            it { is_expected.not_to be_editable_by(author) }
+  ...
+  131
+  132          context "when participation is answered" do
+  133:           let(:participation) { build :participation, :with_answer, component: component, created_at: Time.current, author: author }
+  134
+  135            it { is_expected.not_to be_editable_by(author) }
+  ...
+  137
+  138          context "when participation editing time has run out" do
+  139:           let(:participation) { build :participation, created_at: 10.minutes.ago, component: component, author: author }
+  140
+  141            it { is_expected.not_to be_editable_by(author) }
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/models/decidim/participations/participation_vote_spec.rb:
+    9
+   10        let!(:organization) { create(:organization) }
+   11:       let!(:component) { create(:component, organization: organization, manifest_name: "participations") }
+   12        let!(:participatory_process) { create(:participatory_process, organization: organization) }
+   13        let!(:author) { create(:user, organization: organization) }
+   14:       let!(:participation) { create(:participation, component: component, author: author) }
+   15        let!(:participation_vote) { build(:participation_vote, participation: participation, author: author) }
+   16
+   ..
+   61
+   62        context "when participation is rejected" do
+   63:         let!(:participation) { create(:participation, :rejected, component: component, author: author) }
+   64
+   65          it { is_expected.to be_invalid }
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/models/decidim/participations/abilities/admin_ability_spec.rb:
+   24        {
+   25          current_settings: double(creation_enabled?: false),
+   26:         component_settings: double(official_participations_enabled: true)
+   27        }
+   28      end
+   ..
+   35        {
+   36          current_settings: double(creation_enabled?: true),
+   37:         component_settings: double(official_participations_enabled: false)
+   38        }
+   39      end
+   ..
+   52    end
+   53
+   54:   context "when participation_answering is disabled in component level" do
+   55      let(:context) do
+   56        {
+   57:         component_settings: double(participation_answering_enabled: false)
+   58        }
+   59      end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/models/decidim/participations/abilities/current_user_ability_spec.rb:
+    7
+    8    let(:user) { build(:user) }
+    9:   let(:participation_component) { create :participation_component }
+   10    let(:extra_context) do
+   11      {
+   12        current_settings: current_settings,
+   13:       component_settings: component_settings
+   14      }
+   15    end
+   16    let(:context) do
+   17      {
+   18:       current_component: participation_component
+   19      }.merge(extra_context)
+   20    end
+   ..
+   28    let(:extra_settings) { {} }
+   29    let(:current_settings) { double(settings.merge(extra_settings)) }
+   30:   let(:component_settings) { double(participation_edit_before_minutes: 5) }
+   31
+   32    it { is_expected.to be_able_to(:report, Decidim::Participations::Participation) }
+   ..
+   34    describe "voting" do
+   35      context "when voting is disabled" do
+   36:       let(:participation) { build :participation, component: participation_component }
+   37        let(:extra_settings) do
+   38          {
+   ..
+   59    describe "unvoting" do
+   60      context "when voting is disabled" do
+   61:       let(:participation) { build :participation, component: participation_component }
+   62        let(:extra_settings) do
+   63          {
+   ..
+  105
+  106    describe "participation edition" do
+  107:     let(:participation) { build :participation, author: user, created_at: Time.current, component: participation_component }
+  108
+  109      context "when participation is editable" do
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/models/decidim/participations/abilities/participatory_process_admin_ability_spec.rb:
+    9    let(:user_process) { create :participatory_process, organization: user.organization }
+   10    let!(:user_process_role) { create :participatory_process_user_role, user: user, participatory_process: user_process, role: :admin }
+   11:   let(:component) { create :participation_component, participatory_space: user_process }
+   12:   let(:participations) { create_list :participation, 3, component: component }
+   13    let(:other_participations) { create_list :participation, 3 }
+   14    let(:context) { { current_participatory_process: user_process } }
+   ..
+   30          current_participatory_process: user_process,
+   31          current_settings: double(creation_enabled?: false),
+   32:         component_settings: double(official_participations_enabled: true)
+   33        }
+   34      end
+   ..
+   42          current_participatory_process: user_process,
+   43          current_settings: double(creation_enabled?: true),
+   44:         component_settings: double(official_participations_enabled: false)
+   45        }
+   46      end
+   ..
+   60    end
+   61
+   62:   context "when participation_answering is disabled in component level" do
+   63      let(:context) do
+   64        {
+   65          current_participatory_process: user_process,
+   66:         component_settings: double(participation_answering_enabled: false)
+   67        }
+   68      end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/queries/decidim/participations/filtered_participations_spec.rb:
+    6    let(:organization) { create(:organization) }
+    7    let(:participatory_process) { create(:participatory_process, organization: organization) }
+    8:   let(:component) { create(:participation_component, participatory_space: participatory_process) }
+    9:   let(:another_component) { create(:participation_component, participatory_space: participatory_process) }
+   10
+   11:   let(:participations) { create_list(:participation, 3, component: component) }
+   12:   let(:old_participations) { create_list(:participation, 3, component: component, created_at: 10.days.ago) }
+   13:   let(:another_participations) { create_list(:participation, 3, component: another_component) }
+   14
+   15:   it "returns participations included in a collection of components" do
+   16:     expect(described_class.for([component, another_component])).to match_array participations.concat(old_participations, another_participations)
+   17    end
+   18
+   19    it "returns participations created in a date range" do
+   20:     expect(described_class.for([component, another_component], 2.weeks.ago, 1.week.ago)).to match_array old_participations
+   21    end
+   22  end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/services/decidim/participations/participation_search_spec.rb:
+    6    module Participations
+    7      describe ParticipationSearch do
+    8:       let(:component) { create(:component, manifest_name: "participations") }
+    9:       let(:scope1) { create :scope, organization: component.organization }
+   10:       let(:scope2) { create :scope, organization: component.organization }
+   11:       let(:subscope1) { create :scope, organization: component.organization, parent: scope1 }
+   12:       let(:participatory_process) { component.participatory_space }
+   13:       let(:user) { create(:user, organization: component.organization) }
+   14:       let!(:participation) { create(:participation, component: component, scope: scope1) }
+   15
+   16        describe "results" do
+   17          subject do
+   18            described_class.new(
+   19:             component: component,
+   20              activity: activity,
+   21              search_text: search_text,
+   ..
+   35          let(:scope_id) { nil }
+   36
+   37:         it "only includes participations from the given component" do
+   38            other_participation = create(:participation)
+   39
+   ..
+   46
+   47            it "returns the participations containing the search in the title or the body" do
+   48:             create_list(:participation, 3, component: component)
+   49:             create(:participation, title: "A dog", component: component)
+   50:             create(:participation, body: "There is a dog in the office", component: component)
+   51
+   52              expect(subject.size).to eq(2)
+   ..
+   58
+   59            it "returns the participations voted by the user" do
+   60:             create_list(:participation, 3, component: component)
+   61              create(:participation_vote, participation: Participation.first, author: user)
+   62
+   ..
+   70
+   71              it "returns only official participations" do
+   72:               official_participations = create_list(:participation, 3, :official, component: component)
+   73:               create_list(:participation, 3, component: component)
+   74
+   75                expect(subject.size).to eq(3)
+   ..
+   82
+   83              it "returns only citizen participations" do
+   84:               create_list(:participation, 3, :official, component: component)
+   85:               citizen_participations = create_list(:participation, 2, component: component)
+   86                citizen_participations << participation
+   87
+   ..
+   97
+   98              it "returns only accepted participations" do
+   99:               accepted_participations = create_list(:participation, 3, :accepted, component: component)
+  100:               create_list(:participation, 3, component: component)
+  101
+  102                expect(subject.size).to eq(3)
+  ...
+  109
+  110              it "returns only rejected participations" do
+  111:               create_list(:participation, 3, component: component)
+  112:               rejected_participations = create_list(:participation, 3, :rejected, component: component)
+  113
+  114                expect(subject.size).to eq(3)
+  ...
+  119
+  120          describe "scope_id filter" do
+  121:           let!(:participation2) { create(:participation, component: component, scope: scope2) }
+  122:           let!(:participation3) { create(:participation, component: component, scope: subscope1) }
+  123
+  124            context "when a parent scope id is being sent" do
+  ...
+  147
+  148            context "when `global` is being sent" do
+  149:             let!(:resource_without_scope) { create(:participation, component: component, scope: nil) }
+  150              let(:scope_id) { ["global"] }
+  151
+  ...
+  156
+  157            context "when `global` and some ids is being sent" do
+  158:             let!(:resource_without_scope) { create(:participation, component: component, scope: nil) }
+  159              let(:scope_id) { ["global", scope2.id, scope1.id] }
+  160
+  ...
+  168            context "when filtering by related to meetings" do
+  169              let(:related_to) { "Decidim::Meetings::Meeting".underscore }
+  170:             let(:meetings_component) { create(:component, manifest_name: "meetings", participatory_space: participatory_process) }
+  171:             let(:meeting) { create :meeting, component: meetings_component }
+  172
+  173              it "returns only participations related to meetings" do
+  174:               related_participation = create(:participation, :accepted, component: component)
+  175:               related_participation2 = create(:participation, :accepted, component: component)
+  176:               create_list(:participation, 3, component: component)
+  177                meeting.link_resources([related_participation], "participations_from_meeting")
+  178                related_participation2.link_resources([meeting], "participations_from_meeting")
+  ...
+  184            context "when filtering by related to resources" do
+  185              let(:related_to) { "Decidim::DummyResources::DummyResource".underscore }
+  186:             let(:dummy_component) { create(:component, manifest_name: "dummy", participatory_space: participatory_process) }
+  187:             let(:dummy_resource) { create :dummy_resource, component: dummy_component }
+  188
+  189              it "returns only participations related to results" do
+  190:               related_participation = create(:participation, :accepted, component: component)
+  191:               related_participation2 = create(:participation, :accepted, component: component)
+  192:               create_list(:participation, 3, component: component)
+  193                dummy_resource.link_resources([related_participation], "included_participations")
+  194                related_participation2.link_resources([dummy_resource], "included_participations")
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/services/decidim/participations/participation_serializer_spec.rb:
+   11
+   12        let!(:participation) { create(:participation) }
+   13:       let!(:category) { create(:category, participatory_space: component.participatory_space) }
+   14:       let!(:scope) { create(:scope, organization: component.participatory_space.organization) }
+   15:       let(:participatory_process) { component.participatory_space }
+   16:       let(:component) { participation.component }
+   17
+   18:       let!(:meetings_component) { create(:component, manifest_name: "meetings", participatory_space: participatory_process) }
+   19:       let(:meetings) { create_list(:meeting, 2, component: meetings_component) }
+   20
+   21        before do
+   ..
+   66          end
+   67
+   68:         it "serializes the component" do
+   69:           expect(serialized[:component]).to include(id: participation.component.id)
+   70          end
+   71
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/shared/create_participation_examples.rb:
+    2
+    3  shared_examples "create a participation" do |with_author|
+    4:   let(:component) { create(:participation_component) }
+    5:   let(:organization) { component.organization }
+    6    let(:form) do
+    7      form_klass.from_params(
+    .
+    9      ).with_context(
+   10        current_organization: organization,
+   11:       current_component: component
+   12      )
+   13    end
+   ..
+   87
+   88            context "with a participation limit" do
+   89:             let(:component) do
+   90:               create(:participation_component, settings: { "participation_limit" => 2 })
+   91              end
+   92
+   ..
+  109
+  110            context "with a participation limit" do
+  111:             let(:component) do
+  112:               create(:participation_component, settings: { "participation_limit" => 2 })
+  113              end
+  114
+  115              before do
+  116:               create_list(:participation, 2, component: component, author: author)
+  117              end
+  118
+  ...
+  127
+  128        context "when geocoding is enabled" do
+  129:         let(:component) { create(:participation_component, :with_geocoding_enabled) }
+  130
+  131          context "when the has address checkbox is checked" do
+  ...
+  154
+  155        context "when attachments are allowed", processing_uploads_for: Decidim::AttachmentUploader do
+  156:         let(:component) { create(:participation_component, :with_attachments_allowed) }
+  157          let(:attachment_params) do
+  158            {
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/shared/export_participations_examples.rb:
+    2
+    3  shared_examples "export participations" do
+    4:   let!(:participations) { create_list :participation, 3, component: current_component }
+    5
+    6    it "exports a CSV" do
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/shared/manage_participations_examples.rb:
+   33      context "when official_participations setting is enabled" do
+   34        before do
+   35:         current_component.update_attributes!(settings: { official_participations_enabled: true })
+   36        end
+   37
+   38        context "when creation is enabled" do
+   39          before do
+   40:           current_component.update_attributes!(
+   41              step_settings: {
+   42:               current_component.participatory_space.active_step.id => {
+   43                  creation_enabled: true
+   44                }
+   ..
+   46            )
+   47
+   48:           visit_component_admin
+   49          end
+   50
+   ..
+  152            context "when geocoding is enabled" do
+  153              before do
+  154:               current_component.update_attributes!(settings: { geocoding_enabled: true })
+  155              end
+  156
+  ...
+  182          context "when attachments are allowed", processing_uploads_for: Decidim::AttachmentUploader do
+  183            before do
+  184:             current_component.update_attributes!(settings: { attachments_allowed: true })
+  185            end
+  186
+  ...
+  206        context "when creation is not enabled" do
+  207          before do
+  208:           current_component.update_attributes!(
+  209              step_settings: {
+  210:               current_component.participatory_space.active_step.id => {
+  211                  creation_enabled: false
+  212                }
+  ...
+  216
+  217          it "cannot create a new participation from the main site" do
+  218:           visit_component
+  219            expect(page).to have_no_button("New Participation")
+  220          end
+  221
+  222          it "cannot create a new participation from the admin site" do
+  223:           visit_component_admin
+  224            expect(page).to have_no_link(/New/)
+  225          end
+  ...
+  229      context "when official_participations setting is disabled" do
+  230        before do
+  231:         current_component.update_attributes!(settings: { official_participations_enabled: false })
+  232        end
+  233
+  234        it "cannot create a new participation from the main site" do
+  235:         visit_component
+  236          expect(page).to have_no_button("New Participation")
+  237        end
+  238
+  239        it "cannot create a new participation from the admin site" do
+  240:         visit_component_admin
+  241          expect(page).to have_no_link(/New/)
+  242        end
+  ...
+  244    end
+  245
+  246:   context "when the participation_answering component setting is enabled" do
+  247      before do
+  248:       current_component.update_attributes!(settings: { participation_answering_enabled: true })
+  249      end
+  250
+  251      context "when the participation_answering step setting is enabled" do
+  252        before do
+  253:         current_component.update_attributes!(
+  254            step_settings: {
+  255:             current_component.participatory_space.active_step.id => {
+  256                participation_answering_enabled: true
+  257              }
+  ...
+  321          )
+  322
+  323:         visit_component_admin
+  324
+  325          within find("tr", text: participation.title) do
+  ...
+  344      context "when the participation_answering step setting is disabled" do
+  345        before do
+  346:         current_component.update_attributes!(
+  347            step_settings: {
+  348:             current_component.participatory_space.active_step.id => {
+  349                participation_answering_enabled: false
+  350              }
+  ...
+  363    end
+  364
+  365:   context "when the participation_answering component setting is disabled" do
+  366      before do
+  367:       current_component.update_attributes!(settings: { participation_answering_enabled: false })
+  368      end
+  369
+  ...
+  377    end
+  378
+  379:   context "when the votes_enabled component setting is disabled" do
+  380      before do
+  381:       current_component.update_attributes!(
+  382          step_settings: {
+  383:           component.participatory_space.active_step.id => {
+  384              votes_enabled: false
+  385            }
+  ...
+  397    end
+  398
+  399:   context "when the votes_enabled component setting is enabled" do
+  400      before do
+  401:       current_component.update_attributes!(
+  402          step_settings: {
+  403:           component.participatory_space.active_step.id => {
+  404              votes_enabled: true
+  405            }
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/shared/participation_form_examples.rb:
+    6    let(:organization) { create(:organization, available_locales: [:en]) }
+    7    let(:participatory_space) { create(:participatory_process, :with_steps, organization: organization) }
+    8:   let(:component) { create(:participation_component, participatory_space: participatory_space) }
+    9    let(:title) { "Oriol for president!" }
+   10    let(:body) { "Everything would be better" }
+   ..
+   34    let(:form) do
+   35      described_class.from_params(params).with_context(
+   36:       current_component: component,
+   37:       current_organization: component.organization,
+   38        current_participatory_space: participatory_space
+   39      )
+   ..
+   81
+   82    context "when geocoding is enabled" do
+   83:     let(:component) { create(:participation_component, :with_geocoding_enabled, participatory_space: participatory_space) }
+   84
+   85      context "when the has address checkbox is checked" do
+   ..
+  170
+  171    it "properly maps category id from model" do
+  172:     participation = create(:participation, component: component, category: category)
+  173
+  174      expect(described_class.from_model(participation).category_id).to eq(category_id)
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/spec/shared/participations_help_texts_examples.rb:
+    3  shared_examples "manage participations help texts" do
+    4    before do
+    5:     current_component.update_attributes!(
+    6        step_settings: {
+    7:         current_component.participatory_space.active_step.id => {
+    8            creation_enabled: true
+    9          }
+   ..
+   13
+   14    it "customize a help text for the new participation page" do
+   15:     visit edit_component_path(current_component)
+   16
+   17      fill_in_i18n_editor(
+   18:       :component_settings_new_participation_help_text,
+   19        "#global-settings-new_participation_help_text-tabs",
+   20        en: "Create a participation following our guidelines.",
+   ..
+   25      click_button "Update"
+   26
+   27:     visit new_participation_path(current_component)
+   28
+   29      within ".callout.secondary" do
+   ..
+   34    private
+   35
+   36:   def new_participation_path(component)
+   37:     Decidim::EngineRouter.main_proxy(component).new_participation_path(current_component.id)
+   38    end
+   39  end
+
+650 matches across 55 files
+
+
+Searching 99 files for "component" (case sensitive)
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/current_user_ability.rb:
+   36
+   37          def authorized?(action)
+   38:           return unless component
+   39
+   40:           ActionAuthorizer.new(user, component, action).authorize.ok?
+   41          end
+   42
+   43          def vote_limit_enabled?
+   44:           return unless component_settings
+   45:           component_settings.vote_limit.present? && component_settings.vote_limit.positive?
+   46          end
+   47
+   ..
+   54            return 1 unless vote_limit_enabled?
+   55
+   56:           participations = Participation.where(component: component)
+   57            votes_count = ParticipationVote.where(author: user, participation: participations).size
+   58:           component_settings.vote_limit - votes_count
+   59          end
+   60
+   ..
+   68          end
+   69
+   70:         def component_settings
+   71:           context.fetch(:component_settings, nil)
+   72          end
+   73
+   74:         def component
+   75:           component = context.fetch(:current_component, nil)
+   76:           return nil unless component && component.manifest.name == :participations
+   77
+   78:           component
+   79          end
+   80        end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_admin_ability.rb:
+   11
+   12            can [:manage, :unreport, :hide], Participation do |participation|
+   13:             can_manage_process?(participation.component.participatory_space)
+   14            end
+   15
+   ..
+   24          end
+   25
+   26:         def component_settings
+   27:           @context.fetch(:component_settings, nil)
+   28          end
+   29
+   30:         def current_component
+   31:           @context.fetch(:current_component, nil)
+   32          end
+   33
+   34          def can_create_participation?
+   35            current_settings.try(:creation_enabled?) &&
+   36:             component_settings.try(:official_participations_enabled) &&
+   37:             can_manage_process?(current_component.try(:participatory_space))
+   38          end
+   39
+   40          def can_update_participation?
+   41            current_settings.try(:participation_answering_enabled) &&
+   42:             component_settings.try(:participation_answering_enabled)
+   43          end
+   44        end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_cpdp_ability.rb:
+   13            # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
+   14            can [:manage, :read, :duplicate], Participation do |participation|
+   15:             can_manage_process?(participation.component.participatory_space)
+   16            end
+   17
+   18:           can [:read, :manage], Feature do |component|
+   19:             component.manifest_name == "participations"
+   20            end
+   21
+   22            can [:unreport, :hide], Reportable do |reportable|
+   23:             can_manage_process?(reportable.component.participatory_space)
+   24            end
+   25          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_moa_ability.rb:
+   23
+   24            can [:update, :read], Participation do |participation|
+   25:             can_manage_process?(participation.component.participatory_space)
+   26            end
+   27
+   28:           can [:manage, :read], Feature do |component|
+   29:             component.manifest_name == "participations"
+   30            end
+   31          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/models/decidim/participations/abilities/participatory_process_moderator_ability.rb:
+   12            # Dispaly functions and menu
+   13            # See overwritten template app/views/layouts/decidim/admin/participatory_process.html.erb
+   14:           can [:manage, :read, :update, :preview], Feature do |component|
+   15:             component.manifest_name == "participations"
+   16            end
+   17
+   18            can [:manage, :read, :duplicate], Participation do |participation|
+   19:             can_manage_process?(participation.component.participatory_space)
+   20            end
+   21          end
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/services/decidim/participations/participation_search.rb:
+    7      class ParticipationSearch < ResourceSearch
+    8        # Public: Initializes the service.
+    9:       # component     - A Decidim::Feature to get the participations from.
+   10        # page        - The page number to paginate the results.
+   11        # per_page    - The number of participations to return per page.
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/_voting_rules.html.erb:
+    7            <ul>
+    8              <% if vote_limit_enabled? %>
+    9:               <li><%= t('.vote_limit.description', limit: component_settings.vote_limit) %></li>
+   10              <% end %>
+   11
+   ..
+   23              <div class="card card--nomargin text-center remaining-votes-counter">
+   24                <div class="card__content">
+   25:                 <span class="definition-data__title"><%= t('.vote_limit.left', limit: component_settings.vote_limit) %></span>
+   26                  <%= render partial: "remaining_votes_count" %>
+   27                  <span class="extra__suport-text"><%= t('.vote_limit.votes') %></span>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/edit.html.erb:
+   10    <div class="columns large-6 medium-centered">
+   11      <div class="card">
+   12:       <% if translated_attribute(component_settings.new_participation_help_text).present? %>
+   13:         <%= render partial: "decidim/shared/announcement", locals: { announcement: component_settings.new_participation_help_text } %>
+   14        <% end %>
+   15
+   ..
+   31            <% end %>
+   32
+   33:           <% if component_settings.geocoding_enabled? %>
+   34              <div class="field">
+   35                <%= form.check_box :has_address %>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/index.html.erb:
+    1: <%= render partial: "decidim/shared/component_announcement" %>
+    2
+    3: <% if component_settings.geocoding_enabled? %>
+    4    <%= dynamic_map_for participations_data_for_map(geocoded_participations) do %>
+    5      <template id="marker-popup">
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/new.html.erb:
+   10    <div class="columns large-6 medium-centered">
+   11      <div class="card">
+   12:       <% if translated_attribute(component_settings.new_participation_help_text).present? %>
+   13:         <%= render partial: "decidim/shared/announcement", locals: { announcement: component_settings.new_participation_help_text } %>
+   14        <% end %>
+   15
+   16        <div class="row column">
+   17          <div class="callout warning">
+   18:           <%= t(".participation_edit_before_minutes", count: component_settings.participation_edit_before_minutes) %>
+   19          </div>
+   20        </div>
+   ..
+   27            </div>
+   28
+   29:           <% if component_settings.geocoding_enabled? %>
+   30              <div class="field">
+   31                <%= form.check_box :has_address %>
+   ..
+   57              </div>
+   58            <% end %>
+   59:           <% if component_settings.attachments_allowed? %>
+   60              <fieldset>
+   61                <legend><%= t('.attachment_legend') %></legend>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participations/participations/show.html.erb:
+   38        </div>
+   39      <% end %>
+   40:     <%= component_reference(@participation) %>
+   41      <%= render partial: "decidim/shared/share_modal" %>
+   42      <%= embed_modal_for participation_participation_widget_url(@participation, format: :js) %>
+   ..
+   46        <%= render partial: "participation_badge", locals: { participation: @participation } %>
+   47        <%= decidim_sanitize @participation.body %>
+   48:       <% if component_settings.geocoding_enabled? %>
+   49          <%= render partial: "decidim/shared/static_map", locals: { icon_name: "participations", geolocalizable: @participation } %>
+   50        <% end %>
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/decidim/participatory_processes/admin/participatory_processes/index.html.erb:
+   30                    <%= link_to translated_attribute(process.title), decidim_participatory_processes.participatory_process_path(process) %><br />
+   31                  <% elsif can? :read, process %> <!--  MOA / CPDP / Moderator-->
+   32:                   <% if process.has_participation_component? %>
+   33:                     <%= link_to translated_attribute(process.title), (manage_component_path(process.participations_component)) %><br />
+   34                    <% else %>
+   35                      <% if process.can_be_managed_by?(current_user) %> <!--  Moderator / CPDP -->
+
+/Users/juliesimon/code/OpenSourcePolitics/decidim-participations/app/views/layouts/decidim/admin/participatory_process.html.erb:
+   14        <% if can? :read, Decidim::Feature %>
+   15          <% if can? :manage, Decidim::Feature %>
+   16:           <li <% if is_active_link?(decidim_admin_participatory_processes.components_path(current_participatory_space)) %> class="is-active" <% end %>>
+   17:             <%= aria_selected_link_to t("components", scope: "decidim.admin.menu.participatory_processes_submenu"), decidim_admin_participatory_processes.components_path(current_participatory_space) %>
+   18          <% end %>
+   19            <ul>
+   20:             <% current_participatory_space.components.each do |component| %>
+   21:               <% if can? :read, component %>
+   22:                 <% if component.manifest.admin_engine %>
+   23:                   <li <% if is_active_link?(manage_component_path(component)) || is_active_link?(decidim_admin_participatory_processes.edit_component_path(current_participatory_space, component)) || is_active_link?(decidim_admin_participatory_processes.edit_component_permissions_path(current_participatory_space, component)) %> class="is-active" <% end %>>
+   24:                     <%= link_to manage_component_path(component) do %>
+   25:                       <%= translated_attribute component.name %>
+   26:                       <% if component.primary_stat.present? %>
+   27:                         <span class="component-counter <%= "component-counter--off" if component.primary_stat.zero? %>"><%= component.primary_stat %></span>
+   28                        <% end %>
+   29                      <% end %>
+
+71 matches across 13 files

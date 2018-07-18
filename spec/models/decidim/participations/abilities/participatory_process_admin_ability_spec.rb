@@ -8,8 +8,8 @@ describe Decidim::Participations::Abilities::ParticipatoryProcessAdminAbility do
   let(:user) { build(:user) }
   let(:user_process) { create :participatory_process, organization: user.organization }
   let!(:user_process_role) { create :participatory_process_user_role, user: user, participatory_process: user_process, role: :admin }
-  let(:feature) { create :participation_feature, participatory_space: user_process }
-  let(:participations) { create_list :participation, 3, feature: feature }
+  let(:component) { create :participation_component, participatory_space: user_process }
+  let(:participations) { create_list :participation, 3, component: component }
   let(:other_participations) { create_list :participation, 3 }
   let(:context) { { current_participatory_process: user_process } }
 
@@ -29,7 +29,7 @@ describe Decidim::Participations::Abilities::ParticipatoryProcessAdminAbility do
       {
         current_participatory_process: user_process,
         current_settings: double(creation_enabled?: false),
-        feature_settings: double(official_participations_enabled: true)
+        component_settings: double(official_participations_enabled: true)
       }
     end
 
@@ -41,7 +41,7 @@ describe Decidim::Participations::Abilities::ParticipatoryProcessAdminAbility do
       {
         current_participatory_process: user_process,
         current_settings: double(creation_enabled?: true),
-        feature_settings: double(official_participations_enabled: false)
+        component_settings: double(official_participations_enabled: false)
       }
     end
 
@@ -59,11 +59,11 @@ describe Decidim::Participations::Abilities::ParticipatoryProcessAdminAbility do
     it { is_expected.not_to be_able_to(:update, Decidim::Participations::Participation) }
   end
 
-  context "when participation_answering is disabled in feature level" do
+  context "when participation_answering is disabled in component level" do
     let(:context) do
       {
         current_participatory_process: user_process,
-        feature_settings: double(participation_answering_enabled: false)
+        component_settings: double(participation_answering_enabled: false)
       }
     end
 

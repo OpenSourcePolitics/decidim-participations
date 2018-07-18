@@ -12,11 +12,11 @@
     </div>
   </div>
 
-   <% if feature_settings.official_participations_enabled %>
+   <% if component_settings.official_participations_enabled %>
     <%= form.collection_radio_buttons :participation_type, [["all", t('.all')], ["question", t('.questions')], ["contribution", t('.contributions')], ["opinion", t('.opinions')]], :first, :last, legend_title: t('.participation_type') %>
   <% end %>
 
-  <% if feature_settings.official_participations_enabled %>
+  <% if component_settings.official_participations_enabled %>
     <%= form.collection_radio_buttons :state, [["all", t('.all')], ["accepted", t('.published_answer')], ["waiting_for_answer", t('.waiting_for_answer')]], :first, :last, legend_title: t('.questions_filter') %>
   <% end %>
 
@@ -28,8 +28,8 @@
     <%= scopes_picker_filter form, :scope_id %>
   <% end %>
 
-  <% if current_feature.categories.any? %>
-    <%= form.categories_select :category_id, current_feature.categories, legend_title: t('.category'), disable_parents: false, label: false, prompt: t('.category_prompt') %>
+  <% if current_component.categories.any? %>
+    <%= form.categories_select :category_id, current_component.categories, legend_title: t('.category'), disable_parents: false, label: false, prompt: t('.category_prompt') %>
   <% end %>
 
   <%= hidden_field_tag :order, order, id: nil, class: "order_filter" %>

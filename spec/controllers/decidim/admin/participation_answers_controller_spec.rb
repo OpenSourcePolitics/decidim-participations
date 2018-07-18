@@ -8,23 +8,23 @@ module Decidim
       describe ParticipationAnswersController, type: :controller do
         routes { Decidim::Participations::AdminEngine.routes }
 
-        let(:feature) { participation.feature }
+        let(:component) { participation.component }
         let(:participation) { create(:participation) }
-        let(:user) { create(:user, :confirmed, :admin, organization: feature.organization) }
+        let(:user) { create(:user, :confirmed, :admin, organization: component.organization) }
 
         let(:params) do
           {
             id: participation.id,
             participation_id: participation.id,
-            feature_id: feature.id,
-            participatory_process_slug: feature.participatory_space.slug,
+            component_id: component.id,
+            participatory_process_slug: component.participatory_space.slug,
             state: "rejected"
           }
         end
 
         before do
-          request.env["decidim.current_organization"] = feature.organization
-          request.env["decidim.current_feature"] = feature
+          request.env["decidim.current_organization"] = component.organization
+          request.env["decidim.current_component"] = component
           sign_in user
         end
 

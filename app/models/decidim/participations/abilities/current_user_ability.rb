@@ -35,14 +35,14 @@ module Decidim
         private
 
         def authorized?(action)
-          return unless feature
+          return unless component
 
-          ActionAuthorizer.new(user, feature, action).authorize.ok?
+          ActionAuthorizer.new(user, component, action).authorize.ok?
         end
 
         def vote_limit_enabled?
-          return unless feature_settings
-          feature_settings.vote_limit.present? && feature_settings.vote_limit.positive?
+          return unless component_settings
+          component_settings.vote_limit.present? && component_settings.vote_limit.positive?
         end
 
         def creation_enabled?
@@ -53,9 +53,9 @@ module Decidim
         def remaining_votes
           return 1 unless vote_limit_enabled?
 
-          participations = Participation.where(feature: feature)
+          participations = Participation.where(component: component)
           votes_count = ParticipationVote.where(author: user, participation: participations).size
-          feature_settings.vote_limit - votes_count
+          component_settings.vote_limit - votes_count
         end
 
         def voting_enabled?
@@ -67,15 +67,15 @@ module Decidim
           context.fetch(:current_settings, nil)
         end
 
-        def feature_settings
-          context.fetch(:feature_settings, nil)
+        def component_settings
+          context.fetch(:component_settings, nil)
         end
 
-        def feature
-          feature = context.fetch(:current_feature, nil)
-          return nil unless feature && feature.manifest.name == :participations
+        def component
+          component = context.fetch(:current_component, nil)
+          return nil unless component && component.manifest.name == :participations
 
-          feature
+          component
         end
       end
     end

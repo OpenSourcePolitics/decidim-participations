@@ -6,7 +6,7 @@ module Decidim
     # participations in a participatory process.
     class ParticipationSearch < ResourceSearch
       # Public: Initializes the service.
-      # feature     - A Decidim::Feature to get the participations from.
+      # component     - A Decidim::Feature to get the participations from.
       # page        - The page number to paginate the results.
       # per_page    - The number of participations to return per page.
       def initialize(options = {})

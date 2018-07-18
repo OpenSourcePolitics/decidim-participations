@@ -2,12 +2,12 @@
 
 require "spec_helper"
 
-describe "Vote Participation", type: :feature do
-  include_context "with a feature"
+describe "Vote Participation", type: :component do
+  include_context "with a component"
   let(:manifest_name) { "participations" }
 
-  let!(:participations) { create_list(:participation, 3, feature: feature) }
-  let!(:participation) { Decidim::Participations::Participation.where(feature: feature).first }
+  let!(:participations) { create_list(:participation, 3, component: component) }
+  let!(:participation) { Decidim::Participations::Participation.where(component: component).first }
   let!(:user) { create :user, :confirmed, organization: organization }
 
   def expect_page_not_to_include_votes
@@ -18,7 +18,7 @@ describe "Vote Participation", type: :feature do
   context "when votes are not enabled" do
     context "when the user is not logged in" do
       it "doesn't show the vote participation button and counts" do
-        visit_feature
+        visit_component
         expect_page_not_to_include_votes
 
         click_link participation.title
@@ -32,7 +32,7 @@ describe "Vote Participation", type: :feature do
       end
 
       it "doesn't show the vote participation button and counts" do
-        visit_feature
+        visit_component
         expect_page_not_to_include_votes
 
         click_link participation.title
@@ -42,22 +42,22 @@ describe "Vote Participation", type: :feature do
   end
 
   context "when votes are blocked" do
-    let!(:feature) do
-      create(:participation_feature,
+    let!(:component) do
+      create(:participation_component,
              :with_votes_blocked,
              manifest: manifest,
              participatory_space: participatory_process)
     end
 
     it "shows the vote count and the vote button is disabled" do
-      visit_feature
+      visit_component
       expect_page_not_to_include_votes
     end
   end
 
   context "when votes are enabled" do
-    let!(:feature) do
-      create(:participation_feature,
+    let!(:component) do
+      create(:participation_component,
              :with_votes_enabled,
              manifest: manifest,
              participatory_space: participatory_process)
@@ -65,7 +65,7 @@ describe "Vote Participation", type: :feature do
 
     context "when the user is not logged in" do
       it "is given the option to sign in" do
-        visit_feature
+        visit_component
 
         within ".card__support", match: :first do
           click_button "Vote"
@@ -82,7 +82,7 @@ describe "Vote Participation", type: :feature do
 
       context "when the participation is not voted yet" do
         before do
-          visit_feature
+          visit_component
         end
 
         it "is able to vote the participation" do
@@ -100,7 +100,7 @@ describe "Vote Participation", type: :feature do
       context "when the participation is already voted" do
         before do
           create(:participation_vote, participation: participation, author: user)
-          visit_feature
+          visit_component
         end
 
         it "is not able to vote it again" do
@@ -126,11 +126,11 @@ describe "Vote Participation", type: :feature do
         end
       end
 
-      context "when the feature has a vote limit" do
+      context "when the component has a vote limit" do
         let(:vote_limit) { 10 }
 
-        let!(:feature) do
-          create(:participation_feature,
+        let!(:component) do
+          create(:participation_component,
                  :with_votes_enabled,
                  :with_vote_limit,
                  vote_limit: vote_limit,
@@ -140,8 +140,8 @@ describe "Vote Participation", type: :feature do
 
         describe "vote counter" do
           context "when votes are blocked" do
-            let!(:feature) do
-              create(:participation_feature,
+            let!(:component) do
+              create(:participation_component,
                      :with_votes_blocked,
                      :with_vote_limit,
                      vote_limit: vote_limit,
@@ -150,7 +150,7 @@ describe "Vote Participation", type: :feature do
             end
 
             it "doesn't show the remaining votes counter" do
-              visit_feature
+              visit_component
 
               expect(page).to have_css(".voting-rules")
               expect(page).to have_no_css(".remaining-votes-counter")
@@ -158,8 +158,8 @@ describe "Vote Participation", type: :feature do
           end
 
           context "when votes are enabled" do
-            let!(:feature) do
-              create(:participation_feature,
+            let!(:component) do
+              create(:participation_component,
                      :with_votes_enabled,
                      :with_vote_limit,
                      vote_limit: vote_limit,
@@ -168,7 +168,7 @@ describe "Vote Participation", type: :feature do
             end
 
             it "shows the remaining votes counter" do
-              visit_feature
+              visit_component
 
               expect(page).to have_css(".voting-rules")
               expect(page).to have_css(".remaining-votes-counter")
@@ -178,7 +178,7 @@ describe "Vote Participation", type: :feature do
 
         context "when the participation is not voted yet" do
           before do
-            visit_feature
+            visit_component
           end
 
           it "updates the remaining votes counter" do
@@ -199,8 +199,8 @@ describe "Vote Participation", type: :feature do
               }
             }
 
-            feature.update_attributes!(permissions: permissions)
-            visit_feature
+            component.update_attributes!(permissions: permissions)
+            visit_component
           end
 
           it "shows a modal dialog" do
@@ -215,7 +215,7 @@ describe "Vote Participation", type: :feature do
         context "when the participation is already voted" do
           before do
             create(:participation_vote, participation: participation, author: user)
-            visit_feature
+            visit_component
           end
 
           it "is not able to vote it again" do
@@ -244,7 +244,7 @@ describe "Vote Participation", type: :feature do
 
           before do
             create(:participation_vote, participation: participation, author: user)
-            visit_feature
+            visit_component
           end
 
           it "is not able to vote other participations" do
@@ -252,8 +252,8 @@ describe "Vote Participation", type: :feature do
           end
 
           context "when votes are blocked" do
-            let!(:feature) do
-              create(:participation_feature,
+            let!(:component) do
+              create(:participation_component,
                      :with_votes_blocked,
                      manifest: manifest,
                      participatory_space: participatory_process)
@@ -269,14 +269,14 @@ describe "Vote Participation", type: :feature do
     end
 
     context "when the participation is rejected" do
-      let!(:rejected_participation) { create(:participation, :rejected, feature: feature) }
+      let!(:rejected_participation) { create(:participation, :rejected, component: component) }
 
       before do
-        feature.update_attributes!(settings: { participation_answering_enabled: true })
+        component.update_attributes!(settings: { participation_answering_enabled: true })
       end
 
       it "cannot be voted" do
-        visit_feature
+        visit_component
         expect(page).not_to have_selector("#participation-#{rejected_participation.id}-vote-button")
 
         click_link rejected_participation.title
@@ -285,8 +285,8 @@ describe "Vote Participation", type: :feature do
     end
 
     context "when participations have a voting limit" do
-      let!(:feature) do
-        create(:participation_feature,
+      let!(:component) do
+        create(:participation_component,
                :with_votes_enabled,
                :with_maximum_votes_per_participation,
                manifest: manifest,
@@ -299,7 +299,7 @@ describe "Vote Participation", type: :feature do
 
       it "doesn't allow users to vote to a participation that's reached the limit" do
         create(:participation_vote, participation: participation)
-        visit_feature
+        visit_component
 
         participation_element = page.find("article", text: participation.reference)
 
@@ -311,7 +311,7 @@ describe "Vote Participation", type: :feature do
       end
 
       it "allows users to vote on participations under the limit" do
-        visit_feature
+        visit_component
 
         participation_element = page.find("article", text: participation.reference)
 

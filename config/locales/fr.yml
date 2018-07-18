@@ -90,7 +90,7 @@ fr:
     participatory_processes:
       statistics:
         participations_count: Participations
-    features:
+    components:
       participations:
         actions:
           create: Créer

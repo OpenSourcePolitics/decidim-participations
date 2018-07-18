@@ -2,31 +2,31 @@
 
 require "spec_helper"
 
-describe "Participations feature" do # rubocop:disable RSpec/DescribeClass
-  let!(:feature) { create(:participation_feature) }
+describe "Participations component" do # rubocop:disable RSpec/DescribeClass
+  let!(:component) { create(:participation_component) }
 
   describe "on destroy" do
-    context "when there are no participations for the feature" do
-      it "destroys the feature" do
+    context "when there are no participations for the component" do
+      it "destroys the component" do
         expect do
-          Decidim::Admin::DestroyFeature.call(feature)
+          Decidim::Admin::DestroyFeature.call(component)
         end.to change { Decidim::Feature.count }.by(-1)
 
-        expect(feature).to be_destroyed
+        expect(component).to be_destroyed
       end
     end
 
-    context "when there are participations for the feature" do
+    context "when there are participations for the component" do
       before do
-        create(:participation, feature: feature)
+        create(:participation, component: component)
       end
 
       it "raises an error" do
         expect do
-          Decidim::Admin::DestroyFeature.call(feature)
+          Decidim::Admin::DestroyFeature.call(component)
         end.to broadcast(:invalid)
 
-        expect(feature).not_to be_destroyed
+        expect(component).not_to be_destroyed
       end
     end
   end
@@ -35,8 +35,8 @@ describe "Participations feature" do # rubocop:disable RSpec/DescribeClass
     subject { current_stat[2] }
 
     let(:raw_stats) do
-      Decidim.feature_manifests.map do |feature_manifest|
-        feature_manifest.stats.filter(name: stats_name).with_context(feature).flat_map { |name, data| [feature_manifest.name, name, data] }
+      Decidim.component_manifests.map do |component_manifest|
+        component_manifest.stats.filter(name: stats_name).with_context(component).flat_map { |name, data| [component_manifest.name, name, data] }
       end
     end
 
@@ -45,8 +45,8 @@ describe "Participations feature" do # rubocop:disable RSpec/DescribeClass
     end
 
     let!(:participation) { create :participation }
-    let(:feature) { participation.feature }
-    let!(:hidden_participation) { create :participation, feature: feature }
+    let(:component) { participation.component }
+    let!(:hidden_participation) { create :participation, component: component }
     let!(:moderation) { create :moderation, reportable: hidden_participation, hidden_at: 1.day.ago }
 
     let(:current_stat) { stats.find { |stat| stat[1] == stats_name } }
@@ -55,7 +55,7 @@ describe "Participations feature" do # rubocop:disable RSpec/DescribeClass
       let(:stats_name) { :participations_count }
 
       it "only counts not hidden participations" do
-        expect(Decidim::Participations::Participation.where(feature: feature).count).to eq 2
+        expect(Decidim::Participations::Participation.where(component: component).count).to eq 2
         expect(subject).to eq 1
       end
     end
